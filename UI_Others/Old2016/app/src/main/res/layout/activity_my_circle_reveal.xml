@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ca.six.ui.others.circle_reveal.widget.RevealFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include android:id="@+id/view_login"
+                 layout="@layout/view_login"
+                 />
+
+        <include android:id="@+id/view_register"
+                 layout="@layout/view_register"
+                 />
+    </ca.six.ui.others.circle_reveal.widget.RevealFrameLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_mycr" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:src="@drawable/ic_add" app:backgroundTint="#FF4081"
+        app:layout_anchor="@id/view_login"
+        app:layout_anchorGravity="right|top"
+        />
+
+</android.support.design.widget.CoordinatorLayout>

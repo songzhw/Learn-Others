@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <ca.six.ui.others.gooey_menu.GooeyMenu
+        android:id="@+id/gooey_menu"
+        app:fab_radius="32dp"
+        app:gap_between_menu_fab="100dp"
+        app:menu_drawable="@array/drawable_array"
+        app:menu_radius="24dp"
+        app:no_of_menu="4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>

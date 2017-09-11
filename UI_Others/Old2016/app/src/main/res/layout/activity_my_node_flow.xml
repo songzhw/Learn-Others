@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button android:id="@+id/btn_my_node_flow_one" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textSize="22dp" android:textColor="#000"
+                android:text="First_" android:onClick="clickOne"
+                />
+
+        <Button android:id="@+id/btn_my_node_flow_two" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textSize="22dp" android:textColor="#000"
+                android:text="Second_"  android:onClick="clickTwo"
+                />
+
+        <Button android:id="@+id/btn_my_node_flow_Three" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textSize="22dp" android:textColor="#000"
+                android:text="Clear___"  android:onClick="clickThree"
+            />
+    </LinearLayout>
+
+
+    <ca.six.ui.others.node_flow.mine.MySimpleNodeFlow
+        android:id="@+id/msnf_my_node_flow"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        />
+
+
+
+
+</LinearLayout>

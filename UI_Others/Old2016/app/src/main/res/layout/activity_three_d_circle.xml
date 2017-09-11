@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context="com.moxun.tagcloud.MainActivity">
+
+    <ca.six.ui.others.Circle3d.TagCloudView
+        android:id="@+id/tag_cloud"
+        android:layout_margin="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:autoScrollMode="uniform"
+        app:lightColor="#0fe291"
+        app:darkColor="#123456"
+        app:radiusPercent="0.5"
+        app:scrollSpeed="3"/>
+
+</LinearLayout>

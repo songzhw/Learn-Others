@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">SixUiViews</string>
+    <string name="app_caption">Study others\' great libraries</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="android_names">Android Version Names</string>
+    <string name="android_codes">Android Version Codes</string>
+
+</resources>

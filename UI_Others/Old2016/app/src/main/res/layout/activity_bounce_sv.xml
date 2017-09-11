@@ -1,0 +1,132 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical" >
+
+    <TextView android:layout_width="fill_parent" android:layout_height="50dp" android:text="Title" android:gravity="center"/>
+
+    <ca.six.ui.others.bounceview.BounceScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ccc"
+        android:focusable="true"
+        android:focusableInTouchMode="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="10.0dip" >
+
+            <RelativeLayout
+                android:id="@+id/accountSetting"
+                android:layout_width="fill_parent"
+                android:layout_height="63.0dip"
+                android:background="#80ffffff"
+                android:focusable="true" >
+
+                <FrameLayout
+                    android:id="@+id/frameLayout1"
+                    android:layout_width="54.0dip"
+                    android:layout_height="54.0dip"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10.0dip" >
+
+                    <ImageView
+                        android:id="@+id/face"
+                        android:layout_width="50.0dip"
+                        android:layout_height="50.0dip"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:src="@drawable/cash" />
+
+                    <ImageView
+                        android:id="@+id/statusIcon"
+                        android:layout_width="18.0dip"
+                        android:layout_height="18.0dip"
+                        android:layout_gravity="bottom|right|center"
+                        android:contentDescription="@null" />
+                </FrameLayout>
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10.0dip"
+                    android:contentDescription="@null"
+                    android:duplicateParentState="true" />
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/nick"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_toLeftOf="@id/imageView1"
+                    android:duplicateParentState="true"
+                    android:text="在线" />
+
+                <TextView
+                    android:id="@+id/nick"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginRight="69.0dip"
+                    android:layout_toRightOf="@id/frameLayout1"
+                    android:duplicateParentState="true"
+                    android:ellipsize="end"
+                    android:singleLine="true" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="600dp"
+                android:layout_marginTop="16.0dip"
+                android:layout_weight="2.13"
+                android:background="#ffffffff"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/my_profile"
+                    android:layout_width="fill_parent"
+                    android:layout_height="44.0dip"
+                    android:background="#800000ff"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10.0dip"
+                    android:paddingRight="10.0dip"
+                    android:text="标题一" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16.0dip"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:id="@+id/set_feedback"
+                        android:layout_width="fill_parent"
+                        android:layout_height="44.0dip"
+                        android:background="#8000ffff"
+                        android:clickable="true"
+                        android:focusable="true" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="12.0dip"
+                            android:duplicateParentState="true"
+                            android:gravity="center_vertical"
+                            android:text="反馈" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ca.six.ui.others.bounceview.BounceScrollView>
+
+</LinearLayout>

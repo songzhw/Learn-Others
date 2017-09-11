@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nodeContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.telenav.demoapp.MainActivity"
+    android:background="@color/header_text">
+
+    <ca.six.ui.others.node_flow.demo.LocationFlowLayout
+        android:id="@+id/nodeFlow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</RelativeLayout>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="swipe_two"
+        android:textColor="#1f8a9e" />
+
+    <ca.six.ui.others.gesture_fun.FailedDeleteOnSwipeEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:hint="Swipe with threshold 200"
+        custom:hrskrs_swipe_mode="2"
+        custom:hrskrs_threshold="200" />
+
+    <ca.six.ui.others.gesture_fun.FailedDeleteOnSwipeEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:hint="Swipe with threshold 400"
+        custom:hrskrs_swipe_mode="2"
+        custom:hrskrs_threshold="400" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:textColor="#1f8a9e" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="swipe_single"
+        android:textColor="#1f8a9e" />
+
+    <ca.six.ui.others.gesture_fun.FailedDeleteOnSwipeEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:hint="Swipe with threshold 200"
+        custom:hrskrs_swipe_mode="1"
+        custom:hrskrs_threshold="200" />
+
+    <ca.six.ui.others.gesture_fun.FailedDeleteOnSwipeEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:hint="Swipe with threshold 800"
+        custom:hrskrs_swipe_mode="1"
+        custom:hrskrs_threshold="800" />
+</LinearLayout>

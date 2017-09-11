@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="common_bg">#C5EDCC</color>
+
+    <!-- TabsView -->
+    <color name="white">#ffffff</color>
+    <color name="tabs_view_white_text_color">#f8f8f8</color>
+    <color name="tabs_view_black_bg">#353d43</color>
+    <color name="tabs_view_black_text_color">#353d43</color>
+    <color name="tabs_view_white_bg">#f6f5fa</color>
+    <color name="tabs_view_black_bg_titlebar">#21292c</color>
+
+    <!-- Swipe-Card -->
+    <color name="bel_red_text">#F37B61</color>
+    <color name="bel_grey_text">#4A4C54</color>
+    <color name="bel_lightgrey_text">#72747A</color>
+    <color name="background_material_light">#f4f5f9</color>
+
+    <!-- app lock -->
+    <color name="pin__default_activity_background">#FAFAFA</color>
+    <color name="pin__default_description_text">#54000000</color>
+    <color name="pin__default_item_background">#3C9ADF</color>
+    <color name="pin__default_item_text">#FAFAFA</color>
+
+    <!-- DragScaleCircleView -->
+    <color name="white_translucent">#AAFFFFFF</color>
+    <color name="black_translucent">#B0000000</color>
+    <color name="border">@color/white_translucent</color>
+    <color name="guideline">@color/white_translucent</color>
+    <color name="corner">@android:color/white</color>
+    <color name="surrounding_area">@color/black_translucent</color>
+
+    <!-- SwipeNumberPicker -->
+    <color name="snp_background">#E5E5E5</color>
+    <color name="snp_arrows">#757575</color>
+    <color name="snap_text">#212121</color>
+
+    <!-- Morphy Toolbar -->
+    <color name="mt_title_color">#FFFFFF</color>
+    <color name="mt_subtitle_color">#f2f2f2</color>
+
+    <!-- credit card view -->
+    <color name="green_previous">#cc2f7055</color>
+    <color name="green_continue">#1fc055</color>
+    <color name="chip_color">#d4edfa</color>
+    <color name="chip_inner_color">#e0e4e4</color>
+    <color name="chip_yellow_color">#fbe191</color>
+    <color name="chip_yellow_inner_color">#eed280</color>
+    <color name="purple_color">#5515a9</color>
+    <color name="purple_color_gradient">#651dc4</color>
+    <color name="green_color">#108b4c</color>
+    <color name="green_color_gradient">#1caf57</color>
+    <color name="blue_color">#5D8BF2</color>
+    <color name="blue_color_gradient">#3545AE</color>
+    <color name="pink_color">#d04c84</color>
+    <color name="pink_color_gradient">#d04882</color>
+    <color name="default_color">#363434</color>
+    <color name="default_color_gradient">#434141</color>
+    <color name="brown_color">#800000</color>
+    <color name="brown_color_gradient">#A52A2A</color>
+
+    <!-- Node Flow -->
+    <color name="header_text">#F1F0FF</color>
+    <color name="header_background_with_alpha">#AA8876AA</color>
+    <color name="details_text">#443266</color>
+
+    <!-- Signature Input View -->
+    <color name="sig__default_background">#FAFAFA</color>
+    <color name="sig__default_baseline">#DE000000</color>
+    <color name="sig__default_signature">#8A8A8A</color>
+
+    <!-- RvExcel -->
+    <color name="bg_line">#E7E7E7</color>
+
+</resources>

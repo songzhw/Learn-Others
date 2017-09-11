@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"  android:layout_height="match_parent"
+              android:orientation="vertical" android:background="#fff"    >
+
+    <TextView android:id="@+id/tvSheetSample1" android:layout_width="fill_parent" android:layout_height="wrap_content" android:textSize="25dp" android:layout_marginTop="10dp"
+              android:text="Sample One"/>
+
+    <Button android:id="@+id/btnSheetSample2" android:layout_width="fill_parent" android:layout_height="wrap_content" android:textSize="25dp" android:layout_marginTop="10dp"
+              android:text="Test Two"/>
+
+    <TextView android:id="@+id/tvSheetSample3" android:layout_width="fill_parent" android:layout_height="wrap_content" android:textSize="25dp" android:layout_marginTop="10dp"
+              android:text="Item Three"/>
+
+    <CheckBox android:id="@+id/tvSheetSample4" android:layout_width="40dp" android:layout_height="40dp"  android:layout_marginTop="10dp" android:checked="true"/>
+
+
+
+</LinearLayout>

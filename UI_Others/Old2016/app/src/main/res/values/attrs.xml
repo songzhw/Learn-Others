@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="FirstExRecyclerView">
+        <attr name="defaultItemHeight" format="dimension" />
+        <attr name="featuredItemHeight" format="dimension" />
+        <attr name="snapGravity" format="integer">
+            <enum name="start" value="0" />
+            <enum name="center" value="1" />
+            <enum name="end" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="ExcelPanel">
+        <attr name="left_cell_width" format="dimension" />
+        <attr name="top_cell_height" format="dimension" />
+        <attr name="normal_cell_width" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="TabsView">
+        <attr name="tab_text" format="string" />
+        <attr name="tab_ui_style" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="MaxHeightRelativeLayout">
+        <attr name="max_height" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="CircleLoadingView">
+        <attr name="cl_circleRadius" format="dimension"/>
+        <attr name="cl_fillAnimationDuration" format="integer"/>
+        <attr name="cl_circleStrokeSize" format="dimension"/>
+        <attr name="cl_src" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="timeline_style" >
+        <attr name="marker" format="color|reference"/>
+        <attr name="line" format="color|reference"/>
+        <attr name="marker_size" format="dimension"/>
+        <attr name="line_size" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="SwipeDeck">
+        <attr name="max_visible" format="integer"/>
+        <attr name="rotation_degrees" format="float"/>
+        <attr name="card_spacing" format="dimension"/>
+        <attr name="render_above" format="boolean"/>
+        <attr name="render_below" format="boolean"/>
+        <attr name="opacity_end" format="float"/>
+        <attr name="card_gravity" format="enum">
+            <enum name="top" value="0"/>
+            <enum name="center" value="1"/>
+            <enum name="bottom" value="2"/>
+        </attr>
+    </declare-styleable>
+
+
+    <declare-styleable name="PINInputView">
+        <attr name="pinTextColor" format="reference|color"/>
+        <attr name="pinBackgroundColor" format="reference|color"/>
+    </declare-styleable>
+
+    <declare-styleable name="TrianglifyView">
+        <attr name="cellSize" format="integer" />
+        <attr name="variance" format="integer" />
+        <attr name="bleedX" format="integer" />
+        <attr name="bleedY" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="TagCloudView">
+        <attr name="autoScrollMode">
+            <enum name="disable" value="0"/>
+            <enum name="decelerate" value="1"/>
+            <enum name="uniform" value="2"/>
+        </attr>
+        <attr name="radiusPercent" format="float"/>
+        <attr name="scrollSpeed" format="float"/>
+        <attr name="lightColor" format="color"/>
+        <attr name="darkColor" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="InfinityLoading">
+        <attr name="infl_backColor" format="color" />
+        <attr name="infl_progressColor" format="color" />
+        <attr name="infl_strokeWidth" format="dimension" />
+        <attr name="infl_drawBack" format="boolean" />
+        <attr name="infl_reverse" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="FailedDeleteOnSwipeEditText">
+        <attr name="hrskrs_threshold" format="integer" />
+        <attr name="hrskrs_swipe_mode" format="integer" />
+        <attr name="android:text" />
+        <attr name="android:hint" />
+        <attr name="android:inputType" />
+        <attr name="android:maxLength" />
+        <attr name="android:minLines" />
+        <attr name="android:maxLines" />
+        <attr name="android:ems" />
+        <attr name="android:gravity" />
+        <attr name="android:enabled" />
+    </declare-styleable>
+
+    <declare-styleable name="DragScaleCircleView">
+        <attr name="hasGuideLine" format="boolean" />
+        <attr name="guideLineSize" format="float" />
+        <attr name="guideLineColor" format="integer" />
+        <attr name="borderSize" format="float" />
+        <attr name="borderColor" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="DilatingDotsProgressBar">
+        <attr name="android:radius" />
+        <attr name="android:color" />
+        <attr name="dd_numDots" format="integer" />
+        <attr name="dd_scaleMultiplier" format="float" />
+        <attr name="dd_animationDuration" format="integer" />
+        <attr name="dd_horizontalSpacing" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="SwipeNumberPicker">
+        <attr name="snp_min" format="integer"/>
+        <attr name="snp_max" format="integer"/>
+        <attr name="snp_value" format="integer"/>
+        <attr name="snp_arrowColor" format="color"/>
+        <attr name="snp_backgroundColor" format="color"/>
+        <attr name="snp_numberColor" format="color"/>
+        <attr name="snp_intermediate" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="creditcard">
+        <attr name="cvv" format="integer" />
+        <attr name="card_holder_name" format="string" />
+        <attr name="card_expiration" format="string" />
+        <attr name="card_number" format="string" />
+        <attr name="card_side" format="enum">
+            <enum name="front" value="1" />
+            <enum name="back" value="0" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="CircularFillableLoaders">
+        <attr name="cfl_progress" format="integer"/>
+        <attr name="cfl_border" format="boolean"/>
+        <attr name="cfl_border_width" format="dimension"/>
+        <attr name="cfl_wave_color" format="color"/>
+        <attr name="cfl_wave_amplitude" format="float"/>
+    </declare-styleable>
+
+    <declare-styleable name="GooeyMenu">
+        <attr name="no_of_menu" format="integer" />
+        <attr name="fab_radius" format="dimension" />
+        <attr name="menu_radius" format="dimension" />
+        <attr name="gap_between_menu_fab" format="dimension" />
+        <attr name="menu_drawable" format="reference" />
+    </declare-styleable>
+
+
+    <!-- Swirl -->
+    <attr name="swirl_ridgeColor" format="reference|color"/>
+    <attr name="swirl_errorColor" format="reference|color"/>
+    <declare-styleable name="swirl_Swirl">
+        <attr name="swirl_state" format="enum">
+            <enum name="off" value="0"/>
+            <enum name="on" value="1"/>
+            <enum name="error" value="2"/>
+        </attr>
+    </declare-styleable>
+
+
+    <declare-styleable name="SignatureInputView">
+        <attr name="baselineColor" format="reference|color" />
+        <attr name="signatureColor" format="reference|color" />
+        <attr name="baseline_height" format="reference|dimension" />
+        <attr name="baseline_paddingHorizontal" format="reference|dimension" />
+        <attr name="baseline_paddingBottom" format="reference|dimension" />
+        <attr name="baseline_x_mark" format="reference|dimension" />
+        <attr name="baseline_x_mark_offsetVertical" format="reference|dimension" />
+    </declare-styleable>
+
+</resources>

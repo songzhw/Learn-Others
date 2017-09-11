@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <AutoCompleteTextView
+        android:id="@+id/et_login_name"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+        android:paddingLeft="15dp"
+        android:singleLine="true"
+        android:textColorHint="#999"
+        android:hint="Your Email Account"
+        android:textSize="17dp"
+        android:background="@color/white"
+        />
+
+    <ImageView android:id="@+id/iv_login_show_history_accounts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/ic_arrow_down"
+        />
+
+    <ImageView android:id="@+id/iv_login_del_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_toLeftOf="@id/iv_login_show_history_accounts"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_delete"
+        />
+
+</merge>

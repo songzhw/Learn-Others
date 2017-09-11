@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="mt_morphy_toolbar" type="id"/>
+
+    <!-- RvExcel-->
+    <item type="id" name="lib_excel_panel_tag_key"/>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="150dp" android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"  android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:layout_gravity="center">
+
+        <TextView android:id="@+id/tvRmenuHome" style="@style/tv_wrap2" android:layout_marginTop="30dp" android:layout_marginLeft="20dp"
+            android:text="Home" android:textSize="28dp"/>
+
+        <TextView android:id="@+id/tvRmenuSetting" style="@style/tv_wrap2" android:layout_marginTop="30dp" android:layout_marginLeft="20dp"
+            android:text="Setting"  android:textSize="28dp"/>
+
+        <TextView android:id="@+id/tvRmenuCopyright" style="@style/tv_wrap2" android:layout_marginTop="30dp" android:layout_marginLeft="20dp"
+            android:text="Copyright"  android:textSize="28dp"/>
+
+    </LinearLayout>
+
+</ScrollView>

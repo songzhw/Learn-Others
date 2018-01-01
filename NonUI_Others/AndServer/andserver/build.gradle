@@ -1,0 +1,19 @@
+apply plugin: rootProject.ext.plugins.library
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.android.libraryMinSdkVersion
+        targetSdkVersion rootProject.ext.android.libraryTargetSdkVersion
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', includes: ['*.jar'])
+    compile rootProject.ext.dependencies.httpcore
+    compile rootProject.ext.dependencies.fileupload
+}
+
+apply from: 'https://raw.githubusercontent.com/yanzhenjie/bintray/master/maven.gradle'

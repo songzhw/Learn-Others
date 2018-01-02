@@ -37,10 +37,6 @@ import java.util.concurrent.TimeUnit;
  * Created by Yan Zhenjie on 2017/3/16.
  */
 public class CoreService extends Service {
-
-    /**
-     * AndServer.
-     */
     private Server mServer;
 
     @Override
@@ -52,7 +48,7 @@ public class CoreService extends Service {
                 .timeout(10, TimeUnit.SECONDS)
                 .website(new AssetsWebsite(getAssets(), "web"))
                 .registerHandler("/download", new FileHandler())
-                .registerHandler("/login2", new LoginHandler())//这个login2就是html表单中的<form id="form1" method="post" action="login2">
+                .registerHandler("/login3", new LoginHandler())//这个login2就是html表单中的<form id="form1" method="post" action="login2">
                 .registerHandler("/upload", new UploadHandler())
                 .registerHandler("/image", new ImageHandler())
                 .filter(new HttpCacheFilter())

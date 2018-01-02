@@ -25,21 +25,21 @@ import org.apache.httpcore.message.HeaderGroup;
 /**
  * Created by YanZhenjie on 2017/12/19.
  */
-public class View {
+public class RespStub {
 
     private int mHttpCode;
     private HttpEntity mHttpEntity;
     private HeaderGroup mHeaderGroup;
 
-    public View(int httpCode) {
+    public RespStub(int httpCode) {
         this(httpCode, (HttpEntity) null);
     }
 
-    public View(int httpCode, String httpBody) {
+    public RespStub(int httpCode, String httpBody) {
         this(httpCode, new StringEntity(httpBody, ContentType.TEXT_PLAIN));
     }
 
-    public View(int httpCode, HttpEntity httpEntity) {
+    public RespStub(int httpCode, HttpEntity httpEntity) {
         this.mHttpCode = httpCode;
         this.mHttpEntity = httpEntity;
         this.mHeaderGroup = new HeaderGroup();

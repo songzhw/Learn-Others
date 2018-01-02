@@ -53,10 +53,6 @@ public class ServerManager extends BroadcastReceiver {
         activity.stopService(serviceIntent);
     }
 
-
-
-
-
     /**
      * Notify serverStart.
      *

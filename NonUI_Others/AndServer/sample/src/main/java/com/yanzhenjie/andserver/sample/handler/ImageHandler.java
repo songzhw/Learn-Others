@@ -20,7 +20,7 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 
 import com.yanzhenjie.andserver.SimpleRequestHandler;
-import com.yanzhenjie.andserver.view.View;
+import com.yanzhenjie.andserver.view.RespStub;
 import com.yanzhenjie.andserver.sample.App;
 import com.yanzhenjie.andserver.sample.R;
 
@@ -47,11 +47,11 @@ public class ImageHandler extends SimpleRequestHandler {
     private File mFile = new File(Environment.getExternalStorageDirectory(), "xxx.jpg");
 
     @Override
-    protected View handle(HttpRequest request) throws HttpException, IOException {
+    protected RespStub handle(HttpRequest request) throws HttpException, IOException {
         writeToSdCard();
 
         HttpEntity httpEntity = new FileEntity(mFile, ContentType.create(getMimeType(mFile.getAbsolutePath()), Charset.defaultCharset()));
-        return new View(200, httpEntity);
+        return new RespStub(200, httpEntity);
     }
 
     private void writeToSdCard() throws IOException {

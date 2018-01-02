@@ -15,7 +15,7 @@
  */
 package com.yanzhenjie.andserver.website;
 
-import com.yanzhenjie.andserver.view.View;
+import com.yanzhenjie.andserver.view.RespStub;
 import com.yanzhenjie.andserver.exception.NotFoundException;
 
 import org.apache.httpcore.HttpException;
@@ -94,17 +94,17 @@ public abstract class SimpleWebsite implements WebSite {
 
     @Override
     public void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException, IOException {
-        View view = handle(request, response);
-        response.setStatusCode(view.getHttpCode());
-        response.setEntity(view.getHttpEntity());
-        response.setHeaders(view.getHeaders());
+        RespStub respStub = handle(request, response);
+        response.setStatusCode(respStub.getHttpCode());
+        response.setEntity(respStub.getHttpEntity());
+        response.setHeaders(respStub.getHeaders());
     }
 
-    protected View handle(HttpRequest request, HttpResponse response) throws HttpException, IOException {
+    protected RespStub handle(HttpRequest request, HttpResponse response) throws HttpException, IOException {
         return handle(request);
     }
 
-    protected View handle(HttpRequest request) throws HttpException, IOException {
+    protected RespStub handle(HttpRequest request) throws HttpException, IOException {
         throw new NotFoundException(getRequestPath(request));
     }
 }

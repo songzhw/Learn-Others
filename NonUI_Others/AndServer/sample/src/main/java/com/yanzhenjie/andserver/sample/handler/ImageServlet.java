@@ -42,7 +42,7 @@ import static com.yanzhenjie.andserver.util.FileUtils.getMimeType;
 /**
  * Created by YanZhenjie on 2017/12/20.
  */
-public class ImageHandler extends SimpleRequestHandler {
+public class ImageServlet extends SimpleRequestHandler {
 
     private File mFile = new File(Environment.getExternalStorageDirectory(), "xxx.jpg");
 
@@ -56,7 +56,7 @@ public class ImageHandler extends SimpleRequestHandler {
 
     private void writeToSdCard() throws IOException {
         if (!mFile.exists()) {
-            synchronized (ImageHandler.class) {
+            synchronized (ImageServlet.class) {
                 if (!mFile.exists()) {
                     boolean b = mFile.createNewFile();
                     if (!b) {

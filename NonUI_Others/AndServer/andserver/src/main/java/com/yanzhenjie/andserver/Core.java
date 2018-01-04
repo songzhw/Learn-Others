@@ -247,7 +247,7 @@ final class Core extends Thread implements Server {
         }
 
         @Override
-        public Server.Builder registerHandler(String path, RequestHandler handler) {
+        public Server.Builder registerServlet(String path, RequestHandler handler) {
             this.mRequestHandlerMap.put(path, handler);
             return this;
         }

@@ -37,7 +37,7 @@ import static java.net.HttpURLConnection.HTTP_OK;
  * <p>Login Handler.</p>
  * Created by Yan Zhenjie on 2016/6/13.
  */
-public class LoginHandler implements RequestHandler {
+public class LoginServlet implements RequestHandler {
 
     @RequestMapping(method = {RequestMethod.POST})
     @Override

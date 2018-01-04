@@ -23,10 +23,10 @@ import android.support.annotation.Nullable;
 import com.yanzhenjie.andserver.AndServer;
 import com.yanzhenjie.andserver.Server;
 import com.yanzhenjie.andserver.filter.HttpCacheFilter;
-import com.yanzhenjie.andserver.sample.handler.FileHandler;
-import com.yanzhenjie.andserver.sample.handler.ImageHandler;
-import com.yanzhenjie.andserver.sample.handler.LoginHandler;
-import com.yanzhenjie.andserver.sample.handler.UploadHandler;
+import com.yanzhenjie.andserver.sample.handler.FileServlet;
+import com.yanzhenjie.andserver.sample.handler.ImageServlet;
+import com.yanzhenjie.andserver.sample.handler.LoginServlet;
+import com.yanzhenjie.andserver.sample.handler.UploadServlet;
 import com.yanzhenjie.andserver.sample.util.NetUtils;
 import com.yanzhenjie.andserver.website.AssetsWebsite;
 
@@ -47,10 +47,10 @@ public class CoreService extends Service {
                 .port(8080)
                 .timeout(10, TimeUnit.SECONDS)
                 .website(new AssetsWebsite(getAssets(), "web"))
-                .registerHandler("/download", new FileHandler())
-                .registerHandler("/login3", new LoginHandler())//这个login3就是html表单中的<form id="form1" method="post" action="login3">
-                .registerHandler("/upload", new UploadHandler())
-                .registerHandler("/image", new ImageHandler())
+                .registerServlet("/download", new FileServlet())
+                .registerServlet("/login3", new LoginServlet())//这个login3就是html表单中的<form id="form1" method="post" action="login3">
+                .registerServlet("/upload", new UploadServlet())
+                .registerServlet("/image", new ImageServlet())
                 .filter(new HttpCacheFilter())
                 .listener(mListener)
                 .build();

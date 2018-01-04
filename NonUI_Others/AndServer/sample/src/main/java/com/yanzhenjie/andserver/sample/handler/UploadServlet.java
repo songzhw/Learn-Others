@@ -46,7 +46,7 @@ import static java.net.HttpURLConnection.HTTP_SERVER_ERROR;
  * <p>Upload file handler.</p>
  * Created by Yan Zhenjie on 2016/6/13.
  */
-public class UploadHandler implements RequestHandler {
+public class UploadServlet implements RequestHandler {
 
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
     @Override

@@ -41,7 +41,7 @@ import static com.yanzhenjie.andserver.util.FileUtils.getMimeType;
  * <p>Returns a file.</p>
  * Created by Yan Zhenjie on 2016/7/1.
  */
-public class FileHandler implements RequestHandler {
+public class FileServlet implements RequestHandler {
 
     @RequestMapping(method = {RequestMethod.GET})
     @Override

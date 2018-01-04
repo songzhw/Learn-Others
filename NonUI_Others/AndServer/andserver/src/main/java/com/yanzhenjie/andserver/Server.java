@@ -94,7 +94,7 @@ public interface Server {
         /**
          * Register a {@link RequestHandler} for a path.
          */
-        Builder registerHandler(String path, RequestHandler handler);
+        Builder registerServlet(String path, RequestHandler handler);
 
         /**
          * Set Handler's filter.

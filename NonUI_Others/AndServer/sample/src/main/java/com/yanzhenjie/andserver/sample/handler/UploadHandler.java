@@ -38,6 +38,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
+import static java.net.HttpURLConnection.HTTP_OK;
+import static java.net.HttpURLConnection.HTTP_SERVER_ERROR;
+
 /**
  * <p>Upload file handler.</p>
  * Created by Yan Zhenjie on 2016/6/13.
@@ -48,19 +52,19 @@ public class UploadHandler implements RequestHandler {
     @Override
     public void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException, IOException {
         if (!HttpRequestParser.isMultipartContentRequest(request)) { // Is POST and upload.
-            response(403, "You must upload file.", response);
+            response(HTTP_FORBIDDEN, "You must upload file.", response);
         } else {
             final File saveDirectory = Environment.getExternalStorageDirectory();
 
             if (saveDirectory.isDirectory()) {
                 try {
                     processFileUpload(request, saveDirectory);
-                    response(200, "Ok.", response);
+                    response(HTTP_OK, "Ok.", response);
                 } catch (Exception e) {
-                    response(500, "Save the file when the error occurs.", response);
+                    response(HTTP_SERVER_ERROR, "Save the file when the error occurs.", response);
                 }
             } else {
-                response(500, "The server can not save the file.", response);
+                response(HTTP_SERVER_ERROR, "The server can not save the file.", response);
             }
         }
     }

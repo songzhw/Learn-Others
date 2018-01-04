@@ -30,6 +30,9 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.Map;
 
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
+import static java.net.HttpURLConnection.HTTP_OK;
+
 /**
  * <p>Login Handler.</p>
  * Created by Yan Zhenjie on 2016/6/13.
@@ -44,7 +47,7 @@ public class LoginHandler implements RequestHandler {
         if (!params.containsKey("username") || !params.containsKey("password")) {
             StringEntity stringEntity = new StringEntity("Please enter your account number and password.", "utf-8");
 
-            response.setStatusCode(400);
+            response.setStatusCode(HTTP_BAD_REQUEST);
             response.setEntity(stringEntity);
             return;
         }
@@ -55,12 +58,12 @@ public class LoginHandler implements RequestHandler {
         if ("123".equals(userName) && "123".equals(password)) {
             StringEntity stringEntity = new StringEntity("Login Succeed", "utf-8");
 
-            response.setStatusCode(200);
+            response.setStatusCode(HTTP_OK);
             response.setEntity(stringEntity);
         } else {
             StringEntity stringEntity = new StringEntity("Login Failed", "utf-8");
 
-            response.setStatusCode(400);
+            response.setStatusCode(HTTP_BAD_REQUEST);
             response.setEntity(stringEntity);
         }
     }

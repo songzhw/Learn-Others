@@ -48,7 +48,7 @@ public class CoreService extends Service {
                 .timeout(10, TimeUnit.SECONDS)
                 .website(new AssetsWebsite(getAssets(), "web"))
                 .registerHandler("/download", new FileHandler())
-                .registerHandler("/login3", new LoginHandler())//这个login2就是html表单中的<form id="form1" method="post" action="login2">
+                .registerHandler("/login3", new LoginHandler())//这个login3就是html表单中的<form id="form1" method="post" action="login3">
                 .registerHandler("/upload", new UploadHandler())
                 .registerHandler("/image", new ImageHandler())
                 .filter(new HttpCacheFilter())

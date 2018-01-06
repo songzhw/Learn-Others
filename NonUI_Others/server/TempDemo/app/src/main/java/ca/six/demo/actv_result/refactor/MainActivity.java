@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent it = new Intent(this, ActivityResultDemo.class);
         startActivityForResult(it, 11);
 
-        ImplicitResultActivity.startActivityForResult(this, ActivityResultDemo.class,
+        ActivityResultHelper.startActivityForResult(this, ActivityResultDemo.class,
                 new IActivityResultCallback() {
                     @Override
                     public void onSucc(Intent it) {

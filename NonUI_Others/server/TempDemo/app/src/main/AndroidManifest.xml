@@ -16,7 +16,7 @@
         </activity>
 
         <activity android:name=".actv_result.refactor.ActivityResultDemo"/>
-        <activity android:name=".actv_result.refactor.ImplicitResultActivity"/>
+        <activity android:name=".actv_result.refactor.ActivityResultHelper"/>
     </application>
 
 </manifest>

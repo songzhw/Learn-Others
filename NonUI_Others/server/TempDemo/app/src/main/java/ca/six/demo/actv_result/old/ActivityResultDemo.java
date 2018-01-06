@@ -1,4 +1,4 @@
-package ca.six.demo.actv_result;
+package ca.six.demo.actv_result.old;
 
 import android.content.Intent;
 import android.os.Bundle;

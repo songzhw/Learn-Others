@@ -8,14 +8,15 @@
         android:roundIcon="@drawable/ic_launcher_round"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".actv_result.MainActivity">
+        <activity android:name=".actv_result.refactor.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".actv_result.ActivityResultDemo"/>
+        <activity android:name=".actv_result.refactor.ActivityResultDemo"/>
+        <activity android:name=".actv_result.refactor.ImplicitResultActivity"/>
     </application>
 
 </manifest>

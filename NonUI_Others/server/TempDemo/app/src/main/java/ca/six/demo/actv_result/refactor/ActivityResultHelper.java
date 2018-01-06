@@ -43,7 +43,7 @@ public class ActivityResultHelper extends Activity {
 
     @Override
     protected void onDestroy() {
-        resultCallback = null;
+        resultCallback = null; // set the listener to null, to avoid memory leak
         super.onDestroy();
     }
 

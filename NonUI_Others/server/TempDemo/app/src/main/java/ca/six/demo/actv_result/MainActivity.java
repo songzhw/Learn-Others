@@ -1,10 +1,12 @@
-package ca.six.demo;
+package ca.six.demo.actv_result;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import ca.six.demo.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView tvMain;
@@ -30,4 +32,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tvMain.setText("Message from page B");
         }
     }
+
 }

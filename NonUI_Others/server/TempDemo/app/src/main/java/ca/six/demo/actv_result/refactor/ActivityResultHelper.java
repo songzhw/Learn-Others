@@ -9,7 +9,7 @@ import android.content.Intent;
  */
 
 public class ActivityResultHelper {
-    public void startActivityForResult(Context context, Class<Activity> target) {
+    public static void startActivityForResult(Context context, Class<Activity> target, IActivityResultCallback callback) {
         Intent it = new Intent(context, ImplicitResultActivity.class);
         it.putExtra("target_class", target);
         context.startActivity(it);

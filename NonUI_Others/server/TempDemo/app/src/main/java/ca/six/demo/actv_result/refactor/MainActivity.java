@@ -24,13 +24,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         Intent it = new Intent(this, ActivityResultDemo.class);
         startActivityForResult(it, 11);
+
+        ImplicitResultActivity.startActivityForResult(this, ActivityResultDemo.class,
+                new IActivityResultCallback() {
+                    @Override
+                    public void onSucc(Intent it) {
+                        tvMain.setText("Message from page B");
+                    }
+
+                    @Override
+                    public void onFail(Intent it) {
+                        tvMain.setText("Error from page B");
+                    }
+                });
+
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == 11 && resultCode == RESULT_OK){
-            tvMain.setText("Message from page B");
-        }
-    }
 
 }

@@ -22,9 +22,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        Intent it = new Intent(this, ActivityResultDemo.class);
-        startActivityForResult(it, 11);
-
         ActivityResultHelper.startActivityForResult(this, ActivityResultDemo.class,
                 new IActivityResultCallback() {
                     @Override
@@ -37,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         tvMain.setText("Error from page B");
                     }
                 });
-
     }
 
 

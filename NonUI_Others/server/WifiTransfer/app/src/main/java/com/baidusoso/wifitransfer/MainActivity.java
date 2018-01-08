@@ -37,13 +37,10 @@ import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements Animator.AnimatorListener {
 
-    Unbinder mUnbinder;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-    @BindView(R.id.fab)
-    FloatingActionButton mFab;
-    @BindView(R.id.booklist)
-    RecyclerView mBookList;
+    Unbinder mUnbinder; // ButterKnife的一个类. 用于onDestory()中释放引用
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.fab) FloatingActionButton mFab;
+    @BindView(R.id.booklist) RecyclerView mBookList;
 
     List<String> mBooks = new ArrayList<>();
     BookshelfAdapter mBookshelfAdapter;
@@ -52,66 +49,18 @@ public class MainActivity extends AppCompatActivity implements Animator.Animator
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mUnbinder = ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
+
         Timber.plant(new Timber.DebugTree());
         RxBus.get().register(this);
-        initRecyclerView();
-    }
 
-    @OnClick(R.id.fab)
-    public void onClick(View view) {
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mFab, "translationY", 0, mFab.getHeight() * 2).setDuration(200L);
-        objectAnimator.setInterpolator(new AccelerateInterpolator());
-        objectAnimator.addListener(this);
-        objectAnimator.start();
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        WebService.stop(this);
-        if (mUnbinder != null) {
-            mUnbinder.unbind();
-        }
-        RxBus.get().unregister(this);
-    }
-
-    @Subscribe(tags = {@Tag(Constants.RxBusEventType.POPUP_MENU_DIALOG_SHOW_DISMISS)})
-    public void onPopupMenuDialogDismiss(Integer type) {
-        if (type == Constants.MSG_DIALOG_DISMISS) {
-            WebService.stop(this);
-            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mFab, "translationY", mFab.getHeight() * 2, 0).setDuration(200L);
-            objectAnimator.setInterpolator(new AccelerateInterpolator());
-            objectAnimator.start();
-        }
-    }
-
-    @Override
-    public void onAnimationStart(Animator animation) {
-        WebService.start(this);
-        new PopupMenuDialog(this).builder().setCancelable(false)
-                .setCanceledOnTouchOutside(false).show();
-    }
-
-    @Override
-    public void onAnimationEnd(Animator animation) {
-    }
-
-    @Override
-    public void onAnimationCancel(Animator animation) {
-    }
-
-    @Override
-    public void onAnimationRepeat(Animator animation) {
-    }
-
-    void initRecyclerView() {
         mBookshelfAdapter = new BookshelfAdapter();
         mBookList.setHasFixedSize(true);
         mBookList.setLayoutManager(new GridLayoutManager(this, 3));
         mBookList.setAdapter(mBookshelfAdapter);
+
         RxBus.get().post(Constants.RxBusEventType.LOAD_BOOK_LIST, 0);
     }
 
@@ -135,48 +84,39 @@ public class MainActivity extends AppCompatActivity implements Animator.Animator
         });
     }
 
-    @Deprecated
-    private void loadBookList() {
-        Observable.create(new Observable.OnSubscribe<List<String>>() {
-            @Override
-            public void call(Subscriber<? super List<String>> subscriber) {
-                List<String> books = new ArrayList<>();
-                File dir = Constants.DIR;
-                if (dir.exists() && dir.isDirectory()) {
-                    String[] fileNames = dir.list();
-                    for (String fileName : fileNames) {
-                        books.add(fileName);
-                    }
-                }
-                subscriber.onNext(books);
-                subscriber.onCompleted();
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<String>>() {
-            @Override
-            public void onCompleted() {
-                mBookshelfAdapter.notifyDataSetChanged();
-            }
+    @OnClick(R.id.fab)
+    public void onClick(View view) {
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mFab, "translationY", 0, mFab.getHeight() * 2).setDuration(200L);
+        objectAnimator.setInterpolator(new AccelerateInterpolator());
+        objectAnimator.addListener(this);
+        objectAnimator.start();
 
-            @Override
-            public void onError(Throwable e) {
-                mBookshelfAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onNext(List<String> books) {
-                mBooks.clear();
-                mBooks.addAll(books);
-            }
-        });
     }
+
+    @Override
+    public void onAnimationStart(Animator animation) {
+        WebService.start(this);
+
+        new PopupMenuDialog(this).builder()
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(false)
+                .show();
+    }
+
+    @Override
+    public void onAnimationEnd(Animator animation) {}
+    @Override
+    public void onAnimationCancel(Animator animation) {}
+    @Override
+    public void onAnimationRepeat(Animator animation) {}
+
+
 
     class BookshelfAdapter extends RecyclerView.Adapter<BookshelfAdapter.MyViewHolder> {
 
         @Override
         public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            MyViewHolder holder = new MyViewHolder(LayoutInflater.from(
-                    MainActivity.this).inflate(R.layout.layout_book_item, parent,
-                    false));
+            MyViewHolder holder = new MyViewHolder(LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_book_item, parent,false));
             return holder;
         }
 
@@ -192,11 +132,32 @@ public class MainActivity extends AppCompatActivity implements Animator.Animator
 
         class MyViewHolder extends RecyclerView.ViewHolder {
             TextView mTvBookName;
-
             public MyViewHolder(View view) {
                 super(view);
                 mTvBookName = (TextView) view.findViewById(R.id.book_name);
             }
         }
+
+    }
+
+    @Subscribe(tags = {@Tag(Constants.RxBusEventType.POPUP_MENU_DIALOG_SHOW_DISMISS)})
+    public void onPopupMenuDialogDismiss(Integer type) {
+        if (type == Constants.MSG_DIALOG_DISMISS) {
+            WebService.stop(this);
+
+            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mFab, "translationY", mFab.getHeight() * 2, 0).setDuration(200L);
+            objectAnimator.setInterpolator(new AccelerateInterpolator());
+            objectAnimator.start();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        WebService.stop(this);
+        if (mUnbinder != null) {
+            mUnbinder.unbind();
+        }
+        RxBus.get().unregister(this);
     }
 }

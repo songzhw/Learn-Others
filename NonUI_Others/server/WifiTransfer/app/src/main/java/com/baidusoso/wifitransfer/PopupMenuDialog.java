@@ -90,32 +90,6 @@ public class PopupMenuDialog {
         registerWifiConnectChangedReceiver();
     }
 
-    @OnClick({R.id.shared_wifi_cancel, R.id.shared_wifi_settings})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.shared_wifi_cancel:
-                dialog.dismiss();
-                break;
-            case R.id.shared_wifi_settings:
-                context.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                break;
-        }
-    }
-
-    void registerWifiConnectChangedReceiver() {
-        IntentFilter intentFilter = new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        context.registerReceiver(mWifiConnectChangedReceiver, intentFilter);
-    }
-
-    void unregisterWifiConnectChangedReceiver() {
-        context.unregisterReceiver(mWifiConnectChangedReceiver);
-    }
-
-    @Subscribe(tags = {@Tag(Constants.RxBusEventType.WIFI_CONNECT_CHANGE_EVENT)})
-    public void onWifiConnectStateChanged(NetworkInfo.State state) {
-        checkWifiState(state);
-    }
-
     void checkWifiState(NetworkInfo.State state) {
         if (state == NetworkInfo.State.CONNECTED || state == NetworkInfo.State.CONNECTING) {
             if (state == NetworkInfo.State.CONNECTED) {
@@ -130,6 +104,35 @@ public class PopupMenuDialog {
         }
         onWifiDisconnected();
     }
+
+
+    void registerWifiConnectChangedReceiver() {
+        IntentFilter intentFilter = new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        context.registerReceiver(mWifiConnectChangedReceiver, intentFilter);
+    }
+
+
+    @OnClick({R.id.shared_wifi_cancel, R.id.shared_wifi_settings})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.shared_wifi_cancel:
+                dialog.dismiss();
+                break;
+            case R.id.shared_wifi_settings:
+                context.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                break;
+        }
+    }
+
+    void unregisterWifiConnectChangedReceiver() {
+        context.unregisterReceiver(mWifiConnectChangedReceiver);
+    }
+
+    @Subscribe(tags = {@Tag(Constants.RxBusEventType.WIFI_CONNECT_CHANGE_EVENT)})
+    public void onWifiConnectStateChanged(NetworkInfo.State state) {
+        checkWifiState(state);
+    }
+
 
     void onWifiDisconnected() {
         mTxtTitle.setText(R.string.wlan_disabled);

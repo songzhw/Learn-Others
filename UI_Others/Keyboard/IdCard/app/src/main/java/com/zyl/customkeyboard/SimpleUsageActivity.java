@@ -18,55 +18,27 @@ public class SimpleUsageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simpleusage);
+
         final KeyboardView keyboardView = (KeyboardView) findViewById(R.id.keyboard_idcard);
         Keyboard keyboard = new Keyboard(this, R.xml.idcard_keyboard);
         keyboardView.setKeyboard(keyboard);
         keyboardView.setOnKeyboardActionListener(new KeyboardView.OnKeyboardActionListener() {
-            @Override
-            public void onPress(int primaryCode) {
-
-            }
-
-            @Override
-            public void onRelease(int primaryCode) {
-
-            }
-
-            @Override
-            public void onKey(int primaryCode, int[] keyCodes) {
-
-            }
-
-            @Override
-            public void onText(CharSequence text) {
-
-            }
-
-            @Override
-            public void swipeLeft() {
-
-            }
-
-            @Override
-            public void swipeRight() {
-
-            }
-
-            @Override
-            public void swipeDown() {
-
-            }
-
-            @Override
-            public void swipeUp() {
-
-            }
+            @Override            public void onPress(int primaryCode) {            }
+            @Override            public void onRelease(int primaryCode) {            }
+            @Override            public void onKey(int primaryCode, int[] keyCodes) {            }
+            @Override            public void onText(CharSequence text) {            }
+            @Override            public void swipeLeft() {            }
+            @Override            public void swipeRight() {            }
+            @Override            public void swipeDown() {            }
+            @Override            public void swipeUp() {            }
         });
+
         findViewById(R.id.et_identity_card).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 keyboardView.setVisibility(View.VISIBLE);
             }
         });
+
     }
 }

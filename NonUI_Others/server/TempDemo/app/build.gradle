@@ -9,6 +9,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -30,11 +32,12 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$supportVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    implementation ('cn.bmob.android:bmob-sdk:3.5.1') {
-        exclude module: "gson"
-    }
-    implementation ('com.squareup.retrofit2:retrofit:2.1.0')
-    implementation ('com.squareup.retrofit2:converter-gson:2.1.0')
+    compile 'cn.bmob.android:bmob-sdk:3.5.2'
+    compile 'com.squareup.okhttp3:okhttp:3.4.2'
+    compile('com.facebook.fresco:imagepipeline-okhttp3:0.12.0', {
+        exclude module: 'okhttp'
+    })
+    compile 'com.facebook.fresco:fresco:0.12.0'
 
 //    testImplementation 'junit:junit:4.12'
 //    androidTestImplementation 'com.android.support.test:runner:1.0.1'

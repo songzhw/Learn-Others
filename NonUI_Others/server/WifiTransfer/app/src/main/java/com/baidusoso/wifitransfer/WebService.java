@@ -263,8 +263,8 @@ public class WebService extends Service {
     private void sendResources(final AsyncHttpServerRequest request, final AsyncHttpServerResponse response) {
         try {
             String fullPath = request.getPath();
-            fullPath = fullPath.replace("%20", " ");
-            String resourceName = fullPath;
+            fullPath = fullPath.replace("%20", " "); // %20是space (http://www.w3school.com.cn/tags/html_ref_urlencode.html)
+            String resourceName = fullPath; //=> 如"/css/style.css"
             if (resourceName.startsWith("/")) {
                 resourceName = resourceName.substring(1);
             }
@@ -273,7 +273,7 @@ public class WebService extends Service {
             }
             if (!TextUtils.isEmpty(getContentTypeByResourceName(resourceName))) {
                 response.setContentType(getContentTypeByResourceName(resourceName));
-            }
+            } //=> 仍以"/css/style.css"为例, 这时resp变成了:"HTTP/1.1 200 OK             Connection: Keep-Alive            Content-Type: text/css;charset=utf-8           "
             BufferedInputStream bInputStream = new BufferedInputStream(getAssets().open("wifi/" + resourceName));
             response.sendStream(bInputStream, bInputStream.available());
         } catch (IOException e) {

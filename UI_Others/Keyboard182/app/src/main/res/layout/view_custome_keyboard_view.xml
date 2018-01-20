@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <kq.cn.customkeyboard.CustomKeyboardView
+        android:id="@+id/keyboard_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="#fff"
+        android:keyBackground="@drawable/bg_custom_key_gray"
+        android:keyTextColor="@color/text_color_gray_3"
+        android:keyTextSize="@dimen/text_size_large" />
+
+    <EditText
+        android:id="@+id/et_focus_scavenger"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+</FrameLayout>

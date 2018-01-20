@@ -22,8 +22,6 @@ public class MainActivity extends AppCompatActivity {
     EditText etInputNumBuy;
     @BindView(R.id.et_input_num_sell)
     EditText etInputNumSell;
-    @BindView(R.id.layout_opt_container)
-    LinearLayout optContainer;
     @BindView(R.id.view_under)
     View underView;
 

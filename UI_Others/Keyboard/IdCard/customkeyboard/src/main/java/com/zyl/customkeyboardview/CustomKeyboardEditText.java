@@ -102,7 +102,7 @@ public class CustomKeyboardEditText extends EditText implements KeyboardView.OnK
                 }
                 break;
             case 9994://左移
-                setSelection(startIndex-1);
+                setSelection(startIndex - 1);
                 break;
             case 9995://重输
                 editable.clear();
@@ -119,44 +119,35 @@ public class CustomKeyboardEditText extends EditText implements KeyboardView.OnK
     }
 
     @Override
-    public void onText(CharSequence text) {
-
-    }
+    public void onText(CharSequence text) {    }
 
     @Override
-    public void swipeLeft() {
-
-    }
+    public void swipeLeft() {    }
 
     @Override
-    public void swipeRight() {
-
-    }
+    public void swipeRight() {    }
 
     @Override
-    public void swipeDown() {
-
-    }
+    public void swipeDown() {    }
 
     @Override
-    public void swipeUp() {
-
-    }
+    public void swipeUp() {    }
 
     /**
      * 根据key code 获取 Keyboard.Key 对象
+     *
      * @param primaryCode
      * @return
      */
     private Keyboard.Key getKeyByKeyCode(int primaryCode) {
-        if(null != mKeyboard){
+        if (null != mKeyboard) {
             List<Keyboard.Key> keyList = mKeyboard.getKeys();
-            for (int i =0,size= keyList.size(); i < size; i++) {
+            for (int i = 0, size = keyList.size(); i < size; i++) {
                 Keyboard.Key key = keyList.get(i);
 
                 int codes[] = key.codes;
 
-                if(codes[0] == primaryCode){
+                if (codes[0] == primaryCode) {
                     return key;
                 }
             }
@@ -222,11 +213,11 @@ public class CustomKeyboardEditText extends EditText implements KeyboardView.OnK
     /**
      * 屏蔽系统输入法
      */
-    private void notSystemSoftInput(){
+    private void notSystemSoftInput() {
         if (Build.VERSION.SDK_INT <= 10) {
             setInputType(InputType.TYPE_NULL);
         } else {
-            ((Activity)getContext()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            ((Activity) getContext()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             try {
                 Class<EditText> cls = EditText.class;
                 Method setShowSoftInputOnFocus = cls.getMethod("setShowSoftInputOnFocus", boolean.class);

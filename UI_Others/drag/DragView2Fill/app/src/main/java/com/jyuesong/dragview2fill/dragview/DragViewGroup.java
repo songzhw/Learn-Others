@@ -105,7 +105,6 @@ public class DragViewGroup extends ViewGroup {
         mHeight = dm.heightPixels;
     }
 
-
     private View createView1() {
         View view = mLayoutInflater.inflate(R.layout.fast_item_left, this, false);
         LayoutParams layoutParams = view.getLayoutParams();
@@ -124,7 +123,6 @@ public class DragViewGroup extends ViewGroup {
         return view;
     }
 
-
     private View createView3() {
         View view = mLayoutInflater.inflate(R.layout.fast_item_left3, this, false);
         LayoutParams layoutParams = view.getLayoutParams();
@@ -133,8 +131,6 @@ public class DragViewGroup extends ViewGroup {
         view.setTag(T_ZHUGUAN);
         return view;
     }
-
-
 
     @Override
     protected LayoutParams generateDefaultLayoutParams() {
@@ -157,22 +153,15 @@ public class DragViewGroup extends ViewGroup {
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
             measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0);
-            // 测量逻辑不用管太多
-            int childWidth;
-            int childHeight;
-            //直接强制写死宽高
-            childWidth = MeasureSpec.makeMeasureSpec(child.getMeasuredWidth(), MeasureSpec.EXACTLY);
-            childHeight = MeasureSpec.makeMeasureSpec(child.getMeasuredHeight(), MeasureSpec.EXACTLY);
-            child.measure(childWidth, childHeight);
         }
 
         //这的宽高可根据需求自己写测量逻辑
         super.onMeasure(MeasureSpec.makeMeasureSpec(mWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(mHeight, MeasureSpec.EXACTLY));
-        Rect rect1 = new Rect(getPaddingLeft(), getPaddingTop(), getPaddingLeft() + getMeasuredWidth() / 3, getPaddingTop() + getMeasuredHeight());
-        mBorders[0] = rect1;
-        Rect rect2 = new Rect(getPaddingLeft() + getMeasuredWidth() / 3, getPaddingTop(), getPaddingLeft() + getMeasuredWidth(), getPaddingTop() + getMeasuredHeight());
-        mBorders[1] = rect2;
+        mBorders[0] = new Rect(getPaddingLeft(), getPaddingTop(), getPaddingLeft() + getMeasuredWidth() / 3, getPaddingTop() + getMeasuredHeight());
+        mBorders[1] = new Rect(getPaddingLeft() + getMeasuredWidth() / 3, getPaddingTop(), getPaddingLeft() + getMeasuredWidth(), getPaddingTop() + getMeasuredHeight());
     }
+
+
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {

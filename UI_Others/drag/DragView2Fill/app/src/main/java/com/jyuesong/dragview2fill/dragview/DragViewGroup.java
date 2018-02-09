@@ -157,11 +157,14 @@ public class DragViewGroup extends ViewGroup {
 
         //这的宽高可根据需求自己写测量逻辑
         super.onMeasure(MeasureSpec.makeMeasureSpec(mWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(mHeight, MeasureSpec.EXACTLY));
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
         mBorders[0] = new Rect(getPaddingLeft(), getPaddingTop(), getPaddingLeft() + getMeasuredWidth() / 3, getPaddingTop() + getMeasuredHeight());
         mBorders[1] = new Rect(getPaddingLeft() + getMeasuredWidth() / 3, getPaddingTop(), getPaddingLeft() + getMeasuredWidth(), getPaddingTop() + getMeasuredHeight());
     }
-
-
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {

@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by jiang on 29/01/2018.
  */
-public class FastModel implements Serializable{
+public class FastModel implements Serializable {
 
     private int type;
     private int count;

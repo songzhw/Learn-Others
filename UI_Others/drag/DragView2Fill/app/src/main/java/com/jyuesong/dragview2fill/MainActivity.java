@@ -1,7 +1,7 @@
 package com.jyuesong.dragview2fill;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.jyuesong.dragview2fill.dragview.DragViewGroup;
 import com.jyuesong.dragview2fill.dragview.RecyclerViewHelper;

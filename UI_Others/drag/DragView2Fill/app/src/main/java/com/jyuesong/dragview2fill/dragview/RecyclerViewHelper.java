@@ -340,11 +340,6 @@ public class RecyclerViewHelper extends ItemTouchHelper.Callback {
         }
 
         @Override
-        public boolean clickable() {
-            return false;
-        }
-
-        @Override
         public int getItemCount() {
             return mList.size();
         }

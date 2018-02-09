@@ -95,19 +95,8 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    public BaseViewHolder setVisibility(@IdRes int resID, @Visibility int visibility) {
-        switch (visibility) {
-            case VISIBLE:
-                getView(resID).setVisibility(View.VISIBLE);
-                break;
-            case INVISIBLE:
-                getView(resID).setVisibility(View.INVISIBLE);
-                break;
-            case GONE:
-                getView(resID).setVisibility(View.GONE);
-                break;
-
-        }
+    public BaseViewHolder setVisibility(@IdRes int resID, int visibility) {
+        getView(resID).setVisibility(visibility);
         return this;
 
     }
@@ -116,17 +105,6 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         ((TextView) getView(id)).setTextColor(textColor);
         return this;
     }
-
-
-    @IntDef({VISIBLE, INVISIBLE, GONE})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface Visibility {
-    }
-
-    public static final int VISIBLE = 0x00000000;
-    public static final int INVISIBLE = 0x00000004;
-
-    public static final int GONE = 0x00000008;
 
 
 }

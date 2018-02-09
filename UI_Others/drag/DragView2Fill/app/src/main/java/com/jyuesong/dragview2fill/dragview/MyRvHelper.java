@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * Created by jiang on 29/01/2018.
  */
-public class RecyclerViewHelper extends ItemTouchHelper.Callback {
+public class MyRvHelper extends ItemTouchHelper.Callback {
 
 
     private ViewGroup mParent;
@@ -48,13 +48,13 @@ public class RecyclerViewHelper extends ItemTouchHelper.Callback {
         mSizeChangedCallBack = sizeChangedCallBack;
     }
 
-    public RecyclerViewHelper(ViewGroup parent) {
+    public MyRvHelper(ViewGroup parent) {
         this.mParent = parent;
 
     }
 
-    public static RecyclerViewHelper create(ViewGroup parent) {
-        return new RecyclerViewHelper(parent);
+    public static MyRvHelper create(ViewGroup parent) {
+        return new MyRvHelper(parent);
     }
 
     public RecyclerView generateRecyclerView() {
@@ -195,7 +195,7 @@ public class RecyclerViewHelper extends ItemTouchHelper.Callback {
         return position + 1;
     }
 
-    private static final String TAG = "RecyclerViewHelper";
+    private static final String TAG = "MyRvHelper";
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {

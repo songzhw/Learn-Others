@@ -56,7 +56,6 @@ public class DragViewGroup extends ViewGroup {
     private int mHeight;
 
     private MyRvHelper rvHelper;
-    private boolean dragEnable = true;
     private PublishSubject<int[]> mPublishSubject;
 
     public DragViewGroup(Context context) {
@@ -173,7 +172,7 @@ public class DragViewGroup extends ViewGroup {
             View view = getChildAt(i);
             if (view instanceof RecyclerView) {
                 LayoutHelper.layoutRecyclerView(this, view);
-            } else if (view instanceof View) {
+            } else {
                 if (mDragView != null && mDragView == view && mDragLocation[0] != DEFAULT && mDragLocation[1] != DEFAULT) {
                     view.layout(mDragLocation[0], mDragLocation[1],
                             view.getMeasuredWidth() + mDragLocation[0], view.getMeasuredHeight() + mDragLocation[1]);
@@ -205,22 +204,61 @@ public class DragViewGroup extends ViewGroup {
         return true;
     }
 
+    @Override
+    public void computeScroll() {
+        if (mViewDragHelper.continueSettling(true)) {
+            invalidate();
+        } else {
+            if (mDragView != null && mDragView.getVisibility() != View.VISIBLE) {
+                mDragView.setVisibility(VISIBLE);
+                mDragView.setBackgroundColor(Color.parseColor("#ffffff"));
+                if (rvHelper != null) {
+                    rvHelper.cancel();
+                }
+            }
+        }
+    }
+
+
     public class CallBack extends ViewDragHelper.Callback {
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
-            if (!dragEnable) return false;
-            boolean can = canDrag(child);
-            if (can) isDraging = true;
+            boolean canDrag = canDrag(child);
             mDragView = child;
             rvHelper.reset();
-            if (can) {
-                child.setBackgroundColor(Color.parseColor("#f7f7f9"));
+            if (canDrag) {
+                isDraging = true;
+                child.setBackgroundColor(Color.parseColor("#f7f7f9")); //灰白色, 偏白色
                 bringChildToFront(child);
                 initRxSubject();
             }
             mDragLocation[0] = DEFAULT;
             mDragLocation[1] = DEFAULT;
-            return can;
+            return canDrag;
+        }
+
+        private boolean canDrag(View child) {
+            if (child == view1[1]) return true;
+            if (child == view2[1]) return true;
+            if (child == view3[1]) return true;
+            return false;
+        }
+
+
+        private void initRxSubject() {
+            //通过throttleLast做延迟，防止拖动的时候闪的太快
+            mPublishSubject = PublishSubject.create();
+            mPublishSubject.throttleLast(300, TimeUnit.MILLISECONDS)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<int[]>() {
+                        @Override
+                        public void accept(int[] ints) throws Exception {
+                            if (rvHelper != null)
+                                rvHelper.draging(ints);
+
+                        }
+                    });
         }
 
         @Override
@@ -289,44 +327,5 @@ public class DragViewGroup extends ViewGroup {
         }
     }
 
-    private void initRxSubject() {
-        //通过throttleLast做延迟，防止拖动的时候闪的太快
-        mPublishSubject = PublishSubject.create();
-        mPublishSubject.throttleLast(300, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<int[]>() {
-                    @Override
-                    public void accept(int[] ints) throws Exception {
-                        if (rvHelper != null)
-                            rvHelper.draging(ints);
-
-                    }
-                });
-    }
-
-
-
-    @Override
-    public void computeScroll() {
-        if (mViewDragHelper.continueSettling(true)) {
-            invalidate();
-        } else {
-            if (mDragView != null && mDragView.getVisibility() != View.VISIBLE) {
-                mDragView.setVisibility(VISIBLE);
-                mDragView.setBackgroundColor(Color.parseColor("#ffffff"));
-                if (rvHelper != null) {
-                    rvHelper.cancel();
-                }
-            }
-        }
-    }
-
-    private boolean canDrag(View child) {
-        if (child == view1[1]) return true;
-        if (child == view2[1]) return true;
-        if (child == view3[1]) return true;
-        return false;
-    }
 
 }

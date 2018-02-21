@@ -204,22 +204,6 @@ public class DragViewGroup extends ViewGroup {
         return true;
     }
 
-    @Override
-    public void computeScroll() {
-        if (mViewDragHelper.continueSettling(true)) {
-            invalidate();
-        } else {
-            if (mDragView != null && mDragView.getVisibility() != View.VISIBLE) {
-                mDragView.setVisibility(VISIBLE);
-                mDragView.setBackgroundColor(Color.parseColor("#ffffff"));
-                if (rvHelper != null) {
-                    rvHelper.cancel();
-                }
-            }
-        }
-    }
-
-
     public class CallBack extends ViewDragHelper.Callback {
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
@@ -326,6 +310,24 @@ public class DragViewGroup extends ViewGroup {
             }
         }
     }
+
+    // settleCapturedViewAt()需要computeScroll()的配合.
+    @Override
+    public void computeScroll() {
+        if (mViewDragHelper.continueSettling(true)) {
+            invalidate();
+        } else {
+            if (mDragView != null && mDragView.getVisibility() != View.VISIBLE) {
+                mDragView.setVisibility(VISIBLE);
+                mDragView.setBackgroundColor(Color.parseColor("#ffffff"));
+                if (rvHelper != null) {
+                    rvHelper.cancel();
+                }
+            }
+        }
+    }
+
+
 
 
 }

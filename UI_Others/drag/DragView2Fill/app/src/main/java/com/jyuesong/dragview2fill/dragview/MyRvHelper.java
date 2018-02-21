@@ -41,12 +41,7 @@ public class MyRvHelper extends ItemTouchHelper.Callback {
     private ItemTouchHelper mItemTouchHelper;
     public static final int MAX_COUNT = 50; //题数最大值
     public static final int MAX_SUBJECT_COUNT = 10; //可拖动的最大个数
-    public SizeChangedCallBack mSizeChangedCallBack;
     protected String mSubjectTitle = getSubjectTitle();
-
-    public void setSizeChangedCallBack(SizeChangedCallBack sizeChangedCallBack) {
-        mSizeChangedCallBack = sizeChangedCallBack;
-    }
 
     public MyRvHelper(ViewGroup parent) {
         this.mParent = parent;
@@ -104,15 +99,11 @@ public class MyRvHelper extends ItemTouchHelper.Callback {
     }
 
     public void dragFinish(int tag) {
-
         int bestPosition = lastPosition;
         cancel();
         if (bestPosition >= 0) {
             mList.add(bestPosition, new FastModel(tag, 1));
             mRecyclerView.getAdapter().notifyItemInserted(bestPosition);
-            if (mSizeChangedCallBack != null) {
-                mSizeChangedCallBack.size(mList.size() - 1);
-            }
         }
         reset();
         if (mList.size() > MAX_SUBJECT_COUNT) {
@@ -149,13 +140,11 @@ public class MyRvHelper extends ItemTouchHelper.Callback {
     }
 
     public void draging(int[] ints) {
-
         if (dealing) return;
         dealing = true;
         //只需要知道顶部坐标，来判断要不要添加，添加到哪
         int top = ints[1];
         int bottom = ints[2];
-        int tag = ints[3];
 
         //根据position一个一个找到一个位置，位置的顶部在top上面，然后下一个位置的底部在top的下面
         int positions = findBestPosition(top, bottom, mRecyclerView);
@@ -170,14 +159,11 @@ public class MyRvHelper extends ItemTouchHelper.Callback {
     private int findBestPosition(int top, int bottom, RecyclerView recyclerView) {
         if (mList == null || mList.size() == 0) return 0;
         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-
         int position = linearLayoutManager.findFirstVisibleItemPosition();
+        View firstVisibleView = linearLayoutManager.findViewByPosition(position);
 
-
-        View view = linearLayoutManager.findViewByPosition(position);
-
-        if (view == null) return -1;
-        if (view.getTop() > top && view.getBottom() > bottom) {
+        if (firstVisibleView == null) return -1;
+        if (firstVisibleView.getTop() > top && firstVisibleView.getBottom() > bottom) {
             return position;
         }
         for (int i = position; i < mList.size() - 1; i++) {
@@ -240,9 +226,6 @@ public class MyRvHelper extends ItemTouchHelper.Callback {
         }
 
         recyclerView.getAdapter().notifyItemMoved(fromPos, toPos);
-        if (mSizeChangedCallBack != null) {
-            mSizeChangedCallBack.size(mList.size() - 1);
-        }
         return true;
     }
 
@@ -359,13 +342,6 @@ public class MyRvHelper extends ItemTouchHelper.Callback {
 //        if (!anim) {
         mRecyclerView.getAdapter().notifyDataSetChanged();
 //        }
-        if (mSizeChangedCallBack != null) {
-            if (mList.size() == 2 && mList.get(1).getType() == DragViewGroup.T_EMPTY) {
-                mSizeChangedCallBack.size(0);
-            } else {
-                mSizeChangedCallBack.size(mList.size() - 1);
-            }
-        }
     }
 
     private void itemCountClicked(final int position, int count) {
@@ -466,8 +442,4 @@ public class MyRvHelper extends ItemTouchHelper.Callback {
         return "大题";
     }
 
-    public interface SizeChangedCallBack {
-        void size(int count);
-
-    }
 }

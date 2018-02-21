@@ -30,7 +30,7 @@ public class ProgressStatusBar extends View {
     private TextView mTextView;
     private RelativeLayout mRelativeLayout;
     private WindowManager windowManager;
-    private WindowManager.LayoutParams parameters;
+    private WindowManager.LayoutParams lp;
     private Paint progressPaint;
     private int ballsColor,barColor,barThickness,progressEndX,progress,colorPrimary,interprogress;
     private ValueAnimator barProgress;
@@ -85,13 +85,18 @@ public class ProgressStatusBar extends View {
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) statusBarHeight = getResources().getDimensionPixelSize(resourceId);
 
-        parameters = new WindowManager.LayoutParams(
+        int type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        }
+
+        lp = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
                 statusBarHeight,
-                WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+                type,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,    // Keeps the button presses from going to the background window and Draws over status bar
                 PixelFormat.TRANSLUCENT);
-        parameters.gravity = Gravity.TOP | Gravity.CENTER;
+        lp.gravity = Gravity.TOP | Gravity.CENTER;
 
         mRelativeLayout = new RelativeLayout(context);
         mRelativeLayout.setBackgroundColor(Color.TRANSPARENT);
@@ -201,7 +206,7 @@ public class ProgressStatusBar extends View {
         this.isWait = isWait;
         this.isToast = false;
         if(!isViewAdded) {
-            windowManager.addView(mRelativeLayout, parameters);
+            windowManager.addView(mRelativeLayout, lp);
             isViewAdded = true;
             if(pListener!=null){
                 pListener.onStart();
@@ -225,7 +230,7 @@ public class ProgressStatusBar extends View {
         mTextView.setText(message);
         mTextView.setVisibility(VISIBLE);
         if(!isViewAdded) {
-            windowManager.addView(mRelativeLayout, parameters);
+            windowManager.addView(mRelativeLayout, lp);
             isViewAdded = true;
             if(pListener!=null){
                 pListener.onStart();

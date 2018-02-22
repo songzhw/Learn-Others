@@ -1,6 +1,9 @@
 package basel.com.ProgressStatusBarSample;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -78,7 +81,31 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
+        boolean canDrawOverlay = Settings.canDrawOverlays(this);
+        if(!canDrawOverlay){
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, 11);
+        }
+
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        boolean canDrawOverlay = Settings.canDrawOverlays(this);
+        System.out.println("szw can? = "+ canDrawOverlay);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("szw onActvResult() : ok? = "+ (resultCode == RESULT_OK)); // 通没通过, 都不是result_ok
+    }
+
 
     @Override
     protected void onPause() {

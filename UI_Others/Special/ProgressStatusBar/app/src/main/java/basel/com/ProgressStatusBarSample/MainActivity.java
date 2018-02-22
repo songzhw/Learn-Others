@@ -80,8 +80,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
         boolean canDrawOverlay = Settings.canDrawOverlays(this);
         if(!canDrawOverlay){
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
@@ -92,19 +90,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        boolean canDrawOverlay = Settings.canDrawOverlays(this);
-        System.out.println("szw can? = "+ canDrawOverlay);
-
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("szw onActvResult() : ok? = "+ (resultCode == RESULT_OK)); // 通没通过, 都不是result_ok
+        boolean canDrawOverlay = Settings.canDrawOverlays(this);
+        if(!canDrawOverlay){
+            Toast.makeText(this, "no permission", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
+
 
 
     @Override

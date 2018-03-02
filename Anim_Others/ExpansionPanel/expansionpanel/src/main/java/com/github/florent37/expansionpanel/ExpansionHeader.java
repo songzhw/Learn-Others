@@ -15,19 +15,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 public class ExpansionHeader extends FrameLayout {
 
     int headerIndicatorId = 0;
     int expansionLayoutId = 0;
     boolean toggleOnClick = true;
-    @Nullable
-    View headerIndicator;
-    @Nullable
-    ExpansionLayout expansionLayout;
-    @Nullable
-    Animator indicatorAnimator;
+    @Nullable View ivIndicator;
+    @Nullable ExpansionLayout expansionLayout;
+    @Nullable Animator indicatorAnimator;
     private int headerRotationExpanded = 270;
     private int headerRotationCollapsed = 90;
     private boolean expansionLayoutInitialised = false;
@@ -77,16 +73,16 @@ public class ExpansionHeader extends FrameLayout {
         this.toggleOnClick = toggleOnClick;
     }
 
-    public void setHeaderIndicatorId(int headerIndicatorId){
+    public void setHeaderIndicatorId(int headerIndicatorId) {
         this.headerIndicatorId = headerIndicatorId;
         if (headerIndicatorId != 0) {
-            headerIndicator = findViewById(headerIndicatorId);
-            setExpansionHeaderIndicator(headerIndicator);
+            ivIndicator = findViewById(headerIndicatorId);
+            setExpansionHeaderIndicator(ivIndicator);
         }
     }
 
     public void setExpansionHeaderIndicator(@Nullable View headerIndicator) {
-        this.headerIndicator = headerIndicator;
+        this.ivIndicator = headerIndicator;
 
         //if not, the view will clip when rotate
         if (headerIndicator != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -96,7 +92,7 @@ public class ExpansionHeader extends FrameLayout {
         setup();
     }
 
-    public void setExpansionLayout(@Nullable  ExpansionLayout expansionLayout) {
+    public void setExpansionLayout(@Nullable ExpansionLayout expansionLayout) {
         this.expansionLayout = expansionLayout;
         setup();
     }
@@ -108,7 +104,7 @@ public class ExpansionHeader extends FrameLayout {
             final ViewParent parent = getParent();
             if (parent instanceof ViewGroup) {
                 final View view = ((ViewGroup) parent).findViewById(expansionLayoutId);
-                if(view instanceof ExpansionLayout){
+                if (view instanceof ExpansionLayout) {
                     setExpansionLayout(((ExpansionLayout) view));
                 }
             }
@@ -149,22 +145,22 @@ public class ExpansionHeader extends FrameLayout {
 
     //can be overriden
     protected void initialiseView(boolean isExpanded) {
-        if (headerIndicator != null) {
-            headerIndicator.setRotation(isExpanded ? headerRotationExpanded : headerRotationCollapsed);
+        if (ivIndicator != null) {
+            ivIndicator.setRotation(isExpanded ? headerRotationExpanded : headerRotationCollapsed);
         }
     }
 
     //can be overriden
     protected void onExpansionModifyView(boolean willExpand) {
         setSelected(willExpand);
-        if (headerIndicator != null) {
+        if (ivIndicator != null) {
             if (indicatorAnimator != null) {
                 indicatorAnimator.cancel();
             }
             if (willExpand) {
-                indicatorAnimator = ObjectAnimator.ofFloat(headerIndicator, View.ROTATION, headerRotationExpanded);
+                indicatorAnimator = ObjectAnimator.ofFloat(ivIndicator, View.ROTATION, headerRotationExpanded);
             } else {
-                indicatorAnimator = ObjectAnimator.ofFloat(headerIndicator, View.ROTATION, headerRotationCollapsed);
+                indicatorAnimator = ObjectAnimator.ofFloat(ivIndicator, View.ROTATION, headerRotationCollapsed);
             }
 
             indicatorAnimator.addListener(new AnimatorListenerAdapter() {
@@ -197,8 +193,8 @@ public class ExpansionHeader extends FrameLayout {
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        if(state instanceof Bundle) {
-            final Bundle savedInstance = (Bundle)state;
+        if (state instanceof Bundle) {
+            final Bundle savedInstance = (Bundle) state;
 
             headerIndicatorId = savedInstance.getInt("headerIndicatorId");
             expansionLayoutId = savedInstance.getInt("expansionLayoutId");
@@ -216,7 +212,7 @@ public class ExpansionHeader extends FrameLayout {
     }
 
     @Nullable
-    public View getHeaderIndicator() {
-        return headerIndicator;
+    public View getIvIndicator() {
+        return ivIndicator;
     }
 }

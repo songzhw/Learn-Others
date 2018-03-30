@@ -12,22 +12,17 @@ import android.view.ViewGroup;
  * Created by xmuSistone on 2017/9/20.
  */
 public class VegaLayoutManager extends RecyclerView.LayoutManager {
+    private SparseArray<Rect> locationRects = new SparseArray<>();
+    private SparseBooleanArray isItemAttachedArray = new SparseBooleanArray();
+    private ArrayMap<Integer, Integer> viewType2HeightMap = new ArrayMap<>(); //viewType2HeightMap.put(viewType, itemHeight);
+    private boolean needSnap = false;
 
     private int scroll = 0;
-    private SparseArray<Rect> locationRects = new SparseArray<>();
-    private SparseBooleanArray attachedItems = new SparseBooleanArray();
-    private ArrayMap<Integer, Integer> viewTypeHeightMap = new ArrayMap<>();
-
-    private boolean needSnap = false;
     private int lastDy = 0;
     private int maxScroll = -1;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.Recycler recycler;
 
-    @Override
-    public boolean isAutoMeasureEnabled() {
-        return true;
-    }
+    private RecyclerView.Adapter adapter; //要由此adapter来得到viewType. 本demo中只有一个viewType, 但难保其它adapter场景会没有多个ViewType
+    private RecyclerView.Recycler recycler;
 
     @Override
     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
@@ -41,22 +36,34 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
     }
 
     @Override
+    public void onAttachedToWindow(RecyclerView view) {
+        super.onAttachedToWindow(view);
+        new StartSnapHelper().attachToRecyclerView(view);
+    }
+
+    // 返回true, 就是用rv的measure. 要么就返回false, 然后自己重写LayoutManager.onMeasure()方法
+    @Override
+    public boolean isAutoMeasureEnabled() {
+        return true;
+    }
+
+
+    @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-        this.recycler = recycler; // 二话不说，先把recycler保存了
+        this.recycler = recycler;
+
         if (state.isPreLayout()) {
             return;
         }
 
         buildLocationRects();
-
-        // 先回收放到缓存，后面会再次统一layout
-        detachAndScrapAttachedViews(recycler);
+        detachAndScrapAttachedViews(recycler); // 先回收放到缓存，后面会再次统一layout
         layoutItemsOnCreate(recycler);
     }
 
     private void buildLocationRects() {
         locationRects.clear();
-        attachedItems.clear();
+        isItemAttachedArray.clear();
 
         int tempPosition = getPaddingTop();
         int itemCount = getItemCount();
@@ -64,14 +71,14 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
             // 1. 先计算出itemWidth和itemHeight
             int viewType = adapter.getItemViewType(i);
             int itemHeight;
-            if (viewTypeHeightMap.containsKey(viewType)) {
-                itemHeight = viewTypeHeightMap.get(viewType);
+            if (viewType2HeightMap.containsKey(viewType)) {
+                itemHeight = viewType2HeightMap.get(viewType);
             } else {
                 View itemView = recycler.getViewForPosition(i);
                 addView(itemView);
                 measureChildWithMargins(itemView, View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
                 itemHeight = getDecoratedMeasuredHeight(itemView);
-                viewTypeHeightMap.put(viewType, itemHeight);
+                viewType2HeightMap.put(viewType, itemHeight);
             }
 
             // 2. 组装Rect并保存
@@ -81,7 +88,7 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
             rect.right = getWidth() - getPaddingRight();
             rect.bottom = rect.top + itemHeight;
             locationRects.put(i, rect);
-            attachedItems.put(i, false);
+            isItemAttachedArray.put(i, false);
             tempPosition = tempPosition + itemHeight;
         }
 
@@ -92,20 +99,6 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
         }
     }
 
-    /**
-     * 对外提供接口，找到第一个可视view的index
-     */
-    public int findFirstVisibleItemPosition() {
-        int count = locationRects.size();
-        Rect displayRect = new Rect(0, scroll, getWidth(), getHeight() + scroll);
-        for (int i = 0; i < count; i++) {
-            if (Rect.intersects(displayRect, locationRects.get(i)) &&
-                    attachedItems.get(i)) {
-                return i;
-            }
-        }
-        return 0;
-    }
 
     /**
      * 计算可滑动的最大值
@@ -143,7 +136,7 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
                 addView(childView);
                 measureChildWithMargins(childView, View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
                 layoutItem(childView, locationRects.get(i));
-                attachedItems.put(i, true);
+                isItemAttachedArray.put(i, true);
                 childView.setPivotY(0);
                 childView.setPivotX(childView.getMeasuredWidth() / 2);
                 if (thisRect.top - scroll > getHeight()) {
@@ -151,6 +144,43 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
                 }
             }
         }
+    }
+
+
+    // =========================== Scroll Vertically ===========================
+
+    @Override
+    public void onScrollStateChanged(int state) {
+        if (state == RecyclerView.SCROLL_STATE_DRAGGING) {
+            needSnap = true;
+        }
+        super.onScrollStateChanged(state);
+    }
+
+
+    @Override
+    public boolean canScrollVertically() {
+        return true;
+    }
+
+    @Override
+    public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
+        if (getItemCount() == 0 || dy == 0) {
+            return 0;
+        }
+        int travel = dy;
+        if (dy + scroll < 0) {
+            travel = -scroll;
+        } else if (dy + scroll > maxScroll) {
+            travel = maxScroll - scroll;
+        }
+        scroll += travel; //累计偏移量
+        lastDy = dy;
+        if (!state.isPreLayout() && getChildCount() > 0) {
+            layoutItemsOnScroll();
+        }
+
+        return travel;
     }
 
 
@@ -173,7 +203,7 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
             if (!Rect.intersects(displayRect, locationRects.get(position))) {
                 // 回收滑出屏幕的View
                 removeAndRecycleView(child, recycler);
-                attachedItems.put(position, false);
+                isItemAttachedArray.put(position, false);
             } else {
                 // Item还在显示区域内，更新滑动后Item的位置
                 if (lastVisiblePosition < 0) {
@@ -195,7 +225,7 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
             // 往前搜索复用
             for (int i = firstVisiblePosition - 1; i >= 0; i--) {
                 if (Rect.intersects(displayRect, locationRects.get(i)) &&
-                        !attachedItems.get(i)) {
+                        !isItemAttachedArray.get(i)) {
                     reuseItemOnSroll(i, true);
                 } else {
                     break;
@@ -205,13 +235,14 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
         // 往后搜索复用
         for (int i = lastVisiblePosition + 1; i < itemCount; i++) {
             if (Rect.intersects(displayRect, locationRects.get(i)) &&
-                    !attachedItems.get(i)) {
+                    !isItemAttachedArray.get(i)) {
                 reuseItemOnSroll(i, false);
             } else {
                 break;
             }
         }
     }
+
 
     /**
      * 复用position对应的View
@@ -229,7 +260,7 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
         }
         // 将这个Item布局出来
         layoutItem(scrap, locationRects.get(position));
-        attachedItems.put(position, true);
+        isItemAttachedArray.put(position, true);
     }
 
 
@@ -257,43 +288,19 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
         layoutDecorated(child, rect.left, layoutTop, rect.right, layoutBottom);
     }
 
-    @Override
-    public boolean canScrollVertically() {
-        return true;
-    }
 
-    @Override
-    public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
-        if (getItemCount() == 0 || dy == 0) {
-            return 0;
-        }
-        int travel = dy;
-        if (dy + scroll < 0) {
-            travel = -scroll;
-        } else if (dy + scroll > maxScroll) {
-            travel = maxScroll - scroll;
-        }
-        scroll += travel; //累计偏移量
-        lastDy = dy;
-        if (!state.isPreLayout() && getChildCount() > 0) {
-            layoutItemsOnScroll();
-        }
+    // =========================== 对外提供的接口 ===========================
 
-        return travel;
-    }
-
-    @Override
-    public void onAttachedToWindow(RecyclerView view) {
-        super.onAttachedToWindow(view);
-        new StartSnapHelper().attachToRecyclerView(view);
-    }
-
-    @Override
-    public void onScrollStateChanged(int state) {
-        if (state == RecyclerView.SCROLL_STATE_DRAGGING) {
-            needSnap = true;
+    public int findFirstVisibleItemPosition() {
+        int count = locationRects.size();
+        Rect displayRect = new Rect(0, scroll, getWidth(), getHeight() + scroll);
+        for (int i = 0; i < count; i++) {
+            if (Rect.intersects(displayRect, locationRects.get(i)) &&
+                    isItemAttachedArray.get(i)) {
+                return i;
+            }
         }
-        super.onScrollStateChanged(state);
+        return 0;
     }
 
     public int getSnapHeight() {
@@ -327,4 +334,5 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
         }
         return null;
     }
+
 }

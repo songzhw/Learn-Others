@@ -57,7 +57,7 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
         }
 
         buildLocationRects();
-        detachAndScrapAttachedViews(recycler); // 先回收放到缓存，后面会再次统一layout
+        this.detachAndScrapAttachedViews(recycler); // 先回收放到缓存，后面会再次统一layout. LayoutManager的方法
         layoutItemsOnCreate(recycler);
     }
 
@@ -65,7 +65,7 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
         locationRects.clear();
         isItemAttachedArray.clear();
 
-        int tempPosition = getPaddingTop();
+        int currentTop = getPaddingTop();
         int itemCount = getItemCount();
         for (int i = 0; i < itemCount; i++) {
             // 1. 先计算出itemWidth和itemHeight
@@ -76,20 +76,20 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
             } else {
                 View itemView = recycler.getViewForPosition(i);
                 addView(itemView);
-                measureChildWithMargins(itemView, View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-                itemHeight = getDecoratedMeasuredHeight(itemView);
+                measureChildWithMargins(itemView, View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED); //unspecfied值为0
+                itemHeight = getDecoratedMeasuredHeight(itemView); //这是LayoutManager的方法. 其实就是child.getMeasuredHeight() + decoInsets.top + decoInsets.bottom;
                 viewType2HeightMap.put(viewType, itemHeight);
             }
 
             // 2. 组装Rect并保存
             Rect rect = new Rect();
             rect.left = getPaddingLeft();
-            rect.top = tempPosition;
             rect.right = getWidth() - getPaddingRight();
+            rect.top = currentTop;
             rect.bottom = rect.top + itemHeight;
             locationRects.put(i, rect);
-            isItemAttachedArray.put(i, false);
-            tempPosition = tempPosition + itemHeight;
+            isItemAttachedArray.put(i, false); //先全置false. 后面layotuOnCreate()时会把可见项的值设为true
+            currentTop = currentTop + itemHeight;
         }
 
         if (itemCount == 0) {
@@ -104,7 +104,8 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
      * 计算可滑动的最大值
      */
     private void computeMaxScroll() {
-        maxScroll = locationRects.get(locationRects.size() - 1).bottom - getHeight();
+        // 这一点和"监听Scroll是否滑动到底了"十分类似
+        maxScroll = locationRects.get(locationRects.size() - 1).bottom - getHeight(); //getHeight()一般来说就是rv.height
         if (maxScroll < 0) {
             maxScroll = 0;
             return;
@@ -114,9 +115,12 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
         int screenFilledHeight = 0;
         for (int i = itemCount - 1; i >= 0; i--) {
             Rect rect = locationRects.get(i);
-            screenFilledHeight = screenFilledHeight + (rect.bottom - rect.top);
+            int thisItemHeight = rect.bottom - rect.top;
+            screenFilledHeight = screenFilledHeight + thisItemHeight;
+            // 若一进来就最多显示了10项, 第10项只能显示一部分了. 这时screenFilledHeight就大于getHeight(),
+            // 这时screenFillHeight - thisItemHeight, 其实就是前9项的items的高度和. extraSnapHeight就成了第10项显示了多少个像素.
             if (screenFilledHeight > getHeight()) {
-                int extraSnapHeight = getHeight() - (screenFilledHeight - (rect.bottom - rect.top));
+                int extraSnapHeight = getHeight() - (screenFilledHeight - thisItemHeight);
                 maxScroll = maxScroll + extraSnapHeight;
                 break;
             }
@@ -128,14 +132,14 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
      */
     private void layoutItemsOnCreate(RecyclerView.Recycler recycler) {
         int itemCount = getItemCount();
-        Rect displayRect = new Rect(0, scroll, getWidth(), getHeight() + scroll);
+        Rect displayRect = new Rect(0, scroll, getWidth(), getHeight() + scroll); //scroll一开始为0
         for (int i = 0; i < itemCount; i++) {
             Rect thisRect = locationRects.get(i);
-            if (Rect.intersects(displayRect, thisRect)) {
+            if (Rect.intersects(displayRect, thisRect)) { //即可见, 至少是部分可见.
                 View childView = recycler.getViewForPosition(i);
-                addView(childView);
-                measureChildWithMargins(childView, View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-                layoutItem(childView, locationRects.get(i));
+                this.addView(childView);
+                this.measureChildWithMargins(childView, View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                layoutMyChildren(childView, locationRects.get(i));
                 isItemAttachedArray.put(i, true);
                 childView.setPivotY(0);
                 childView.setPivotX(childView.getMeasuredWidth() / 2);
@@ -145,6 +149,35 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
             }
         }
     }
+
+
+
+    private void layoutMyChildren(View child, Rect rect) {
+        int topDistance = scroll - rect.top;
+        int layoutTop, layoutBottom;
+        int itemHeight = rect.bottom - rect.top;
+
+        //要滑出去的部分, 要修改它们的scaleX, scaleY, alpha值
+        if (topDistance < itemHeight && topDistance > 0) {
+            float rate1 = (float) topDistance / itemHeight;
+            float rate2 = 1 - rate1 * rate1 / 3;
+            float rate3 = 1 - rate1 * rate1;
+            child.setScaleX(rate2);
+            child.setScaleY(rate2);
+            child.setAlpha(rate3);
+            layoutTop = 0;
+            layoutBottom = itemHeight;
+        } else {
+            child.setScaleX(1);
+            child.setScaleY(1);
+            child.setAlpha(1);
+
+            layoutTop = rect.top - scroll;
+            layoutBottom = rect.bottom - scroll;
+        }
+        this.layoutDecorated(child, rect.left, layoutTop, rect.right, layoutBottom);
+    }
+
 
 
     // =========================== Scroll Vertically ===========================
@@ -216,7 +249,7 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
                     firstVisiblePosition = Math.min(firstVisiblePosition, position);
                 }
 
-                layoutItem(child, locationRects.get(position)); //更新Item位置
+                layoutMyChildren(child, locationRects.get(position)); //更新Item位置
             }
         }
 
@@ -259,33 +292,8 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
             addView(scrap);
         }
         // 将这个Item布局出来
-        layoutItem(scrap, locationRects.get(position));
+        layoutMyChildren(scrap, locationRects.get(position));
         isItemAttachedArray.put(position, true);
-    }
-
-
-    private void layoutItem(View child, Rect rect) {
-        int topDistance = scroll - rect.top;
-        int layoutTop, layoutBottom;
-        int itemHeight = rect.bottom - rect.top;
-        if (topDistance < itemHeight && topDistance > 0) {
-            float rate1 = (float) topDistance / itemHeight;
-            float rate2 = 1 - rate1 * rate1 / 3;
-            float rate3 = 1 - rate1 * rate1;
-            child.setScaleX(rate2);
-            child.setScaleY(rate2);
-            child.setAlpha(rate3);
-            layoutTop = 0;
-            layoutBottom = itemHeight;
-        } else {
-            child.setScaleX(1);
-            child.setScaleY(1);
-            child.setAlpha(1);
-
-            layoutTop = rect.top - scroll;
-            layoutBottom = rect.bottom - scroll;
-        }
-        layoutDecorated(child, rect.left, layoutTop, rect.right, layoutBottom);
     }
 
 

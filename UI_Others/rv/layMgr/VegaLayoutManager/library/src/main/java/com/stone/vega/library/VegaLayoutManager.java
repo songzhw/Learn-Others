@@ -15,7 +15,7 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
     private SparseArray<Rect> locationRects = new SparseArray<>();
     private SparseBooleanArray isItemAttachedArray = new SparseBooleanArray();
     private ArrayMap<Integer, Integer> viewType2HeightMap = new ArrayMap<>(); //viewType2HeightMap.put(viewType, itemHeight);
-    private boolean needSnap = false;
+    private boolean isDragging = false;
 
     private int scroll = 0;
     private int lastDy = 0;
@@ -185,7 +185,7 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
     @Override
     public void onScrollStateChanged(int state) {
         if (state == RecyclerView.SCROLL_STATE_DRAGGING) {
-            needSnap = true;
+            isDragging = true;
         }
         super.onScrollStateChanged(state);
     }
@@ -312,30 +312,30 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
     }
 
     public int getSnapHeight() {
-        if (!needSnap) {
+        if (!isDragging) {
             return 0;
         }
-        needSnap = false;
+        isDragging = false;
 
-        Rect displayRect = new Rect(0, scroll, getWidth(), getHeight() + scroll);
+        Rect rvDisplayRect = new Rect(0, scroll, getWidth(), getHeight() + scroll);
         int itemCount = getItemCount();
         for (int i = 0; i < itemCount; i++) {
             Rect itemRect = locationRects.get(i);
-            if (displayRect.intersect(itemRect)) {
-
+            if (rvDisplayRect.intersect(itemRect)) {
                 if (lastDy > 0) {
                     // scroll变大，属于列表往下走，往下找下一个为snapView
                     if (i < itemCount - 1) {
                         Rect nextRect = locationRects.get(i + 1);
-                        return nextRect.top - displayRect.top;
+                        return nextRect.top - rvDisplayRect.top;
                     }
                 }
-                return itemRect.top - displayRect.top;
+                return itemRect.top - rvDisplayRect.top;
             }
         }
         return 0;
     }
 
+    // 总是第0项, 才有可能有我们的snap的效果
     public View findSnapView() {
         if (getChildCount() > 0) {
             return getChildAt(0);
@@ -344,3 +344,10 @@ public class VegaLayoutManager extends RecyclerView.LayoutManager {
     }
 
 }
+/*
+1. 没处理fling?
+2. 没用offsetChildrenVertically(), 而是自己layout when scrolling
+
+
+ */
+

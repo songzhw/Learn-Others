@@ -22,12 +22,11 @@ import java.util.HashMap;
  */
 
 public class CardDrawerLayout extends DrawerLayout {
-    private static final String TAG = CardDrawerLayout.class.getSimpleName();
     private HashMap<Integer, Setting> settings = new HashMap<>();
     private int defaultScrimColor = 0x99000000;
     private float defaultDrawerElevation;
-    private FrameLayout frameLayout;
-    public View drawerView;
+    private FrameLayout frameLayout; //就是放content的 (疑问: 若左右不是NavigationView, 好像会有问题)
+    public View drawerView; //content view
 
     public CardDrawerLayout(Context context) {
         super(context);
@@ -58,20 +57,9 @@ public class CardDrawerLayout extends DrawerLayout {
                 updateSlideOffset(drawerView, slideOffset);
             }
 
-            @Override
-            public void onDrawerOpened(View drawerView) {
-
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
+            @Override public void onDrawerOpened(View drawerView) {}
+            @Override public void onDrawerClosed(View drawerView) {}
+            @Override public void onDrawerStateChanged(int newState) {}
         });
 
         frameLayout = new FrameLayout(context);
@@ -89,6 +77,7 @@ public class CardDrawerLayout extends DrawerLayout {
 
     @Override
     public void addView(View child) {
+        System.out.println("szw addView() : child = "+child);
         if (child instanceof NavigationView) {
             super.addView(child);
         } else {
@@ -225,6 +214,7 @@ public class CardDrawerLayout extends DrawerLayout {
 
         for (int i = 0; i < frameLayout.getChildCount(); i++) {
             CardView child = (CardView) frameLayout.getChildAt(i);
+            System.out.println("szw updateOffest() : child = "+child);
             Setting setting = settings.get(childAbsGravity);
             float adjust = 0;
 

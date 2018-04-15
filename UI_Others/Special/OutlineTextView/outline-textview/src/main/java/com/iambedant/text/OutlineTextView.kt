@@ -40,11 +40,8 @@ class OutlineTextView : AppCompatTextView {
     private fun initResources(context: Context?, attrs: AttributeSet?) {
         if (attrs != null) {
             val a = context?.obtainStyledAttributes(attrs, R.styleable.outlineAttrs)
-            strokeColor = a!!.getColor(R.styleable.outlineAttrs_outlineColor,
-                    currentTextColor)
-            strokeWidth = a.getFloat(R.styleable.outlineAttrs_outlineWidth,
-                    defaultStrokeWidth)
-
+            strokeColor = a!!.getColor(R.styleable.outlineAttrs_outlineColor, currentTextColor)
+            strokeWidth = a.getFloat(R.styleable.outlineAttrs_outlineWidth, defaultStrokeWidth)
             a.recycle()
         } else {
             strokeColor = currentTextColor
@@ -78,18 +75,18 @@ class OutlineTextView : AppCompatTextView {
     override fun onDraw(canvas: Canvas) {
         if (strokeWidth > 0) {
             isDrawing = true
+
             val p = paint
             p.style = Paint.Style.FILL
+            super.onDraw(canvas) //画实心文字
 
-            super.onDraw(canvas)
-
-            val currentTextColor = currentTextColor
             p.style = Paint.Style.STROKE
             p.strokeWidth = strokeWidth
             setTextColor(strokeColor)
-            super.onDraw(canvas)
-            setTextColor(currentTextColor)
+            super.onDraw(canvas) //再调用一次, 这次是描边了
+
             isDrawing = false
+
         } else {
             super.onDraw(canvas)
         }

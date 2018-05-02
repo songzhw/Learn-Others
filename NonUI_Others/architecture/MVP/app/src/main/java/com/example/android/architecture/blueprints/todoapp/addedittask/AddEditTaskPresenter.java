@@ -21,10 +21,6 @@ import android.support.annotation.Nullable;
 
 import com.example.android.architecture.blueprints.todoapp.data.Task;
 import com.example.android.architecture.blueprints.todoapp.data.source.TasksDataSource;
-import com.example.android.architecture.blueprints.todoapp.util.schedulers.BaseSchedulerProvider;
-
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -32,7 +28,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Listens to user actions from the UI ({@link AddEditTaskFragment}), retrieves the data and updates
  * the UI as required.
  */
-public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
+public class AddEditTaskPresenter implements AddEditTaskContract.Presenter,
+        TasksDataSource.GetTaskCallback {
 
     @NonNull
     private final TasksDataSource mTasksRepository;
@@ -40,49 +37,34 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     @NonNull
     private final AddEditTaskContract.View mAddTaskView;
 
-    @NonNull
-    private final BaseSchedulerProvider mSchedulerProvider;
-
     @Nullable
     private String mTaskId;
 
     private boolean mIsDataMissing;
 
-    @NonNull
-    private CompositeDisposable mCompositeDisposable;
-
     /**
      * Creates a presenter for the add/edit view.
      *
-     * @param taskId                 ID of the task to edit or null for a new task
-     * @param tasksRepository        a repository of data for tasks
-     * @param addTaskView            the add/edit view
+     * @param taskId ID of the task to edit or null for a new task
+     * @param tasksRepository a repository of data for tasks
+     * @param addTaskView the add/edit view
      * @param shouldLoadDataFromRepo whether data needs to be loaded or not (for config changes)
      */
     public AddEditTaskPresenter(@Nullable String taskId, @NonNull TasksDataSource tasksRepository,
-                                @NonNull AddEditTaskContract.View addTaskView, boolean shouldLoadDataFromRepo,
-                                @NonNull BaseSchedulerProvider schedulerProvider) {
+            @NonNull AddEditTaskContract.View addTaskView, boolean shouldLoadDataFromRepo) {
         mTaskId = taskId;
         mTasksRepository = checkNotNull(tasksRepository);
         mAddTaskView = checkNotNull(addTaskView);
         mIsDataMissing = shouldLoadDataFromRepo;
 
-        mSchedulerProvider = checkNotNull(schedulerProvider, "schedulerProvider cannot be null!");
-
-        mCompositeDisposable = new CompositeDisposable();
         mAddTaskView.setPresenter(this);
     }
 
     @Override
-    public void subscribe() {
+    public void start() {
         if (!isNewTask() && mIsDataMissing) {
             populateTask();
         }
-    }
-
-    @Override
-    public void unsubscribe() {
-        mCompositeDisposable.clear();
     }
 
     @Override
@@ -99,34 +81,25 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
         if (isNewTask()) {
             throw new RuntimeException("populateTask() was called but task is new.");
         }
-        Disposable getTasks = mTasksRepository
-                .getTask(mTaskId)
-                .subscribeOn(mSchedulerProvider.computation())
-                .observeOn(mSchedulerProvider.ui())
-                .subscribe(
-                        // onNext
-                        taskOptional -> {
-                            if (taskOptional.isPresent()) {
-                                Task task = taskOptional.get();
-                                if (mAddTaskView.isActive()) {
-                                    mAddTaskView.setTitle(task.getTitle());
-                                    mAddTaskView.setDescription(task.getDescription());
+        mTasksRepository.getTask(mTaskId, this);
+    }
 
-                                    mIsDataMissing = false;
-                                }
-                            } else {
-                                if (mAddTaskView.isActive()) {
-                                    mAddTaskView.showEmptyTaskError();
-                                }
-                            }
-                        },
-                        // onError
-                        throwable -> {
-                            if (mAddTaskView.isActive()) {
-                                mAddTaskView.showEmptyTaskError();
-                            }
-                        });
-        mCompositeDisposable.add(getTasks);
+    @Override
+    public void onTaskLoaded(Task task) {
+        // The view may not be able to handle UI updates anymore
+        if (mAddTaskView.isActive()) {
+            mAddTaskView.setTitle(task.getTitle());
+            mAddTaskView.setDescription(task.getDescription());
+        }
+        mIsDataMissing = false;
+    }
+
+    @Override
+    public void onDataNotAvailable() {
+        // The view may not be able to handle UI updates anymore
+        if (mAddTaskView.isActive()) {
+            mAddTaskView.showEmptyTaskError();
+        }
     }
 
     @Override

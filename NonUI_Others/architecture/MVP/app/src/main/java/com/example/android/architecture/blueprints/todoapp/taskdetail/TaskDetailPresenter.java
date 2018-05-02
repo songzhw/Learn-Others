@@ -20,12 +20,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.example.android.architecture.blueprints.todoapp.data.Task;
+import com.example.android.architecture.blueprints.todoapp.data.source.TasksDataSource;
 import com.example.android.architecture.blueprints.todoapp.data.source.TasksRepository;
-import com.example.android.architecture.blueprints.todoapp.util.schedulers.BaseSchedulerProvider;
-import com.google.common.base.Optional;
 import com.google.common.base.Strings;
-
-import io.reactivex.disposables.CompositeDisposable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -35,42 +32,26 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class TaskDetailPresenter implements TaskDetailContract.Presenter {
 
-    @NonNull
     private final TasksRepository mTasksRepository;
 
-    @NonNull
     private final TaskDetailContract.View mTaskDetailView;
-
-    @NonNull
-    private final BaseSchedulerProvider mSchedulerProvider;
 
     @Nullable
     private String mTaskId;
 
-    @NonNull
-    private CompositeDisposable mCompositeDisposable;
-
     public TaskDetailPresenter(@Nullable String taskId,
                                @NonNull TasksRepository tasksRepository,
-                               @NonNull TaskDetailContract.View taskDetailView,
-                               @NonNull BaseSchedulerProvider schedulerProvider) {
-        this.mTaskId = taskId;
+                               @NonNull TaskDetailContract.View taskDetailView) {
+        mTaskId = taskId;
         mTasksRepository = checkNotNull(tasksRepository, "tasksRepository cannot be null!");
         mTaskDetailView = checkNotNull(taskDetailView, "taskDetailView cannot be null!");
-        mSchedulerProvider = checkNotNull(schedulerProvider, "schedulerProvider cannot be null");
 
-        mCompositeDisposable = new CompositeDisposable();
         mTaskDetailView.setPresenter(this);
     }
 
     @Override
-    public void subscribe() {
+    public void start() {
         openTask();
-    }
-
-    @Override
-    public void unsubscribe() {
-        mCompositeDisposable.clear();
     }
 
     private void openTask() {
@@ -80,22 +61,30 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
         }
 
         mTaskDetailView.setLoadingIndicator(true);
-        mCompositeDisposable.add(mTasksRepository
-                .getTask(mTaskId)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .subscribeOn(mSchedulerProvider.computation())
-                .observeOn(mSchedulerProvider.ui())
-                .subscribe(
-                        // onNext
-                        this::showTask,
-                        // onError
-                        throwable -> {
-                        },
-                        // onCompleted
-                        () -> mTaskDetailView.setLoadingIndicator(false)
-                )
-        );
+        mTasksRepository.getTask(mTaskId, new TasksDataSource.GetTaskCallback() {
+            @Override
+            public void onTaskLoaded(Task task) {
+                // The view may not be able to handle UI updates anymore
+                if (!mTaskDetailView.isActive()) {
+                    return;
+                }
+                mTaskDetailView.setLoadingIndicator(false);
+                if (null == task) {
+                    mTaskDetailView.showMissingTask();
+                } else {
+                    showTask(task);
+                }
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                // The view may not be able to handle UI updates anymore
+                if (!mTaskDetailView.isActive()) {
+                    return;
+                }
+                mTaskDetailView.showMissingTask();
+            }
+        });
     }
 
     @Override

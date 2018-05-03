@@ -39,19 +39,15 @@ public class AdImageView extends AppCompatImageView {
         minDy = h;
     }
 
-    public int getDy() {
-        return dy;
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
         Drawable drawable = getDrawable();
         int w = getWidth();
-        int h = (int) (getWidth() * 1.0f / drawable.getIntrinsicWidth() * drawable.getIntrinsicHeight());
+        int h = (int) (w * 1.0f / drawable.getIntrinsicWidth() * drawable.getIntrinsicHeight());
         drawable.setBounds(0, 0, w, h);
         canvas.save();
-        canvas.translate(0, -getDy());
-        super.onDraw(canvas);
+        canvas.translate(0, -dy);
+        super.onDraw(canvas); //要在canvas.restor()之前, 不然都已经restore, 即没有translate效果了再画就跟普通iv没区别了
         canvas.restore();
     }
 }

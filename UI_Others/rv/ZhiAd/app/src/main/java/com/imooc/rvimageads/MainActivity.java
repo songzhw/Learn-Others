@@ -54,9 +54,9 @@ public class MainActivity extends AppCompatActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                int fPos = linearLayoutManager.findFirstVisibleItemPosition();
-                int lPos = linearLayoutManager.findLastCompletelyVisibleItemPosition();
-                for (int i = fPos; i <= lPos; i++) {
+                int firstVibibleItemPos = linearLayoutManager.findFirstVisibleItemPosition();
+                int lastCompVisibleItemPos = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+                for (int i = firstVibibleItemPos; i <= lastCompVisibleItemPos; i++) {
                     View view = linearLayoutManager.findViewByPosition(i);
                     AdImageView adImageView = view.findViewById(R.id.id_iv_ad);
                     if (adImageView.getVisibility() == View.VISIBLE) {

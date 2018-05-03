@@ -10,37 +10,33 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
-/**
- * Created by zhanghongyang01 on 17/11/23.
- */
+// 老版本, drawableToBitmap很耗内存的
 
 public class AdImageViewVersion1 extends AppCompatImageView {
+    private RectF rectf;
+    private Bitmap bitmap;
+    private int minDy;
+
     public AdImageViewVersion1(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
-
-    private RectF mBitmapRectF;
-    private Bitmap mBitmap;
-
-    private int mMinDy;
-
 
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        mMinDy = h;
+        minDy = h;
         Drawable drawable = getDrawable();
 
         if (drawable == null) {
             return;
         }
 
-        mBitmap = drawableToBitamp(drawable);
-        mBitmapRectF = new RectF(0, 0,
+        bitmap = drawableToBitamp(drawable);
+        rectf = new RectF(0, 0,
                 w,
-                mBitmap.getHeight() * w / mBitmap.getWidth());
+                bitmap.getHeight() * w / bitmap.getWidth());
 
     }
 
@@ -66,24 +62,24 @@ public class AdImageViewVersion1 extends AppCompatImageView {
         if (getDrawable() == null) {
             return;
         }
-        mDy = dy - mMinDy;
+        mDy = dy - minDy;
         if (mDy <= 0) {
             mDy = 0;
         }
-        if (mDy > mBitmapRectF.height() - mMinDy) {
-            mDy = (int) (mBitmapRectF.height() - mMinDy);
+        if (mDy > rectf.height() - minDy) {
+            mDy = (int) (rectf.height() - minDy);
         }
         invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (mBitmap == null) {
+        if (bitmap == null) {
             return;
         }
         canvas.save();
         canvas.translate(0, -mDy);
-        canvas.drawBitmap(mBitmap, null, mBitmapRectF, null);
+        canvas.drawBitmap(bitmap, null, rectf, null);
         canvas.restore();
     }
 

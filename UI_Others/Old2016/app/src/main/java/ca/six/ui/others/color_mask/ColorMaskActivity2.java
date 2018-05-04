@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,7 +14,7 @@ import android.widget.Toast;
 import ca.six.ui.others.R;
 
 
-public class ColorMaskActivity2 extends ActionBarActivity {
+public class ColorMaskActivity2 extends AppCompatActivity {
 
     private EditText edtColorCode;
     private Button btnChange;

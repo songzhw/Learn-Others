@@ -45,8 +45,11 @@ public class MoveableImage extends AppCompatImageView {
                 break;
             case ACTION_MOVE:
                 int y = (int) event.getY();
-                dy = y - downY;
-                invalidate();
+                dy = y - downY; //手指往上时, y越来越小;
+                System.out.println("szw dy = " + dy + " ; y = " + y + " ; downY = " + downY);
+                if (dy >= 0) {
+                    invalidate();
+                }
                 break;
             case ACTION_UP:
                 int upX = (int) event.getX();

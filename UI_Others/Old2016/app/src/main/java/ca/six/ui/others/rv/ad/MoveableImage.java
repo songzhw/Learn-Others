@@ -39,6 +39,7 @@ public class MoveableImage extends AppCompatImageView {
     }
 
     int downX, downY, dy, height;
+    private Drawable drawable;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -76,10 +77,12 @@ public class MoveableImage extends AppCompatImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Drawable drawable = getDrawable();
-        int w = getWidth();
-        int h = (int) (w * 1.0f / drawable.getIntrinsicWidth() * drawable.getIntrinsicHeight());
-        drawable.setBounds(0, 0, w, h);
+        if(drawable == null) {
+            drawable = getDrawable();
+            int w = getWidth();
+            int h = (int) (w * 1.0f / drawable.getIntrinsicWidth() * drawable.getIntrinsicHeight());
+            drawable.setBounds(0, 0, w, h);
+        }
 
         canvas.save();
         canvas.translate(0, -dy);
@@ -88,3 +91,6 @@ public class MoveableImage extends AppCompatImageView {
     }
 }
 
+/*
+1. 没有记录当前up位置. 结果每次action_down, 结果都强制回到了最顶头
+ */

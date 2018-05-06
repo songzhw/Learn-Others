@@ -32,7 +32,13 @@ public class MoveableImage extends AppCompatImageView {
         return super.performClick();
     }
 
-    int downX, downY, dy;
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        this.height = h;
+    }
+
+    int downX, downY, dy, height;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -46,7 +52,10 @@ public class MoveableImage extends AppCompatImageView {
             case ACTION_MOVE:
                 int y = (int) event.getY();
                 dy = y - downY; //手指往上时, y越来越小;
-                System.out.println("szw dy = " + dy + " ; y = " + y + " ; downY = " + downY);
+                System.out.println("szw dy = " + dy + " ; y = " + y + " ; downY = " + downY+" ; height = "+height);
+                if(dy > height){
+                    dy = height;
+                }
                 if (dy >= 0) {
                     invalidate();
                 }

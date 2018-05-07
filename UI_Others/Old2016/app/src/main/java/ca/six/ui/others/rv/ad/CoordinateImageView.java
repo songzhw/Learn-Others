@@ -26,8 +26,10 @@ public class CoordinateImageView extends AppCompatImageView {
     @Override
     protected void onDraw(Canvas canvas) {
         //TODO probabaly need the save/restore
+        canvas.save();
         canvas.translate(0, -dy);
         super.onDraw(canvas);
+        canvas.restore();
     }
 
     public void setDiff(int diff) {

@@ -6,10 +6,9 @@
 
     <ca.six.ui.others.rv.ad.MoveableImage
         android:id="@+id/ivMove"
-        android:layout_width="wrap_content"
-        android:layout_height="130dp"
-        android:layout_margin="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
         android:scaleType="matrix"
-        android:src="@drawable/wallpaper04"/>
+        android:src="@drawable/vertical_wallpaper03"/>
 
 </LinearLayout>

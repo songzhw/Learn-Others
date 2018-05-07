@@ -53,9 +53,11 @@ public class MoveableImage extends AppCompatImageView {
             case ACTION_MOVE:
                 int y = (int) event.getY();
                 dy = y - downY; //手指往上时, y越来越小;
-                System.out.println("szw dy = " + dy + " ; y = " + y + " ; downY = " + downY+" ; height = "+height);
-                if(dy > height){
-                    dy = height;
+                System.out.println("szw dy = " + dy + " ; y = " + y + " ; downY = " + downY+" ; h1 = "+height+" ; h2 = "+getDrawable().getBounds().height());
+
+                int heightDiff = getDrawable().getBounds().height() - height;
+                if(dy > heightDiff){
+                    dy = heightDiff;
                 }
                 if (dy >= 0) {
                     invalidate();

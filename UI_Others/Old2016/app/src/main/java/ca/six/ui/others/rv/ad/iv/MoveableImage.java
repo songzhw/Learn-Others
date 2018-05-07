@@ -1,9 +1,8 @@
-package ca.six.ui.others.rv.ad;
+package ca.six.ui.others.rv.ad.iv;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
@@ -14,6 +13,10 @@ import static android.view.MotionEvent.ACTION_MOVE;
 import static android.view.MotionEvent.ACTION_UP;
 
 public class MoveableImage extends AppCompatImageView {
+    int downX, downY, dy, height;
+    private Drawable drawable;
+
+
     public MoveableImage(Context context) {
         super(context);
         init(context, null);
@@ -38,9 +41,6 @@ public class MoveableImage extends AppCompatImageView {
         this.height = h;
     }
 
-    int downX, downY, dy, height;
-    private Drawable drawable;
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
@@ -53,10 +53,10 @@ public class MoveableImage extends AppCompatImageView {
             case ACTION_MOVE:
                 int y = (int) event.getY();
                 dy = y - downY; //手指往上时, y越来越小;
-                System.out.println("szw dy = " + dy + " ; y = " + y + " ; downY = " + downY+" ; h1 = "+height+" ; h2 = "+getDrawable().getBounds().height());
+                System.out.println("szw dy = " + dy + " ; y = " + y + " ; downY = " + downY + " ; h1 = " + height + " ; h2 = " + getDrawable().getBounds().height());
 
                 int heightDiff = getDrawable().getBounds().height() - height;
-                if(dy > heightDiff){
+                if (dy > heightDiff) {
                     dy = heightDiff;
                 }
                 if (dy >= 0) {
@@ -79,7 +79,7 @@ public class MoveableImage extends AppCompatImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if(drawable == null) {
+        if (drawable == null) {
             drawable = getDrawable();
             int w = getWidth();
             int h = (int) (w * 1.0f / drawable.getIntrinsicWidth() * drawable.getIntrinsicHeight());
@@ -89,7 +89,7 @@ public class MoveableImage extends AppCompatImageView {
         canvas.save();
         canvas.translate(0, -dy);
         super.onDraw(canvas);
-        canvas.restore();
+        canvas.restore(); // 经实测, 不save/restore也行. 因为此句之后没有与原样相关的canvas操作嘛!
     }
 }
 

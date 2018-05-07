@@ -4,7 +4,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <ca.six.ui.others.rv.ad.MoveableImage
+    <ca.six.ui.others.rv.ad.iv.MoveableImage
         android:id="@+id/ivMove"
         android:layout_width="match_parent"
         android:layout_height="200dp"

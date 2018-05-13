@@ -24,7 +24,7 @@
   <FrameLayout
       android:id="@+id/visibleSwipeArea"
       android:layout_width="match_parent"
-      android:layout_height="?attr/actionBarSize"
+      android:layout_height="?android:attr/actionBarSize"
       android:background="#EEEEEE"
       android:elevation="4dp"
       android:paddingBottom="8dp"
@@ -63,7 +63,7 @@
   <ca.six.mvi1.view.selectedcounttoolbar.SelectedCountToolbar
       android:id="@+id/selectedCountToolbar"
       android:layout_width="match_parent"
-      android:layout_height="?attr/actionBarSize"
+      android:layout_height="?android:attr/actionBarSize"
       android:background="@color/accent"
       android:elevation="4dp"
       android:titleTextColor="#FFFFFF"

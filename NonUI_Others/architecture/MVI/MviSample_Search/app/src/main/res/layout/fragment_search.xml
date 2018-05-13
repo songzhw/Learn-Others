@@ -9,7 +9,7 @@
   <SearchView
       android:id="@+id/searchView"
       android:layout_width="match_parent"
-      android:layout_height="?attr/actionBarSize"
+      android:layout_height="?android:attr/actionBarSize"
       android:background="@color/search_toolbar_background"
       android:iconifiedByDefault="false"
       android:queryHint="@string/search_query_hint"

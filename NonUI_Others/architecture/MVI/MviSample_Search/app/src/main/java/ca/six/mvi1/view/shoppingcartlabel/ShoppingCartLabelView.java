@@ -18,6 +18,7 @@
 package ca.six.mvi1.view.shoppingcartlabel;
 
 import com.hannesdorfmann.mosby3.mvp.MvpView;
+
 import io.reactivex.Observable;
 
 /**
@@ -27,10 +28,10 @@ import io.reactivex.Observable;
  */
 public interface ShoppingCartLabelView extends MvpView {
 
-  /**
-   * Intent to load the data
-   */
-  Observable<Boolean> loadIntent();
+    /**
+     * Intent to load the data
+     */
+    Observable<Boolean> loadIntent();
 
-  void render(int intemsInShoppingCart);
+    void render(int intemsInShoppingCart);
 }

@@ -19,9 +19,11 @@ package ca.six.mvi1;
 
 import android.app.Application;
 import android.content.Context;
-import ca.six.mvi1.dependencyinjection.DependencyInjection;
+
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+
+import ca.six.mvi1.dependencyinjection.DependencyInjection;
 import timber.log.Timber;
 
 /**
@@ -31,32 +33,31 @@ import timber.log.Timber;
  */
 public class SampleApplication extends Application {
 
-  protected DependencyInjection dependencyInjection = new DependencyInjection();
+    protected DependencyInjection dependencyInjection = new DependencyInjection();
+    private RefWatcher refWatcher;
 
-  {
-    Timber.plant(new Timber.DebugTree());
-  }
-
-  public static DependencyInjection getDependencyInjection(Context context) {
-    return ((SampleApplication) context.getApplicationContext()).dependencyInjection;
-  }
-
-
-  public static RefWatcher getRefWatcher(Context context) {
-    SampleApplication application = (SampleApplication) context.getApplicationContext();
-    return application.refWatcher;
-  }
-
-  private RefWatcher refWatcher;
-
-  @Override public void onCreate() {
-    super.onCreate();
-    if (LeakCanary.isInAnalyzerProcess(this)) {
-      // This process is dedicated to LeakCanary for heap analysis.
-      // You should not init your app in this process.
-      return;
+    {
+        Timber.plant(new Timber.DebugTree());
     }
-    refWatcher = LeakCanary.install(this);
-    Timber.d("Starting Application");
-  }
+
+    public static DependencyInjection getDependencyInjection(Context context) {
+        return ((SampleApplication) context.getApplicationContext()).dependencyInjection;
+    }
+
+    public static RefWatcher getRefWatcher(Context context) {
+        SampleApplication application = (SampleApplication) context.getApplicationContext();
+        return application.refWatcher;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        refWatcher = LeakCanary.install(this);
+        Timber.d("Starting Application");
+    }
 }

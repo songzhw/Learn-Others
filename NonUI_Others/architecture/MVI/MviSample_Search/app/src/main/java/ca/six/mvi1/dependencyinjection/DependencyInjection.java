@@ -36,10 +36,8 @@ import ca.six.mvi1.view.selectedcounttoolbar.SelectedCountToolbarPresenter;
 import ca.six.mvi1.view.shoppingcartlabel.ShoppingCartLabelPresenter;
 import ca.six.mvi1.view.shoppingcartoverview.ShoppingCartOverviewItem;
 import ca.six.mvi1.view.shoppingcartoverview.ShoppingCartOverviewPresenter;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
-import java.util.logging.Level;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -54,109 +52,108 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
  */
 public class DependencyInjection {
 
-  @SuppressFBWarnings(value = "MS_SHOULD_BE_FINAL", justification = "Changeable for unit testing")
-  public static String BASE_URL = "https://raw.githubusercontent.com";
-  public static final String BASE_URL_BRANCH = "master";
-  public static final String BASE_IMAGE_URL = BASE_URL
-      + "/sockeqwe/mosby/"
-      + DependencyInjection.BASE_URL_BRANCH
-      + "/sample-mvi/server/images/";
+    public static final String BASE_URL_BRANCH = "master";
+    public static String BASE_URL = "https://raw.githubusercontent.com";
+    public static final String BASE_IMAGE_URL = BASE_URL
+            + "/sockeqwe/mosby/"
+            + DependencyInjection.BASE_URL_BRANCH
+            + "/sample-mvi/server/images/";
 
-  // Don't do this in your real app
-  private final PublishSubject<Boolean> clearSelectionRelay = PublishSubject.create();
-  private final PublishSubject<Boolean> deleteSelectionRelay = PublishSubject.create();
-  //
-  // Some singletons
-  //
-  private final HttpLoggingInterceptor httpLogger = new HttpLoggingInterceptor();
-  private final Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL)
-      .client(new OkHttpClient.Builder().addInterceptor(httpLogger).build())
-      .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-      .addConverterFactory(MoshiConverterFactory.create())
-      .build();
-  private final ProductBackendApi backendApi = retrofit.create(ProductBackendApi.class);
-  private final ProductBackendApiDecorator backendApiDecorator =
-      new ProductBackendApiDecorator(backendApi);
-  private final MainMenuPresenter mainMenuPresenter = new MainMenuPresenter(backendApiDecorator);
-  private final ShoppingCart shoppingCart = new ShoppingCart();
-  private final ShoppingCartOverviewPresenter shoppingCartPresenter =
-      new ShoppingCartOverviewPresenter(shoppingCart, deleteSelectionRelay, clearSelectionRelay);
+    // Don't do this in your real app
+    private final PublishSubject<Boolean> clearSelectionRelay = PublishSubject.create();
+    private final PublishSubject<Boolean> deleteSelectionRelay = PublishSubject.create();
+    //
+    // Some singletons
+    //
+    private final HttpLoggingInterceptor httpLogger = new HttpLoggingInterceptor();
+    private final Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL)
+            .client(new OkHttpClient.Builder().addInterceptor(httpLogger).build())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build();
+    private final ProductBackendApi backendApi = retrofit.create(ProductBackendApi.class);
+    private final ProductBackendApiDecorator backendApiDecorator =
+            new ProductBackendApiDecorator(backendApi);
+    private final MainMenuPresenter mainMenuPresenter = new MainMenuPresenter(backendApiDecorator);
+    private final ShoppingCart shoppingCart = new ShoppingCart();
+    private final ShoppingCartOverviewPresenter shoppingCartPresenter =
+            new ShoppingCartOverviewPresenter(shoppingCart, deleteSelectionRelay, clearSelectionRelay);
 
 
-  private SearchEngine newSearchEngine() {
-    return new SearchEngine(backendApiDecorator);
-  }
+    private SearchEngine newSearchEngine() {
+        return new SearchEngine(backendApiDecorator);
+    }
 
-  private SearchInteractor newSearchInteractor() {
-    return new SearchInteractor(newSearchEngine());
-  }
+    private SearchInteractor newSearchInteractor() {
+        return new SearchInteractor(newSearchEngine());
+    }
 
-  PagingFeedLoader newPagingFeedLoader() {
-    return new PagingFeedLoader(backendApiDecorator);
-  }
+    PagingFeedLoader newPagingFeedLoader() {
+        return new PagingFeedLoader(backendApiDecorator);
+    }
 
-  GroupedPagedFeedLoader newGroupedPagedFeedLoader() {
-    return new GroupedPagedFeedLoader(newPagingFeedLoader());
-  }
+    GroupedPagedFeedLoader newGroupedPagedFeedLoader() {
+        return new GroupedPagedFeedLoader(newPagingFeedLoader());
+    }
 
-  HomeFeedLoader newHomeFeedLoader() {
-    return new HomeFeedLoader(newGroupedPagedFeedLoader(), backendApiDecorator);
-  }
+    HomeFeedLoader newHomeFeedLoader() {
+        return new HomeFeedLoader(newGroupedPagedFeedLoader(), backendApiDecorator);
+    }
 
-  public SearchPresenter newSearchPresenter() {
-    return new SearchPresenter(newSearchInteractor());
-  }
+    public SearchPresenter newSearchPresenter() {
+        return new SearchPresenter(newSearchInteractor());
+    }
 
-  public HomePresenter newHomePresenter() {
-    return new HomePresenter(newHomeFeedLoader());
-  }
+    public HomePresenter newHomePresenter() {
+        return new HomePresenter(newHomeFeedLoader());
+    }
 
-  /**
-   * This is a singleton
-   */
-  public MainMenuPresenter getMainMenuPresenter() {
-    return mainMenuPresenter;
-  }
+    /**
+     * This is a singleton
+     */
+    public MainMenuPresenter getMainMenuPresenter() {
+        return mainMenuPresenter;
+    }
 
-  public CategoryPresenter newCategoryPresenter() {
-    return new CategoryPresenter(backendApiDecorator);
-  }
+    public CategoryPresenter newCategoryPresenter() {
+        return new CategoryPresenter(backendApiDecorator);
+    }
 
-  public ProductDetailsPresenter newProductDetailsPresenter() {
-    return new ProductDetailsPresenter(new DetailsInteractor(backendApiDecorator, shoppingCart));
-  }
+    public ProductDetailsPresenter newProductDetailsPresenter() {
+        return new ProductDetailsPresenter(new DetailsInteractor(backendApiDecorator, shoppingCart));
+    }
 
-  /**
-   * This is a singleton
-   */
-  public ShoppingCartOverviewPresenter getShoppingCartPresenter() {
-    return shoppingCartPresenter;
-  }
+    /**
+     * This is a singleton
+     */
+    public ShoppingCartOverviewPresenter getShoppingCartPresenter() {
+        return shoppingCartPresenter;
+    }
 
-  public ShoppingCartLabelPresenter newShoppingCartLabelPresenter() {
-    return new ShoppingCartLabelPresenter(shoppingCart);
-  }
+    public ShoppingCartLabelPresenter newShoppingCartLabelPresenter() {
+        return new ShoppingCartLabelPresenter(shoppingCart);
+    }
 
-  public CheckoutButtonPresenter newCheckoutButtonPresenter() {
-    return new CheckoutButtonPresenter(shoppingCart);
-  }
+    public CheckoutButtonPresenter newCheckoutButtonPresenter() {
+        return new CheckoutButtonPresenter(shoppingCart);
+    }
 
-  public SelectedCountToolbarPresenter newSelectedCountToolbarPresenter() {
+    public SelectedCountToolbarPresenter newSelectedCountToolbarPresenter() {
 
-    Observable<Integer> selectedItemCountObservable =
-        shoppingCartPresenter.getViewStateObservable().map(items -> {
-          int selected = 0;
-          for (ShoppingCartOverviewItem item : items) {
-            if (item.isSelected()) selected++;
-          }
-          return selected;
-        });
+        Observable<Integer> selectedItemCountObservable =
+                shoppingCartPresenter.getViewStateObservable().map(items -> {
+                    int selected = 0;
+                    for (ShoppingCartOverviewItem item : items) {
+                        if (item.isSelected()) selected++;
+                    }
+                    return selected;
+                });
 
-    return new SelectedCountToolbarPresenter(selectedItemCountObservable, clearSelectionRelay,
-        deleteSelectionRelay);
-  }
+        return new SelectedCountToolbarPresenter(selectedItemCountObservable, clearSelectionRelay,
+                deleteSelectionRelay);
+    }
 
-  public PublishSubject<Boolean> getClearSelectionRelay() {
-    return clearSelectionRelay;
-  }
+    public PublishSubject<Boolean> getClearSelectionRelay() {
+        return clearSelectionRelay;
+    }
 }

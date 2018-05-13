@@ -18,6 +18,7 @@
 package ca.six.mvi1.view.search;
 
 import com.hannesdorfmann.mosby3.mvp.MvpView;
+
 import ca.six.mvi1.businesslogic.interactor.search.SearchViewState;
 import io.reactivex.Observable;
 
@@ -26,17 +27,17 @@ import io.reactivex.Observable;
  */
 public interface SearchView extends MvpView {
 
-  /**
-   * The search intent
-   *
-   * @return An observable emitting search query text
-   */
-  Observable<String> searchIntent();
+    /**
+     * The search intent
+     *
+     * @return An observable emitting search query text
+     */
+    Observable<String> searchIntent();
 
-  /**
-   * Renders the viewState
-   *
-   * @param viewState The current viewState state that should be displayed
-   */
-  void render(SearchViewState viewState);
+    /**
+     * Renders the viewState
+     *
+     * @param viewState The current viewState state that should be displayed
+     */
+    void render(SearchViewState viewState);
 }

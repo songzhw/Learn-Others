@@ -18,11 +18,13 @@
 package ca.six.mvi1.businesslogic.searchengine;
 
 import android.support.annotation.NonNull;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import ca.six.mvi1.businesslogic.http.ProductBackendApiDecorator;
 import ca.six.mvi1.businesslogic.model.Product;
 import io.reactivex.Observable;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * With this class you can search for products
@@ -30,40 +32,40 @@ import java.util.concurrent.TimeUnit;
  * @author Hannes Dorfmann
  */
 public class SearchEngine {
-  private final ProductBackendApiDecorator backend;
+    private final ProductBackendApiDecorator backend;
 
-  public SearchEngine(ProductBackendApiDecorator productApi) {
-    this.backend = productApi;
-  }
-
-  public Observable<List<Product>> searchFor(@NonNull String searchQueryText) {
-
-    if (searchQueryText == null) {
-      return Observable.error(new NullPointerException("SearchQueryText == null"));
+    public SearchEngine(ProductBackendApiDecorator productApi) {
+        this.backend = productApi;
     }
 
-    if (searchQueryText.length() == 0) {
-      return Observable.error(new IllegalArgumentException("SearchQueryTest is blank"));
+    public Observable<List<Product>> searchFor(@NonNull String searchQueryText) {
+
+        if (searchQueryText == null) {
+            return Observable.error(new NullPointerException("SearchQueryText == null"));
+        }
+
+        if (searchQueryText.length() == 0) {
+            return Observable.error(new IllegalArgumentException("SearchQueryTest is blank"));
+        }
+
+        return backend.getAllProducts()
+                .delay(1000, TimeUnit.MILLISECONDS)
+                .flatMap(Observable::fromIterable)
+                .filter(product -> isProductMatchingSearchCriteria(product, searchQueryText))
+                .toList()
+                .toObservable();
     }
 
-    return backend.getAllProducts()
-        .delay(1000, TimeUnit.MILLISECONDS)
-        .flatMap(Observable::fromIterable)
-        .filter(product -> isProductMatchingSearchCriteria(product, searchQueryText))
-        .toList()
-        .toObservable();
-  }
-
-  /**
-   * Filters those items that contains the search query text in name, description or category
-   */
-  private boolean isProductMatchingSearchCriteria(Product product, String searchQueryText) {
-    String words[] = searchQueryText.split(" ");
-    for (String w : words) {
-      if (product.getName().contains(w)) return true;
-      if (product.getDescription().contains(w)) return true;
-      if (product.getCategory().contains(w)) return true;
+    /**
+     * Filters those items that contains the search query text in name, description or category
+     */
+    private boolean isProductMatchingSearchCriteria(Product product, String searchQueryText) {
+        String words[] = searchQueryText.split(" ");
+        for (String w : words) {
+            if (product.getName().contains(w)) return true;
+            if (product.getDescription().contains(w)) return true;
+            if (product.getCategory().contains(w)) return true;
+        }
+        return false;
     }
-    return false;
-  }
 }

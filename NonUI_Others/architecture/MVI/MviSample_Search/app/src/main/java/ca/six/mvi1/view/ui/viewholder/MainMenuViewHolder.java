@@ -21,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ca.six.mvi1.R;
@@ -33,24 +34,25 @@ import ca.six.mvi1.businesslogic.model.MainMenuItem;
  */
 public class MainMenuViewHolder extends RecyclerView.ViewHolder {
 
-  public interface MainMenuSelectionListener {
-    public void onItemSelected(String categoryName);
-  }
+    @BindView(R.id.name)
+    TextView name;
 
-  public static MainMenuViewHolder create(LayoutInflater inflater,
-      MainMenuSelectionListener listener) {
-    return new MainMenuViewHolder(inflater.inflate(R.layout.item_main_menu, null, false), listener);
-  }
+    private MainMenuViewHolder(View itemView, MainMenuSelectionListener listener) {
+        super(itemView);
+        ButterKnife.bind(this, itemView);
+        itemView.setOnClickListener(v -> listener.onItemSelected(name.getText().toString()));
+    }
 
-  @BindView(R.id.name) TextView name;
+    public static MainMenuViewHolder create(LayoutInflater inflater,
+                                            MainMenuSelectionListener listener) {
+        return new MainMenuViewHolder(inflater.inflate(R.layout.item_main_menu, null, false), listener);
+    }
 
-  private MainMenuViewHolder(View itemView, MainMenuSelectionListener listener) {
-    super(itemView);
-    ButterKnife.bind(this, itemView);
-    itemView.setOnClickListener(v -> listener.onItemSelected(name.getText().toString()));
-  }
+    public void bind(MainMenuItem item) {
+        name.setText(item.getName());
+    }
 
-  public void bind(MainMenuItem item) {
-    name.setText(item.getName());
-  }
+    public interface MainMenuSelectionListener {
+        public void onItemSelected(String categoryName);
+    }
 }

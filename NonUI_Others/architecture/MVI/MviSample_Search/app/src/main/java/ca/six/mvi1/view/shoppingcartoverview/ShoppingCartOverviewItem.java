@@ -18,6 +18,7 @@
 package ca.six.mvi1.view.shoppingcartoverview;
 
 import android.support.annotation.NonNull;
+
 import ca.six.mvi1.businesslogic.model.Product;
 
 /**
@@ -26,42 +27,46 @@ import ca.six.mvi1.businesslogic.model.Product;
  * @author Hannes Dorfmann
  */
 public class ShoppingCartOverviewItem {
-  private final Product product;
-  private final boolean isSelected;
+    private final Product product;
+    private final boolean isSelected;
 
-  public ShoppingCartOverviewItem(@NonNull Product product, boolean isSelected) {
-    this.product = product;
-    this.isSelected = isSelected;
-  }
+    public ShoppingCartOverviewItem(@NonNull Product product, boolean isSelected) {
+        this.product = product;
+        this.isSelected = isSelected;
+    }
 
-  @NonNull public Product getProduct() {
-    return product;
-  }
+    @NonNull
+    public Product getProduct() {
+        return product;
+    }
 
-  public boolean isSelected() {
-    return isSelected;
-  }
+    public boolean isSelected() {
+        return isSelected;
+    }
 
-  @Override public String toString() {
-    return "ShoppingCartItem{" +
-        "product=" + product +
-        ", isSelected=" + isSelected +
-        '}';
-  }
+    @Override
+    public String toString() {
+        return "ShoppingCartItem{" +
+                "product=" + product +
+                ", isSelected=" + isSelected +
+                '}';
+    }
 
-  @Override public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-    ShoppingCartOverviewItem item = (ShoppingCartOverviewItem) o;
+        ShoppingCartOverviewItem item = (ShoppingCartOverviewItem) o;
 
-    if (isSelected != item.isSelected) return false;
-    return product.equals(item.product);
-  }
+        if (isSelected != item.isSelected) return false;
+        return product.equals(item.product);
+    }
 
-  @Override public int hashCode() {
-    int result = product.hashCode();
-    result = 31 * result + (isSelected ? 1 : 0);
-    return result;
-  }
+    @Override
+    public int hashCode() {
+        int result = product.hashCode();
+        result = 31 * result + (isSelected ? 1 : 0);
+        return result;
+    }
 }

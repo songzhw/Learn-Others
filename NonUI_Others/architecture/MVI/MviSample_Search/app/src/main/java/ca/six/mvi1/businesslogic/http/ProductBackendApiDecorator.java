@@ -17,86 +17,87 @@
 
 package ca.six.mvi1.businesslogic.http;
 
-import ca.six.mvi1.businesslogic.model.Product;
-import io.reactivex.Observable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import ca.six.mvi1.businesslogic.model.Product;
+import io.reactivex.Observable;
 
 /**
  * Since this app only has a static backend providing some static json responses,
  * we have to calculate some things locally on the app users device, that otherwise would be done
  * on
  * a real backend server.
- *
+ * <p>
  * All app components should interact with this decorator class and not with the real retrofit
  * interface.
  *
  * @author Hannes Dorfmann
  */
 public class ProductBackendApiDecorator {
-  private final ProductBackendApi api;
+    private final ProductBackendApi api;
 
-  public ProductBackendApiDecorator(ProductBackendApi api) {
-    this.api = api;
-  }
+    public ProductBackendApiDecorator(ProductBackendApi api) {
+        this.api = api;
+    }
 
-  public Observable<List<Product>> getProducts(int pagination) {
-    return api.getProducts(pagination);
-  }
+    public Observable<List<Product>> getProducts(int pagination) {
+        return api.getProducts(pagination);
+    }
 
-  /**
-   * Get a list with all products from backend
-   */
-  public Observable<List<Product>> getAllProducts() {
-    return Observable.zip(getProducts(0), getProducts(1), getProducts(2), getProducts(3),
-        (products0, products1, products2, products3) -> {
-          List<Product> productList = new ArrayList<Product>();
-          productList.addAll(products0);
-          productList.addAll(products1);
-          productList.addAll(products2);
-          productList.addAll(products3);
-          return productList;
+    /**
+     * Get a list with all products from backend
+     */
+    public Observable<List<Product>> getAllProducts() {
+        return Observable.zip(getProducts(0), getProducts(1), getProducts(2), getProducts(3),
+                (products0, products1, products2, products3) -> {
+                    List<Product> productList = new ArrayList<Product>();
+                    productList.addAll(products0);
+                    productList.addAll(products1);
+                    productList.addAll(products2);
+                    productList.addAll(products3);
+                    return productList;
+                });
+    }
+
+    /**
+     * Get all products of a certain category
+     *
+     * @param categoryName The name of the category
+     */
+    public Observable<List<Product>> getAllProductsOfCategory(String categoryName) {
+        return getAllProducts().flatMap(Observable::fromIterable)
+                .filter(product -> product.getCategory().equals(categoryName))
+                .toList()
+                .toObservable();
+    }
+
+    /**
+     * Get a list with all categories
+     */
+    public Observable<List<String>> getAllCategories() {
+        return getAllProducts().map(products -> {
+            Set<String> categories = new HashSet<String>();
+            for (Product p : products) {
+                categories.add(p.getCategory());
+            }
+
+            List<String> result = new ArrayList<String>(categories.size());
+            result.addAll(categories);
+            return result;
         });
-  }
+    }
 
-  /**
-   * Get all products of a certain category
-   *
-   * @param categoryName The name of the category
-   */
-  public Observable<List<Product>> getAllProductsOfCategory(String categoryName) {
-    return getAllProducts().flatMap(Observable::fromIterable)
-        .filter(product -> product.getCategory().equals(categoryName))
-        .toList()
-        .toObservable();
-  }
-
-  /**
-   * Get a list with all categories
-   */
-  public Observable<List<String>> getAllCategories() {
-    return getAllProducts().map(products -> {
-      Set<String> categories = new HashSet<String>();
-      for (Product p : products) {
-        categories.add(p.getCategory());
-      }
-
-      List<String> result = new ArrayList<String>(categories.size());
-      result.addAll(categories);
-      return result;
-    });
-  }
-
-  /**
-   * Get the product with the given id
-   *
-   * @param productId The product id
-   */
-  public Observable<Product> getProduct(int productId) {
-    return getAllProducts().flatMap(products -> Observable.fromIterable(products))
-        .filter(product -> product.getId() == productId)
-        .take(1);
-  }
+    /**
+     * Get the product with the given id
+     *
+     * @param productId The product id
+     */
+    public Observable<Product> getProduct(int productId) {
+        return getAllProducts().flatMap(products -> Observable.fromIterable(products))
+                .filter(product -> product.getId() == productId)
+                .take(1);
+    }
 }

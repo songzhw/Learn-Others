@@ -22,9 +22,11 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
+
 import com.hannesdorfmann.mosby3.ViewGroupMviDelegate;
 import com.hannesdorfmann.mosby3.ViewGroupMviDelegateCallback;
 import com.hannesdorfmann.mosby3.ViewGroupMviDelegateImpl;
+
 import ca.six.mvi1.R;
 import ca.six.mvi1.SampleApplication;
 import io.reactivex.Observable;
@@ -32,63 +34,77 @@ import timber.log.Timber;
 
 /**
  * A UI widget that displays how many items are in the shopping cart
+ *
  * @author Hannes Dorfmann
  */
 public class ShoppingCartLabel extends AppCompatButton implements ShoppingCartLabelView,
-    ViewGroupMviDelegateCallback<ShoppingCartLabelView, ShoppingCartLabelPresenter> {
+        ViewGroupMviDelegateCallback<ShoppingCartLabelView, ShoppingCartLabelPresenter> {
 
-  private final ViewGroupMviDelegate<ShoppingCartLabelView, ShoppingCartLabelPresenter>
-      mviDelegate = new ViewGroupMviDelegateImpl<>(this, this, true);
+    private final ViewGroupMviDelegate<ShoppingCartLabelView, ShoppingCartLabelPresenter>
+            mviDelegate = new ViewGroupMviDelegateImpl<>(this, this, true);
 
-  public ShoppingCartLabel(Context context, AttributeSet attrs) {
-    super(context, attrs);
-  }
+    public ShoppingCartLabel(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-  @NonNull @Override public ShoppingCartLabelView getMvpView() {
-    return this;
-  }
+    @NonNull
+    @Override
+    public ShoppingCartLabelView getMvpView() {
+        return this;
+    }
 
-  @NonNull @Override public ShoppingCartLabelPresenter createPresenter() {
-    Timber.d("create presenter");
-    return SampleApplication.getDependencyInjection(getContext()).newShoppingCartLabelPresenter();
-  }
+    @NonNull
+    @Override
+    public ShoppingCartLabelPresenter createPresenter() {
+        Timber.d("create presenter");
+        return SampleApplication.getDependencyInjection(getContext()).newShoppingCartLabelPresenter();
+    }
 
-  @Override public Parcelable superOnSaveInstanceState() {
-    return super.onSaveInstanceState();
-  }
+    @Override
+    public Parcelable superOnSaveInstanceState() {
+        return super.onSaveInstanceState();
+    }
 
-  @Override public void superOnRestoreInstanceState(Parcelable state) {
-    super.onRestoreInstanceState(state);
-  }
+    @Override
+    public void superOnRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(state);
+    }
 
-  @Override public Observable<Boolean> loadIntent() {
-    return Observable.just(true);
-  }
+    @Override
+    public Observable<Boolean> loadIntent() {
+        return Observable.just(true);
+    }
 
-  @Override public void render(int itemsInShoppingCart) {
-    Timber.d("render %d items in shopping cart", itemsInShoppingCart);
-    setText(getResources().getQuantityString(R.plurals.items, itemsInShoppingCart, itemsInShoppingCart));
-  }
+    @Override
+    public void render(int itemsInShoppingCart) {
+        Timber.d("render %d items in shopping cart", itemsInShoppingCart);
+        setText(getResources().getQuantityString(R.plurals.items, itemsInShoppingCart, itemsInShoppingCart));
+    }
 
-  @Override protected void onAttachedToWindow() {
-    super.onAttachedToWindow();
-    mviDelegate.onAttachedToWindow();
-  }
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mviDelegate.onAttachedToWindow();
+    }
 
-  @Override protected void onDetachedFromWindow() {
-    super.onDetachedFromWindow();
-    mviDelegate.onDetachedFromWindow();
-  }
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mviDelegate.onDetachedFromWindow();
+    }
 
-  @Override public Parcelable onSaveInstanceState() {
-    return mviDelegate.onSaveInstanceState();
-  }
+    @Override
+    public Parcelable onSaveInstanceState() {
+        return mviDelegate.onSaveInstanceState();
+    }
 
-  @Override public void onRestoreInstanceState(Parcelable state) {
-    mviDelegate.onRestoreInstanceState(state);
-  }
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        mviDelegate.onRestoreInstanceState(state);
+    }
 
-  @Override public void setRestoringViewState(boolean restoringViewState) {
-    // Not needed for this view
-  }
+    @Override
+    public void setRestoringViewState(boolean restoringViewState) {
+        // Not needed for this view
+    }
 }

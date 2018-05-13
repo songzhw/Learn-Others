@@ -17,10 +17,11 @@
 
 package ca.six.mvi1.businesslogic.http;
 
+import java.util.List;
+
 import ca.six.mvi1.businesslogic.model.Product;
 import ca.six.mvi1.dependencyinjection.DependencyInjection;
 import io.reactivex.Observable;
-import java.util.List;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
@@ -31,8 +32,8 @@ import retrofit2.http.Path;
  */
 public interface ProductBackendApi {
 
-  @GET("/sockeqwe/mosby/"
-      + DependencyInjection.BASE_URL_BRANCH
-      + "/sample-mvi/server/api/products{pagination}.json")
-  Observable<List<Product>> getProducts(@Path("pagination") int pagination);
+    @GET("/sockeqwe/mosby/"
+            + DependencyInjection.BASE_URL_BRANCH
+            + "/sample-mvi/server/api/products{pagination}.json")
+    Observable<List<Product>> getProducts(@Path("pagination") int pagination);
 }

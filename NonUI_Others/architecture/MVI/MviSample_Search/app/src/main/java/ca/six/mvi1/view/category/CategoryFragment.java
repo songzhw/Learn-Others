@@ -26,11 +26,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.hannesdorfmann.mosby3.mvi.MviFragment;
+
+import java.util.List;
+
 import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import com.hannesdorfmann.mosby3.mvi.MviFragment;
 import ca.six.mvi1.R;
 import ca.six.mvi1.SampleApplication;
 import ca.six.mvi1.businesslogic.model.Product;
@@ -38,7 +42,6 @@ import ca.six.mvi1.view.detail.ProductDetailsActivity;
 import ca.six.mvi1.view.ui.GridSpacingItemDecoration;
 import ca.six.mvi1.view.ui.viewholder.ProductViewHolder;
 import io.reactivex.Observable;
-import java.util.List;
 import timber.log.Timber;
 
 /**
@@ -47,92 +50,104 @@ import timber.log.Timber;
  * @author Hannes Dorfmann
  */
 public class CategoryFragment extends MviFragment<CategoryView, CategoryPresenter>
-    implements CategoryView, ProductViewHolder.ProductClickedListener {
+        implements CategoryView, ProductViewHolder.ProductClickedListener {
 
-  private final static String CATEGORY_NAME = "categoryName";
+    private final static String CATEGORY_NAME = "categoryName";
 
-  @BindView(R.id.recyclerView) RecyclerView recyclerView;
-  @BindView(R.id.loadingView) View loadingView;
-  @BindView(R.id.errorView) View errorView;
-  @BindInt(R.integer.grid_span_size) int spanCount;
-  private Unbinder unbinder;
-  private CategoryAdapter adapter;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
+    @BindView(R.id.loadingView)
+    View loadingView;
+    @BindView(R.id.errorView)
+    View errorView;
+    @BindInt(R.integer.grid_span_size)
+    int spanCount;
+    private Unbinder unbinder;
+    private CategoryAdapter adapter;
 
-  @Override public void onProductClicked(Product product) {
-    ProductDetailsActivity.start(getActivity(), product);
-  }
-
-  @NonNull public static CategoryFragment newInstance(@NonNull String categoryName) {
-    if (categoryName == null) {
-      throw new NullPointerException("category name == null");
+    @NonNull
+    public static CategoryFragment newInstance(@NonNull String categoryName) {
+        if (categoryName == null) {
+            throw new NullPointerException("category name == null");
+        }
+        CategoryFragment fragment = new CategoryFragment();
+        Bundle args = new Bundle();
+        args.putString(CATEGORY_NAME, categoryName);
+        fragment.setArguments(args);
+        return fragment;
     }
-    CategoryFragment fragment = new CategoryFragment();
-    Bundle args = new Bundle();
-    args.putString(CATEGORY_NAME, categoryName);
-    fragment.setArguments(args);
-    return fragment;
-  }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_category, container, false);
-    unbinder = ButterKnife.bind(this, view);
-    GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), spanCount);
-    adapter = new CategoryAdapter(inflater, this);
-    recyclerView.setAdapter(adapter);
-    recyclerView.setLayoutManager(layoutManager);
-    recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount,
-        getResources().getDimensionPixelSize(R.dimen.grid_spacing), true));
-    return view;
-  }
-
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-    unbinder.unbind();
-  }
-
-  @NonNull @Override public CategoryPresenter createPresenter() {
-    Timber.d("Create presenter");
-    return SampleApplication.getDependencyInjection(getContext()).newCategoryPresenter();
-  }
-
-  @Override public Observable<String> loadIntents() {
-    return Observable.just(getArguments().getString(CATEGORY_NAME));
-  }
-
-  @Override public void render(CategoryViewState state) {
-    Timber.d("Render %s", state);
-    if (state instanceof CategoryViewState.LoadingState) {
-      renderLoading();
-    } else if (state instanceof CategoryViewState.DataState) {
-      renderData(((CategoryViewState.DataState) state).getProducts());
+    @Override
+    public void onProductClicked(Product product) {
+        ProductDetailsActivity.start(getActivity(), product);
     }
-    if (state instanceof CategoryViewState.ErrorState) {
-      renderError();
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_category, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), spanCount);
+        adapter = new CategoryAdapter(inflater, this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount,
+                getResources().getDimensionPixelSize(R.dimen.grid_spacing), true));
+        return view;
     }
-  }
 
-  private void renderError() {
-    TransitionManager.beginDelayedTransition((ViewGroup) getView());
-    loadingView.setVisibility(View.GONE);
-    errorView.setVisibility(View.VISIBLE);
-    recyclerView.setVisibility(View.GONE);
-  }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 
-  private void renderLoading() {
-    TransitionManager.beginDelayedTransition((ViewGroup) getView());
-    loadingView.setVisibility(View.VISIBLE);
-    errorView.setVisibility(View.GONE);
-    recyclerView.setVisibility(View.GONE);
-  }
+    @NonNull
+    @Override
+    public CategoryPresenter createPresenter() {
+        Timber.d("Create presenter");
+        return SampleApplication.getDependencyInjection(getContext()).newCategoryPresenter();
+    }
 
-  private void renderData(List<Product> products) {
-    adapter.setProducts(products);
-    adapter.notifyDataSetChanged();
-    TransitionManager.beginDelayedTransition((ViewGroup) getView());
-    loadingView.setVisibility(View.GONE);
-    errorView.setVisibility(View.GONE);
-    recyclerView.setVisibility(View.VISIBLE);
-  }
+    @Override
+    public Observable<String> loadIntents() {
+        return Observable.just(getArguments().getString(CATEGORY_NAME));
+    }
+
+    @Override
+    public void render(CategoryViewState state) {
+        Timber.d("Render %s", state);
+        if (state instanceof CategoryViewState.LoadingState) {
+            renderLoading();
+        } else if (state instanceof CategoryViewState.DataState) {
+            renderData(((CategoryViewState.DataState) state).getProducts());
+        }
+        if (state instanceof CategoryViewState.ErrorState) {
+            renderError();
+        }
+    }
+
+    private void renderError() {
+        TransitionManager.beginDelayedTransition((ViewGroup) getView());
+        loadingView.setVisibility(View.GONE);
+        errorView.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+    }
+
+    private void renderLoading() {
+        TransitionManager.beginDelayedTransition((ViewGroup) getView());
+        loadingView.setVisibility(View.VISIBLE);
+        errorView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+    }
+
+    private void renderData(List<Product> products) {
+        adapter.setProducts(products);
+        adapter.notifyDataSetChanged();
+        TransitionManager.beginDelayedTransition((ViewGroup) getView());
+        loadingView.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
 }

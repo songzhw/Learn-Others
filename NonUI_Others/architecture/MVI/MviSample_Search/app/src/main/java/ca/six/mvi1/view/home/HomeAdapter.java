@@ -21,6 +21,9 @@ import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
+import java.util.List;
+
 import ca.six.mvi1.businesslogic.model.AdditionalItemsLoadable;
 import ca.six.mvi1.businesslogic.model.FeedItem;
 import ca.six.mvi1.businesslogic.model.Product;
@@ -31,177 +34,183 @@ import ca.six.mvi1.view.ui.viewholder.ProductViewHolder;
 import ca.six.mvi1.view.ui.viewholder.SectionHederViewHolder;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
-import java.util.List;
 
 /**
  * @author Hannes Dorfmann
  */
 
 public class HomeAdapter extends RecyclerView.Adapter
-    implements MoreItemsViewHolder.LoadItemsClickListener {
+        implements MoreItemsViewHolder.LoadItemsClickListener {
 
-  static final int VIEW_TYPE_PRODUCT = 0;
-  static final int VIEW_TYPE_LOADING_MORE_NEXT_PAGE = 1;
-  static final int VIEW_TYPE_SECTION_HEADER = 2;
-  static final int VIEW_TYPE_MORE_ITEMS_AVAILABLE = 3;
+    static final int VIEW_TYPE_PRODUCT = 0;
+    static final int VIEW_TYPE_LOADING_MORE_NEXT_PAGE = 1;
+    static final int VIEW_TYPE_SECTION_HEADER = 2;
+    static final int VIEW_TYPE_MORE_ITEMS_AVAILABLE = 3;
+    private final LayoutInflater layoutInflater;
+    private final ProductViewHolder.ProductClickedListener productClickedListener;
+    private boolean isLoadingNextPage = false;
+    private List<FeedItem> items;
+    private PublishSubject<String> loadMoreItemsOfCategoryObservable = PublishSubject.create();
 
-  private boolean isLoadingNextPage = false;
-  private List<FeedItem> items;
-  private final LayoutInflater layoutInflater;
-  private final ProductViewHolder.ProductClickedListener productClickedListener;
-
-  private PublishSubject<String> loadMoreItemsOfCategoryObservable = PublishSubject.create();
-
-  public HomeAdapter(LayoutInflater layoutInflater,
-      ProductViewHolder.ProductClickedListener productClickedListener) {
-    this.layoutInflater = layoutInflater;
-    this.productClickedListener = productClickedListener;
-  }
-
-  public List<FeedItem> getItems() {
-    return items;
-  }
-
-  /**
-   * @return true if value has changed since last invocation
-   */
-  public boolean setLoadingNextPage(boolean loadingNextPage) {
-    boolean hasLoadingMoreChanged = loadingNextPage != isLoadingNextPage;
-
-    boolean notifyInserted = loadingNextPage && hasLoadingMoreChanged;
-    boolean notifyRemoved = !loadingNextPage && hasLoadingMoreChanged;
-    isLoadingNextPage = loadingNextPage;
-
-    if (notifyInserted) {
-      notifyItemInserted(items.size());
-    } else if (notifyRemoved) {
-      notifyItemRemoved(items.size());
+    public HomeAdapter(LayoutInflater layoutInflater,
+                       ProductViewHolder.ProductClickedListener productClickedListener) {
+        this.layoutInflater = layoutInflater;
+        this.productClickedListener = productClickedListener;
     }
 
-    return hasLoadingMoreChanged;
-  }
+    public List<FeedItem> getItems() {
+        return items;
+    }
 
-  public boolean isLoadingNextPage() {
-    return isLoadingNextPage;
-  }
+    public void setItems(List<FeedItem> newItems) {
+        List<FeedItem> oldItems = this.items;
+        this.items = newItems;
 
-  public void setItems(List<FeedItem> newItems) {
-    List<FeedItem> oldItems = this.items;
-    this.items = newItems;
+        if (oldItems == null) {
+            notifyDataSetChanged();
+        } else {
+            // Use Diff utils
+            DiffUtil.calculateDiff(new DiffUtil.Callback() {
+                @Override
+                public int getOldListSize() {
+                    return oldItems.size();
+                }
 
-    if (oldItems == null) {
-      notifyDataSetChanged();
-    } else {
-      // Use Diff utils
-      DiffUtil.calculateDiff(new DiffUtil.Callback() {
-        @Override public int getOldListSize() {
-          return oldItems.size();
+                @Override
+                public int getNewListSize() {
+                    return newItems.size();
+                }
+
+                @Override
+                public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                    Object oldItem = oldItems.get(oldItemPosition);
+                    Object newItem = newItems.get(newItemPosition);
+
+                    if (oldItem instanceof Product
+                            && newItem instanceof Product
+                            && ((Product) oldItem).getId() == ((Product) newItem).getId()) {
+                        return true;
+                    }
+
+                    if (oldItem instanceof SectionHeader
+                            && newItem instanceof SectionHeader
+                            && ((SectionHeader) oldItem).getName().equals(((SectionHeader) newItem).getName())) {
+                        return true;
+                    }
+
+                    if (oldItem instanceof AdditionalItemsLoadable
+                            && newItem instanceof AdditionalItemsLoadable
+                            && ((AdditionalItemsLoadable) oldItem).getCategoryName()
+                            .equals(((AdditionalItemsLoadable) newItem).getCategoryName())) {
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                @Override
+                public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                    Object oldItem = oldItems.get(oldItemPosition);
+                    Object newItem = newItems.get(newItemPosition);
+
+                    return oldItem.equals(newItem);
+                }
+            }, true).dispatchUpdatesTo(this);
+        }
+    }
+
+    /**
+     * @return true if value has changed since last invocation
+     */
+    public boolean setLoadingNextPage(boolean loadingNextPage) {
+        boolean hasLoadingMoreChanged = loadingNextPage != isLoadingNextPage;
+
+        boolean notifyInserted = loadingNextPage && hasLoadingMoreChanged;
+        boolean notifyRemoved = !loadingNextPage && hasLoadingMoreChanged;
+        isLoadingNextPage = loadingNextPage;
+
+        if (notifyInserted) {
+            notifyItemInserted(items.size());
+        } else if (notifyRemoved) {
+            notifyItemRemoved(items.size());
         }
 
-        @Override public int getNewListSize() {
-          return newItems.size();
+        return hasLoadingMoreChanged;
+    }
+
+    public boolean isLoadingNextPage() {
+        return isLoadingNextPage;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+
+        if (isLoadingNextPage && position == items.size()) {
+            return VIEW_TYPE_LOADING_MORE_NEXT_PAGE;
         }
 
-        @Override public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-          Object oldItem = oldItems.get(oldItemPosition);
-          Object newItem = newItems.get(newItemPosition);
+        FeedItem item = items.get(position);
 
-          if (oldItem instanceof Product
-              && newItem instanceof Product
-              && ((Product) oldItem).getId() == ((Product) newItem).getId()) {
-            return true;
-          }
-
-          if (oldItem instanceof SectionHeader
-              && newItem instanceof SectionHeader
-              && ((SectionHeader) oldItem).getName().equals(((SectionHeader) newItem).getName())) {
-            return true;
-          }
-
-          if (oldItem instanceof AdditionalItemsLoadable
-              && newItem instanceof AdditionalItemsLoadable
-              && ((AdditionalItemsLoadable) oldItem).getCategoryName()
-              .equals(((AdditionalItemsLoadable) newItem).getCategoryName())) {
-            return true;
-          }
-
-          return false;
+        if (item instanceof Product) {
+            return VIEW_TYPE_PRODUCT;
+        } else if (item instanceof SectionHeader) {
+            return VIEW_TYPE_SECTION_HEADER;
+        } else if (item instanceof AdditionalItemsLoadable) {
+            return VIEW_TYPE_MORE_ITEMS_AVAILABLE;
         }
 
-        @Override public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-          Object oldItem = oldItems.get(oldItemPosition);
-          Object newItem = newItems.get(newItemPosition);
+        throw new IllegalArgumentException("Not able to dertermine the view type for item at position "
+                + position
+                + ". Item is: "
+                + item);
+    }
 
-          return oldItem.equals(newItem);
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case VIEW_TYPE_PRODUCT:
+                return ProductViewHolder.create(layoutInflater, productClickedListener);
+            case VIEW_TYPE_LOADING_MORE_NEXT_PAGE:
+                return LoadingViewHolder.create(layoutInflater);
+            case VIEW_TYPE_MORE_ITEMS_AVAILABLE:
+                return MoreItemsViewHolder.create(layoutInflater, this);
+            case VIEW_TYPE_SECTION_HEADER:
+                return SectionHederViewHolder.create(layoutInflater);
         }
-      }, true).dispatchUpdatesTo(this);
-    }
-  }
 
-  @Override public int getItemViewType(int position) {
-
-    if (isLoadingNextPage && position == items.size()) {
-      return VIEW_TYPE_LOADING_MORE_NEXT_PAGE;
+        throw new IllegalArgumentException("Couldn't create a ViewHolder for viewType  = " + viewType);
     }
 
-    FeedItem item = items.get(position);
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-    if (item instanceof Product) {
-      return VIEW_TYPE_PRODUCT;
-    } else if (item instanceof SectionHeader) {
-      return VIEW_TYPE_SECTION_HEADER;
-    } else if (item instanceof AdditionalItemsLoadable) {
-      return VIEW_TYPE_MORE_ITEMS_AVAILABLE;
+        if (holder instanceof LoadingViewHolder) {
+            return;
+        }
+
+        FeedItem item = items.get(position);
+        if (holder instanceof ProductViewHolder) {
+            ((ProductViewHolder) holder).bind((Product) item);
+        } else if (holder instanceof SectionHederViewHolder) {
+            ((SectionHederViewHolder) holder).onBind((SectionHeader) item);
+        } else if (holder instanceof MoreItemsViewHolder) {
+            ((MoreItemsViewHolder) holder).bind((AdditionalItemsLoadable) item);
+        } else {
+            throw new IllegalArgumentException("couldn't accept  ViewHolder " + holder);
+        }
     }
 
-    throw new IllegalArgumentException("Not able to dertermine the view type for item at position "
-        + position
-        + ". Item is: "
-        + item);
-  }
-
-  @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    switch (viewType) {
-      case VIEW_TYPE_PRODUCT:
-        return ProductViewHolder.create(layoutInflater, productClickedListener);
-      case VIEW_TYPE_LOADING_MORE_NEXT_PAGE:
-        return LoadingViewHolder.create(layoutInflater);
-      case VIEW_TYPE_MORE_ITEMS_AVAILABLE:
-        return MoreItemsViewHolder.create(layoutInflater, this);
-      case VIEW_TYPE_SECTION_HEADER:
-        return SectionHederViewHolder.create(layoutInflater);
+    @Override
+    public int getItemCount() {
+        return items == null ? 0 : (items.size() + (isLoadingNextPage ? 1 : 0));
     }
 
-    throw new IllegalArgumentException("Couldn't create a ViewHolder for viewType  = " + viewType);
-  }
-
-  @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-    if (holder instanceof LoadingViewHolder) {
-      return;
+    @Override
+    public void loadItemsForCategory(String category) {
+        loadMoreItemsOfCategoryObservable.onNext(category);
     }
 
-    FeedItem item = items.get(position);
-    if (holder instanceof ProductViewHolder) {
-      ((ProductViewHolder) holder).bind((Product) item);
-    } else if (holder instanceof SectionHederViewHolder) {
-      ((SectionHederViewHolder) holder).onBind((SectionHeader) item);
-    } else if (holder instanceof MoreItemsViewHolder) {
-      ((MoreItemsViewHolder) holder).bind((AdditionalItemsLoadable) item);
-    } else {
-      throw new IllegalArgumentException("couldn't accept  ViewHolder " + holder);
+    public Observable<String> loadMoreItemsOfCategoryObservable() {
+        return loadMoreItemsOfCategoryObservable;
     }
-  }
-
-  @Override public int getItemCount() {
-    return items == null ? 0 : (items.size() + (isLoadingNextPage ? 1 : 0));
-  }
-
-  @Override public void loadItemsForCategory(String category) {
-    loadMoreItemsOfCategoryObservable.onNext(category);
-  }
-
-  public Observable<String> loadMoreItemsOfCategoryObservable() {
-    return loadMoreItemsOfCategoryObservable;
-  }
 }

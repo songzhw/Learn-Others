@@ -18,6 +18,7 @@
 package ca.six.mvi1.view.detail;
 
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter;
+
 import ca.six.mvi1.businesslogic.interactor.details.DetailsInteractor;
 import ca.six.mvi1.businesslogic.interactor.details.ProductDetailsViewState;
 import io.reactivex.Observable;
@@ -29,31 +30,32 @@ import timber.log.Timber;
  */
 
 public class ProductDetailsPresenter
-    extends MviBasePresenter<ProductDetailsView, ProductDetailsViewState> {
+        extends MviBasePresenter<ProductDetailsView, ProductDetailsViewState> {
 
-  private final DetailsInteractor interactor;
+    private final DetailsInteractor interactor;
 
-  public ProductDetailsPresenter(DetailsInteractor interactor) {
-    this.interactor = interactor;
-  }
+    public ProductDetailsPresenter(DetailsInteractor interactor) {
+        this.interactor = interactor;
+    }
 
-  @Override protected void bindIntents() {
+    @Override
+    protected void bindIntents() {
 
-    intent(ProductDetailsView::addToShoppingCartIntent)
-        .doOnNext(product -> Timber.d("intent: add to shopping cart %s", product))
-        .flatMap(product -> interactor.addToShoppingCart(product).toObservable()).subscribe();
+        intent(ProductDetailsView::addToShoppingCartIntent)
+                .doOnNext(product -> Timber.d("intent: add to shopping cart %s", product))
+                .flatMap(product -> interactor.addToShoppingCart(product).toObservable()).subscribe();
 
-    intent(ProductDetailsView::removeFromShoppingCartIntent)
-        .doOnNext(product -> Timber.d("intent: remove from shopping cart %s", product))
-        .flatMap(product -> interactor.removeFromShoppingCart(product).toObservable())
-        .subscribe();
+        intent(ProductDetailsView::removeFromShoppingCartIntent)
+                .doOnNext(product -> Timber.d("intent: remove from shopping cart %s", product))
+                .flatMap(product -> interactor.removeFromShoppingCart(product).toObservable())
+                .subscribe();
 
-    Observable<ProductDetailsViewState> loadDetails =
-        intent(ProductDetailsView::loadDetailsIntent)
-            .doOnNext(productId -> Timber.d("intent: load details for product id = %s", productId))
-            .flatMap(interactor::getDetails)
-            .observeOn(AndroidSchedulers.mainThread());
+        Observable<ProductDetailsViewState> loadDetails =
+                intent(ProductDetailsView::loadDetailsIntent)
+                        .doOnNext(productId -> Timber.d("intent: load details for product id = %s", productId))
+                        .flatMap(interactor::getDetails)
+                        .observeOn(AndroidSchedulers.mainThread());
 
-    subscribeViewState(loadDetails, ProductDetailsView::render);
-  }
+        subscribeViewState(loadDetails, ProductDetailsView::render);
+    }
 }

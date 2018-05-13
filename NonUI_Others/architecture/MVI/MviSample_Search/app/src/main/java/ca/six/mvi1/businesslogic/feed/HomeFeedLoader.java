@@ -17,12 +17,13 @@
 
 package ca.six.mvi1.businesslogic.feed;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import ca.six.mvi1.businesslogic.http.ProductBackendApiDecorator;
 import ca.six.mvi1.businesslogic.model.FeedItem;
 import ca.six.mvi1.businesslogic.model.Product;
 import io.reactivex.Observable;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Builds the HomeFeed
@@ -30,42 +31,42 @@ import java.util.concurrent.TimeUnit;
  * @author Hannes Dorfmann
  */
 public class HomeFeedLoader {
-  private final GroupedPagedFeedLoader groupedLoader;
-  private final ProductBackendApiDecorator backendApi;
+    private final GroupedPagedFeedLoader groupedLoader;
+    private final ProductBackendApiDecorator backendApi;
 
-  public HomeFeedLoader(GroupedPagedFeedLoader groupedLoader,
-      ProductBackendApiDecorator backendApi) {
-    this.groupedLoader = groupedLoader;
-    this.backendApi = backendApi;
-  }
+    public HomeFeedLoader(GroupedPagedFeedLoader groupedLoader,
+                          ProductBackendApiDecorator backendApi) {
+        this.groupedLoader = groupedLoader;
+        this.backendApi = backendApi;
+    }
 
-  /**
-   * Typically triggered with a pull-to-refresh
-   */
-  public Observable<List<FeedItem>> loadNewestPage() {
-    return groupedLoader.getNewestPage().delay(2, TimeUnit.SECONDS);
-  }
+    /**
+     * Typically triggered with a pull-to-refresh
+     */
+    public Observable<List<FeedItem>> loadNewestPage() {
+        return groupedLoader.getNewestPage().delay(2, TimeUnit.SECONDS);
+    }
 
-  /**
-   * Loads the first page
-   */
-  public Observable<List<FeedItem>> loadFirstPage() {
-    return groupedLoader.getGroupedFirstPage().delay(2, TimeUnit.SECONDS);
-  }
+    /**
+     * Loads the first page
+     */
+    public Observable<List<FeedItem>> loadFirstPage() {
+        return groupedLoader.getGroupedFirstPage().delay(2, TimeUnit.SECONDS);
+    }
 
-  /**
-   * loads the next page (pagination)
-   */
-  public Observable<List<FeedItem>> loadNextPage() {
-    return groupedLoader.getGroupedNextPage().delay(2, TimeUnit.SECONDS);
-  }
+    /**
+     * loads the next page (pagination)
+     */
+    public Observable<List<FeedItem>> loadNextPage() {
+        return groupedLoader.getGroupedNextPage().delay(2, TimeUnit.SECONDS);
+    }
 
-  /**
-   * Loads all items of  a given category
-   *
-   * @param categoryName the category name
-   */
-  public Observable<List<Product>> loadProductsOfCategory(String categoryName) {
-    return backendApi.getAllProductsOfCategory(categoryName).delay(3, TimeUnit.SECONDS);
-  }
+    /**
+     * Loads all items of  a given category
+     *
+     * @param categoryName the category name
+     */
+    public Observable<List<Product>> loadProductsOfCategory(String categoryName) {
+        return backendApi.getAllProductsOfCategory(categoryName).delay(3, TimeUnit.SECONDS);
+    }
 }

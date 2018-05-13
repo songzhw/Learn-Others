@@ -17,9 +17,10 @@
 
 package ca.six.mvi1.view.home;
 
+import java.util.List;
+
 import ca.six.mvi1.businesslogic.model.FeedItem;
 import ca.six.mvi1.businesslogic.model.Product;
-import java.util.List;
 
 /**
  * @author Hannes Dorfmann
@@ -27,178 +28,180 @@ import java.util.List;
 
 public interface PartialStateChanges {
 
-  /**
-   * Indicates that the first page is loading
-   */
-  final class FirstPageLoading implements PartialStateChanges {
+    /**
+     * Indicates that the first page is loading
+     */
+    final class FirstPageLoading implements PartialStateChanges {
 
-    @Override public String toString() {
-      return "FirstPageLoadingState{}";
-    }
-  }
-
-  /**
-   * Indicates that an error has occurred while loading the first page
-   */
-  final class FirstPageError implements PartialStateChanges {
-    private final Throwable error;
-
-    public FirstPageError(Throwable error) {
-      this.error = error;
+        @Override
+        public String toString() {
+            return "FirstPageLoadingState{}";
+        }
     }
 
-    public Throwable getError() {
-      return error;
+    /**
+     * Indicates that an error has occurred while loading the first page
+     */
+    final class FirstPageError implements PartialStateChanges {
+        private final Throwable error;
+
+        public FirstPageError(Throwable error) {
+            this.error = error;
+        }
+
+        public Throwable getError() {
+            return error;
+        }
+
+        @Override
+        public String toString() {
+            return "FirstPageErrorState{" +
+                    "error=" + error +
+                    '}';
+        }
     }
 
-    @Override public String toString() {
-      return "FirstPageErrorState{" +
-          "error=" + error +
-          '}';
-    }
-  }
+    /**
+     * Indicates that the first page data has been loaded successfully
+     */
+    final class FirstPageLoaded implements PartialStateChanges {
+        private final List<FeedItem> data;
 
-  /**
-   * Indicates that the first page data has been loaded successfully
-   */
-  final class FirstPageLoaded implements PartialStateChanges {
-    private final List<FeedItem> data;
+        public FirstPageLoaded(List<FeedItem> data) {
+            this.data = data;
+        }
 
-    public FirstPageLoaded(List<FeedItem> data) {
-      this.data = data;
+        public List<FeedItem> getData() {
+            return data;
+        }
     }
 
-    public List<FeedItem> getData() {
-      return data;
-    }
-  }
+    /**
+     * Next Page has been loaded successfully
+     */
+    final class NextPageLoaded implements PartialStateChanges {
+        private final List<FeedItem> data;
 
-  /**
-   * Next Page has been loaded successfully
-   */
-  final class NextPageLoaded implements PartialStateChanges {
-    private final List<FeedItem> data;
+        public NextPageLoaded(List<FeedItem> data) {
+            this.data = data;
+        }
 
-    public NextPageLoaded(List<FeedItem> data) {
-      this.data = data;
-    }
-
-    public List<FeedItem> getData() {
-      return data;
-    }
-  }
-
-  /**
-   * Error while loading new page
-   */
-  final class NexPageLoadingError implements PartialStateChanges {
-    private final Throwable error;
-
-    public NexPageLoadingError(Throwable error) {
-      this.error = error;
+        public List<FeedItem> getData() {
+            return data;
+        }
     }
 
-    public Throwable getError() {
-      return error;
-    }
-  }
+    /**
+     * Error while loading new page
+     */
+    final class NexPageLoadingError implements PartialStateChanges {
+        private final Throwable error;
 
-  /**
-   * Indicates that loading the next page has started
-   */
-  final class NextPageLoading implements PartialStateChanges {
-  }
+        public NexPageLoadingError(Throwable error) {
+            this.error = error;
+        }
 
-  /**
-   * Indicates that loading the newest items via pull to refresh has started
-   */
-  final class PullToRefreshLoading implements PartialStateChanges {
-  }
-
-  /**
-   * Indicates that an error while loading the newest items via pull to refresh has occurred
-   */
-  final class PullToRefeshLoadingError implements PartialStateChanges {
-    private final Throwable error;
-
-    public PullToRefeshLoadingError(Throwable error) {
-      this.error = error;
+        public Throwable getError() {
+            return error;
+        }
     }
 
-    public Throwable getError() {
-      return error;
-    }
-  }
-
-  /**
-   * Indicates that data has been loaded successfully over pull-to-refresh
-   */
-  final class PullToRefreshLoaded implements PartialStateChanges {
-    private final List<FeedItem> data;
-
-    public PullToRefreshLoaded(List<FeedItem> data) {
-      this.data = data;
+    /**
+     * Indicates that loading the next page has started
+     */
+    final class NextPageLoading implements PartialStateChanges {
     }
 
-    public List<FeedItem> getData() {
-      return data;
-    }
-  }
-
-  /**
-   * Loading all Products of a given category has been started
-   */
-  final class ProductsOfCategoryLoading implements PartialStateChanges {
-    private final String categoryName;
-
-    public ProductsOfCategoryLoading(String categoryName) {
-      this.categoryName = categoryName;
+    /**
+     * Indicates that loading the newest items via pull to refresh has started
+     */
+    final class PullToRefreshLoading implements PartialStateChanges {
     }
 
-    public String getCategoryName() {
-      return categoryName;
-    }
-  }
+    /**
+     * Indicates that an error while loading the newest items via pull to refresh has occurred
+     */
+    final class PullToRefeshLoadingError implements PartialStateChanges {
+        private final Throwable error;
 
-  /**
-   * An error while loading all products has been occurred
-   */
-  final class ProductsOfCategoryLoadingError implements PartialStateChanges {
-    private final String categoryName;
-    private final Throwable error;
+        public PullToRefeshLoadingError(Throwable error) {
+            this.error = error;
+        }
 
-    public ProductsOfCategoryLoadingError(String categoryName, Throwable error) {
-      this.categoryName = categoryName;
-      this.error = error;
+        public Throwable getError() {
+            return error;
+        }
     }
 
-    public String getCategoryName() {
-      return categoryName;
+    /**
+     * Indicates that data has been loaded successfully over pull-to-refresh
+     */
+    final class PullToRefreshLoaded implements PartialStateChanges {
+        private final List<FeedItem> data;
+
+        public PullToRefreshLoaded(List<FeedItem> data) {
+            this.data = data;
+        }
+
+        public List<FeedItem> getData() {
+            return data;
+        }
     }
 
-    public Throwable getError() {
-      return error;
-    }
-  }
+    /**
+     * Loading all Products of a given category has been started
+     */
+    final class ProductsOfCategoryLoading implements PartialStateChanges {
+        private final String categoryName;
 
-  /**
-   * Products of a given Category has been loaded
-   */
-  final class ProductsOfCategoryLoaded implements PartialStateChanges {
-    private final List<Product> data;
-    private final String categoryName;
+        public ProductsOfCategoryLoading(String categoryName) {
+            this.categoryName = categoryName;
+        }
 
-    public ProductsOfCategoryLoaded(String categoryName, List<Product> data) {
-      this.data = data;
-      this.categoryName = categoryName;
+        public String getCategoryName() {
+            return categoryName;
+        }
     }
 
-    public String getCategoryName() {
-      return categoryName;
+    /**
+     * An error while loading all products has been occurred
+     */
+    final class ProductsOfCategoryLoadingError implements PartialStateChanges {
+        private final String categoryName;
+        private final Throwable error;
+
+        public ProductsOfCategoryLoadingError(String categoryName, Throwable error) {
+            this.categoryName = categoryName;
+            this.error = error;
+        }
+
+        public String getCategoryName() {
+            return categoryName;
+        }
+
+        public Throwable getError() {
+            return error;
+        }
     }
 
-    public List<Product> getData() {
-      return data;
+    /**
+     * Products of a given Category has been loaded
+     */
+    final class ProductsOfCategoryLoaded implements PartialStateChanges {
+        private final List<Product> data;
+        private final String categoryName;
+
+        public ProductsOfCategoryLoaded(String categoryName, List<Product> data) {
+            this.data = data;
+            this.categoryName = categoryName;
+        }
+
+        public String getCategoryName() {
+            return categoryName;
+        }
+
+        public List<Product> getData() {
+            return data;
+        }
     }
-  }
 }

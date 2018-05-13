@@ -18,6 +18,7 @@
 package ca.six.mvi1.view.menu;
 
 import com.hannesdorfmann.mosby3.mvp.MvpView;
+
 import io.reactivex.Observable;
 
 /**
@@ -27,15 +28,15 @@ import io.reactivex.Observable;
  */
 public interface MainMenuView extends MvpView {
 
-  /**
-   * Intent to load all categories
-   */
-  Observable<Boolean> loadCategoriesIntent();
+    /**
+     * Intent to load all categories
+     */
+    Observable<Boolean> loadCategoriesIntent();
 
-  /**
-   * Intent to select a certain item
-   */
-  Observable<String> selectCategoryIntent();
+    /**
+     * Intent to select a certain item
+     */
+    Observable<String> selectCategoryIntent();
 
-  void render(MenuViewState menuViewState);
+    void render(MenuViewState menuViewState);
 }

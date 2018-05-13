@@ -18,9 +18,11 @@
 package ca.six.mvi1.view.shoppingcartoverview;
 
 import com.hannesdorfmann.mosby3.mvp.MvpView;
+
+import java.util.List;
+
 import ca.six.mvi1.businesslogic.model.Product;
 import io.reactivex.Observable;
-import java.util.List;
 
 /**
  * A View that displays all the items in your shopping cart.
@@ -29,23 +31,23 @@ import java.util.List;
  */
 public interface ShoppingCartOverviewView extends MvpView {
 
-  /**
-   * Intent to load the items from the shopping cart
-   */
-  Observable<Boolean> loadItemsIntent();
+    /**
+     * Intent to load the items from the shopping cart
+     */
+    Observable<Boolean> loadItemsIntent();
 
-  /**
-   * Intent to mark a given item as selected
-   */
-  Observable<List<Product>> selectItemsIntent();
+    /**
+     * Intent to mark a given item as selected
+     */
+    Observable<List<Product>> selectItemsIntent();
 
-  /**
-   * Intent to remove a given item from the shopping cart
-   */
-  Observable<Product> removeItemIntent();
+    /**
+     * Intent to remove a given item from the shopping cart
+     */
+    Observable<Product> removeItemIntent();
 
-  /**
-   * Renders the View with the given items that are in the shopping cart right now
-   */
-  void render(List<ShoppingCartOverviewItem> itemsInShoppingCart);
+    /**
+     * Renders the View with the given items that are in the shopping cart right now
+     */
+    void render(List<ShoppingCartOverviewItem> itemsInShoppingCart);
 }

@@ -22,31 +22,35 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-/** An ImageView that keeps asp
+/**
+ * An ImageView that keeps asp
+ *
  * @author Hannes Dorfmann
  */
 public class AspectRatioImageView extends ImageView {
 
-  public AspectRatioImageView(Context context) {
-    super(context);
-  }
+    public AspectRatioImageView(Context context) {
+        super(context);
+    }
 
-  public AspectRatioImageView(Context context, AttributeSet attrs) {
-    super(context, attrs);
-  }
+    public AspectRatioImageView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-  public AspectRatioImageView(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-  }
+    public AspectRatioImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
 
-  @TargetApi(21) public AspectRatioImageView(Context context, AttributeSet attrs, int defStyleAttr,
-      int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
-  }
+    @TargetApi(21)
+    public AspectRatioImageView(Context context, AttributeSet attrs, int defStyleAttr,
+                                int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+    }
 
-  @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    int measuredHeight = ((int) (((double) getMeasuredWidth()) / 0.68636363));
-    setMeasuredDimension(getMeasuredWidth(), measuredHeight);
-  }
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int measuredHeight = ((int) (((double) getMeasuredWidth()) / 0.68636363));
+        setMeasuredDimension(getMeasuredWidth(), measuredHeight);
+    }
 }

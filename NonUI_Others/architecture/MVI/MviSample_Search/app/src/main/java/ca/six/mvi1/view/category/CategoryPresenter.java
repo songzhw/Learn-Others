@@ -18,6 +18,7 @@
 package ca.six.mvi1.view.category;
 
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter;
+
 import ca.six.mvi1.businesslogic.http.ProductBackendApiDecorator;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -29,23 +30,24 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CategoryPresenter extends MviBasePresenter<CategoryView, CategoryViewState> {
 
-  private final ProductBackendApiDecorator backendApi;
+    private final ProductBackendApiDecorator backendApi;
 
-  public CategoryPresenter(ProductBackendApiDecorator backendApi) {
-    this.backendApi = backendApi;
-  }
+    public CategoryPresenter(ProductBackendApiDecorator backendApi) {
+        this.backendApi = backendApi;
+    }
 
-  @Override protected void bindIntents() {
-    Observable<CategoryViewState> categoryViewStateObservable =
-        intent(CategoryView::loadIntents)
-            .flatMap(categoryName -> backendApi.getAllProductsOfCategory(categoryName)
-                .subscribeOn(Schedulers.io())
-                .map(CategoryViewState.DataState::new)
-                .cast(CategoryViewState.class)
-                .startWith(new CategoryViewState.LoadingState())
-                .onErrorReturn(CategoryViewState.ErrorState::new))
-            .observeOn(AndroidSchedulers.mainThread());
+    @Override
+    protected void bindIntents() {
+        Observable<CategoryViewState> categoryViewStateObservable =
+                intent(CategoryView::loadIntents)
+                        .flatMap(categoryName -> backendApi.getAllProductsOfCategory(categoryName)
+                                .subscribeOn(Schedulers.io())
+                                .map(CategoryViewState.DataState::new)
+                                .cast(CategoryViewState.class)
+                                .startWith(new CategoryViewState.LoadingState())
+                                .onErrorReturn(CategoryViewState.ErrorState::new))
+                        .observeOn(AndroidSchedulers.mainThread());
 
-    subscribeViewState(categoryViewStateObservable, CategoryView::render);
-  }
+        subscribeViewState(categoryViewStateObservable, CategoryView::render);
+    }
 }

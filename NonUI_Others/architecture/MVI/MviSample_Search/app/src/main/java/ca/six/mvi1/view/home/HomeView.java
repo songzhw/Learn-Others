@@ -18,6 +18,7 @@
 package ca.six.mvi1.view.home;
 
 import com.hannesdorfmann.mosby3.mvp.MvpView;
+
 import ca.six.mvi1.businesslogic.model.FeedItem;
 import io.reactivex.Observable;
 
@@ -28,36 +29,36 @@ import io.reactivex.Observable;
  */
 public interface HomeView extends MvpView {
 
-  /**
-   * The intent to load the first page
-   *
-   * @return The emitted item boolean can be ignored because it is always true
-   */
-  Observable<Boolean> loadFirstPageIntent();
+    /**
+     * The intent to load the first page
+     *
+     * @return The emitted item boolean can be ignored because it is always true
+     */
+    Observable<Boolean> loadFirstPageIntent();
 
-  /**
-   * The intent to load the next page
-   *
-   * @return The emitted item boolean can be ignored because it is always true
-   */
-  Observable<Boolean> loadNextPageIntent();
+    /**
+     * The intent to load the next page
+     *
+     * @return The emitted item boolean can be ignored because it is always true
+     */
+    Observable<Boolean> loadNextPageIntent();
 
-  /**
-   * The intent to react on pull-to-refresh
-   *
-   * @return The emitted item boolean can be ignored because it is always true
-   */
-  Observable<Boolean> pullToRefreshIntent();
+    /**
+     * The intent to react on pull-to-refresh
+     *
+     * @return The emitted item boolean can be ignored because it is always true
+     */
+    Observable<Boolean> pullToRefreshIntent();
 
-  /**
-   * The intent to load more items from a given group
-   *
-   * @return Observable with the name of the group
-   */
-  Observable<String> loadAllProductsFromCategoryIntent();
+    /**
+     * The intent to load more items from a given group
+     *
+     * @return Observable with the name of the group
+     */
+    Observable<String> loadAllProductsFromCategoryIntent();
 
-  /**
-   * Renders the viewState
-   */
-  void render(HomeViewState viewState);
+    /**
+     * Renders the viewState
+     */
+    void render(HomeViewState viewState);
 }

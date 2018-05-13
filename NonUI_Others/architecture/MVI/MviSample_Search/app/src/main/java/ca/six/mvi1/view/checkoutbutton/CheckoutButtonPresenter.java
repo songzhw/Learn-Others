@@ -18,6 +18,7 @@
 package ca.six.mvi1.view.checkoutbutton;
 
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter;
+
 import ca.six.mvi1.businesslogic.ShoppingCart;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -31,27 +32,28 @@ import timber.log.Timber;
  */
 public class CheckoutButtonPresenter extends MviBasePresenter<CheckoutButtonView, Double> {
 
-  private final ShoppingCart shoppingCart;
+    private final ShoppingCart shoppingCart;
 
-  public CheckoutButtonPresenter(ShoppingCart shoppingCart) {
-    this.shoppingCart = shoppingCart;
-  }
+    public CheckoutButtonPresenter(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
 
-  @Override protected void bindIntents() {
-    // This could be done with a Interactor in a real world application
-    Observable<Double> numberOfItemsInShoppingCart =
-        intent(CheckoutButtonView::loadIntent)
-            .doOnNext(ignored -> Timber.d("intent: load number of items in shopping cart"))
-            .flatMap(ignored -> shoppingCart.itemsInShoppingCart())
-            .map(items -> {
-              double sum = 0;
-              for (int i = 0; i < items.size(); i++) {
-                sum += items.get(i).getPrice();
-              }
-              return sum;
-            })
-            .observeOn(AndroidSchedulers.mainThread());
+    @Override
+    protected void bindIntents() {
+        // This could be done with a Interactor in a real world application
+        Observable<Double> numberOfItemsInShoppingCart =
+                intent(CheckoutButtonView::loadIntent)
+                        .doOnNext(ignored -> Timber.d("intent: load number of items in shopping cart"))
+                        .flatMap(ignored -> shoppingCart.itemsInShoppingCart())
+                        .map(items -> {
+                            double sum = 0;
+                            for (int i = 0; i < items.size(); i++) {
+                                sum += items.get(i).getPrice();
+                            }
+                            return sum;
+                        })
+                        .observeOn(AndroidSchedulers.mainThread());
 
-    subscribeViewState(numberOfItemsInShoppingCart, CheckoutButtonView::render);
-  }
+        subscribeViewState(numberOfItemsInShoppingCart, CheckoutButtonView::render);
+    }
 }

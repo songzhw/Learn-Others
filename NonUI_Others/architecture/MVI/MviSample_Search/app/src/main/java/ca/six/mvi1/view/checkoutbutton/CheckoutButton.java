@@ -24,12 +24,15 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.hannesdorfmann.mosby3.ViewGroupMviDelegate;
 import com.hannesdorfmann.mosby3.ViewGroupMviDelegateCallback;
 import com.hannesdorfmann.mosby3.ViewGroupMviDelegateImpl;
+
+import java.util.Locale;
+
 import ca.six.mvi1.SampleApplication;
 import io.reactivex.Observable;
-import java.util.Locale;
 import timber.log.Timber;
 
 /**
@@ -37,73 +40,86 @@ import timber.log.Timber;
  */
 
 public class CheckoutButton extends Button implements CheckoutButtonView,
-    ViewGroupMviDelegateCallback<CheckoutButtonView, CheckoutButtonPresenter> {
+        ViewGroupMviDelegateCallback<CheckoutButtonView, CheckoutButtonPresenter> {
 
-  private final ViewGroupMviDelegate<CheckoutButtonView, CheckoutButtonPresenter> mviDelegate =
-      new ViewGroupMviDelegateImpl<>(this, this, true);
+    private final ViewGroupMviDelegate<CheckoutButtonView, CheckoutButtonPresenter> mviDelegate =
+            new ViewGroupMviDelegateImpl<>(this, this, true);
 
-  public CheckoutButton(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    setOnClickListener(v -> {
-      Toast.makeText(context, "This is just a demo app. You can't purchase any items.",
-          Toast.LENGTH_LONG).show();
-    });
-  }
-
-  @NonNull @Override public CheckoutButtonView getMvpView() {
-    return this;
-  }
-
-  @NonNull @Override public CheckoutButtonPresenter createPresenter() {
-    Timber.d("create presenter");
-    return SampleApplication.getDependencyInjection(getContext()).newCheckoutButtonPresenter();
-  }
-
-  @Override public Parcelable superOnSaveInstanceState() {
-    return super.onSaveInstanceState();
-  }
-
-  @Override public void superOnRestoreInstanceState(Parcelable state) {
-    super.onRestoreInstanceState(state);
-  }
-
-  @Override public Observable<Boolean> loadIntent() {
-    return Observable.just(true);
-  }
-
-  @Override public void render(double priceSum) {
-    // TODO move to strings.xml / internationalization
-
-    String priceString = String.format(Locale.US, "%.2f", priceSum);
-    Timber.d("render %s ", priceString);
-    if (priceSum == 0) {
-      setVisibility(View.INVISIBLE);
-    } else {
-      setText("Checkout $ " + priceString);
-      setVisibility(View.VISIBLE);
+    public CheckoutButton(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setOnClickListener(v -> {
+            Toast.makeText(context, "This is just a demo app. You can't purchase any items.",
+                    Toast.LENGTH_LONG).show();
+        });
     }
-  }
 
-  @Override protected void onAttachedToWindow() {
-    super.onAttachedToWindow();
-    mviDelegate.onAttachedToWindow();
-  }
+    @NonNull
+    @Override
+    public CheckoutButtonView getMvpView() {
+        return this;
+    }
 
-  @Override protected void onDetachedFromWindow() {
-    super.onDetachedFromWindow();
-    mviDelegate.onDetachedFromWindow();
-  }
+    @NonNull
+    @Override
+    public CheckoutButtonPresenter createPresenter() {
+        Timber.d("create presenter");
+        return SampleApplication.getDependencyInjection(getContext()).newCheckoutButtonPresenter();
+    }
+
+    @Override
+    public Parcelable superOnSaveInstanceState() {
+        return super.onSaveInstanceState();
+    }
+
+    @Override
+    public void superOnRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(state);
+    }
+
+    @Override
+    public Observable<Boolean> loadIntent() {
+        return Observable.just(true);
+    }
+
+    @Override
+    public void render(double priceSum) {
+        // TODO move to strings.xml / internationalization
+
+        String priceString = String.format(Locale.US, "%.2f", priceSum);
+        Timber.d("render %s ", priceString);
+        if (priceSum == 0) {
+            setVisibility(View.INVISIBLE);
+        } else {
+            setText("Checkout $ " + priceString);
+            setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mviDelegate.onAttachedToWindow();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mviDelegate.onDetachedFromWindow();
+    }
 
 
-  @Override public Parcelable onSaveInstanceState() {
-    return mviDelegate.onSaveInstanceState();
-  }
+    @Override
+    public Parcelable onSaveInstanceState() {
+        return mviDelegate.onSaveInstanceState();
+    }
 
-  @Override public void onRestoreInstanceState(Parcelable state) {
-    mviDelegate.onRestoreInstanceState(state);
-  }
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        mviDelegate.onRestoreInstanceState(state);
+    }
 
-  @Override public void setRestoringViewState(boolean restoringViewState) {
-    // Not needed for this view
-  }
+    @Override
+    public void setRestoringViewState(boolean restoringViewState) {
+        // Not needed for this view
+    }
 }

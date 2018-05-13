@@ -20,9 +20,11 @@ package ca.six.mvi1.view.search;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
+import java.util.List;
+
 import ca.six.mvi1.businesslogic.model.Product;
 import ca.six.mvi1.view.ui.viewholder.ProductViewHolder;
-import java.util.List;
 
 /**
  * Adapter display search results
@@ -31,28 +33,31 @@ import java.util.List;
  */
 public class SearchAdapter extends RecyclerView.Adapter<ProductViewHolder> {
 
-  private final LayoutInflater inflater;
-  private final ProductViewHolder.ProductClickedListener productClickedListener;
-  private List<Product> products;
+    private final LayoutInflater inflater;
+    private final ProductViewHolder.ProductClickedListener productClickedListener;
+    private List<Product> products;
 
-  public SearchAdapter(LayoutInflater inflater, ProductViewHolder.ProductClickedListener productClickedListener) {
-    this.inflater = inflater;
-    this.productClickedListener = productClickedListener;
-  }
+    public SearchAdapter(LayoutInflater inflater, ProductViewHolder.ProductClickedListener productClickedListener) {
+        this.inflater = inflater;
+        this.productClickedListener = productClickedListener;
+    }
 
-  public void setProducts(List<Product> products) {
-    this.products = products;
-  }
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
 
-  @Override public ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    return ProductViewHolder.create(inflater, productClickedListener);
-  }
+    @Override
+    public ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return ProductViewHolder.create(inflater, productClickedListener);
+    }
 
-  @Override public void onBindViewHolder(ProductViewHolder holder, int position) {
-    holder.bind(products.get(position));
-  }
+    @Override
+    public void onBindViewHolder(ProductViewHolder holder, int position) {
+        holder.bind(products.get(position));
+    }
 
-  @Override public int getItemCount() {
-    return products == null ? 0 : products.size();
-  }
+    @Override
+    public int getItemCount() {
+        return products == null ? 0 : products.size();
+    }
 }

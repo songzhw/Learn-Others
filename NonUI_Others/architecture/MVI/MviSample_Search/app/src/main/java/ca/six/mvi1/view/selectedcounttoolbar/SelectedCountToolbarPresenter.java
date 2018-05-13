@@ -18,6 +18,7 @@
 package ca.six.mvi1.view.selectedcounttoolbar;
 
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter;
+
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
@@ -27,38 +28,40 @@ import timber.log.Timber;
  * @author Hannes Dorfmann
  */
 public class SelectedCountToolbarPresenter
-    extends MviBasePresenter<SelectedCountToolbarView, Integer> {
+        extends MviBasePresenter<SelectedCountToolbarView, Integer> {
 
-  private final Observable<Integer> selectedCountObservable;
-  private final PublishSubject<Boolean> clearSelectionRelay;
-  private final PublishSubject<Boolean> deleteSelectedItemsRelay;
-  Disposable clearSelectionDisposal;
-  Disposable deleteSelectedItemsDisposal;
+    private final Observable<Integer> selectedCountObservable;
+    private final PublishSubject<Boolean> clearSelectionRelay;
+    private final PublishSubject<Boolean> deleteSelectedItemsRelay;
+    Disposable clearSelectionDisposal;
+    Disposable deleteSelectedItemsDisposal;
 
-  public SelectedCountToolbarPresenter(Observable<Integer> selectedCountObservable,
-      PublishSubject<Boolean> clearSelectionRelay,
-      PublishSubject<Boolean> deleteSelectedItemsRelay) {
-    this.selectedCountObservable = selectedCountObservable;
-    this.clearSelectionRelay = clearSelectionRelay;
-    this.deleteSelectedItemsRelay = deleteSelectedItemsRelay;
-  }
+    public SelectedCountToolbarPresenter(Observable<Integer> selectedCountObservable,
+                                         PublishSubject<Boolean> clearSelectionRelay,
+                                         PublishSubject<Boolean> deleteSelectedItemsRelay) {
+        this.selectedCountObservable = selectedCountObservable;
+        this.clearSelectionRelay = clearSelectionRelay;
+        this.deleteSelectedItemsRelay = deleteSelectedItemsRelay;
+    }
 
-  @Override protected void bindIntents() {
+    @Override
+    protected void bindIntents() {
 
-    clearSelectionDisposal = intent(SelectedCountToolbarView::clearSelectionIntent)
-        .doOnNext(ignore -> Timber.d("intent: clear selection"))
-        .subscribe(aBoolean -> clearSelectionRelay.onNext(aBoolean));
+        clearSelectionDisposal = intent(SelectedCountToolbarView::clearSelectionIntent)
+                .doOnNext(ignore -> Timber.d("intent: clear selection"))
+                .subscribe(aBoolean -> clearSelectionRelay.onNext(aBoolean));
 
-    deleteSelectedItemsDisposal =
-        intent(SelectedCountToolbarView::deleteSelectedItemsIntent)
-            .doOnNext(items -> Timber.d("intent: delete selected items "+items))
-            .subscribe(aBoolean -> deleteSelectedItemsRelay.onNext(aBoolean));
+        deleteSelectedItemsDisposal =
+                intent(SelectedCountToolbarView::deleteSelectedItemsIntent)
+                        .doOnNext(items -> Timber.d("intent: delete selected items " + items))
+                        .subscribe(aBoolean -> deleteSelectedItemsRelay.onNext(aBoolean));
 
-    subscribeViewState(selectedCountObservable, SelectedCountToolbarView::render);
-  }
+        subscribeViewState(selectedCountObservable, SelectedCountToolbarView::render);
+    }
 
-  @Override protected void unbindIntents() {
-    clearSelectionDisposal.dispose();
-    deleteSelectedItemsDisposal.dispose();
-  }
+    @Override
+    protected void unbindIntents() {
+        clearSelectionDisposal.dispose();
+        deleteSelectedItemsDisposal.dispose();
+    }
 }

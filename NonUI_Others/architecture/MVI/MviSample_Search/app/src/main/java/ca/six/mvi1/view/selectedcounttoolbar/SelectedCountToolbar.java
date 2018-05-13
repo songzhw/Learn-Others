@@ -23,9 +23,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
+
 import com.hannesdorfmann.mosby3.ViewGroupMviDelegate;
 import com.hannesdorfmann.mosby3.ViewGroupMviDelegateCallback;
 import com.hannesdorfmann.mosby3.ViewGroupMviDelegateImpl;
+
 import ca.six.mvi1.R;
 import ca.six.mvi1.SampleApplication;
 import io.reactivex.Observable;
@@ -37,90 +39,104 @@ import timber.log.Timber;
  */
 
 public class SelectedCountToolbar extends Toolbar implements SelectedCountToolbarView,
-    ViewGroupMviDelegateCallback<SelectedCountToolbarView, SelectedCountToolbarPresenter> {
+        ViewGroupMviDelegateCallback<SelectedCountToolbarView, SelectedCountToolbarPresenter> {
 
-  private final ViewGroupMviDelegate<SelectedCountToolbarView, SelectedCountToolbarPresenter>
-      mviDelegate = new ViewGroupMviDelegateImpl<>(this, this, true);
+    private final ViewGroupMviDelegate<SelectedCountToolbarView, SelectedCountToolbarPresenter>
+            mviDelegate = new ViewGroupMviDelegateImpl<>(this, this, true);
 
-  private final PublishSubject<Boolean> clearSelectionIntent = PublishSubject.create();
-  private final PublishSubject<Boolean> deleteSelectedItemsIntent = PublishSubject.create();
+    private final PublishSubject<Boolean> clearSelectionIntent = PublishSubject.create();
+    private final PublishSubject<Boolean> deleteSelectedItemsIntent = PublishSubject.create();
 
-  public SelectedCountToolbar(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    setNavigationOnClickListener(v -> clearSelectionIntent.onNext(true));
-    setNavigationIcon(R.drawable.ic_back_selection_count_toolbar);
-    inflateMenu(R.menu.shopping_cart_toolbar);
-    setOnMenuItemClickListener(item -> {
-      deleteSelectedItemsIntent.onNext(true);
-      return true;
-    });
-  }
-
-  @Override public Observable<Boolean> clearSelectionIntent() {
-    return clearSelectionIntent;
-  }
-
-  @Override public Observable<Boolean> deleteSelectedItemsIntent() {
-    return deleteSelectedItemsIntent;
-  }
-
-  @NonNull @Override public SelectedCountToolbarView getMvpView() {
-    return this;
-  }
-
-  @NonNull @Override public SelectedCountToolbarPresenter createPresenter() {
-    Timber.d("create presenter");
-    return SampleApplication.getDependencyInjection(getContext())
-        .newSelectedCountToolbarPresenter();
-  }
-
-  @Override public void render(int selectedCount) {
-    Timber.d("render %d selected items", selectedCount);
-    if (selectedCount == 0) {
-      if (getVisibility() == View.VISIBLE) {
-        animate().alpha(0f).withEndAction(() -> setVisibility(View.GONE)).start();
-      } else {
-        setVisibility(View.GONE);
-      }
-    } else {
-      setTitle(getResources().getQuantityString(R.plurals.items, selectedCount, selectedCount));
-
-      if (getVisibility() != View.VISIBLE) {
-        animate().alpha(1f).withStartAction(() -> setVisibility(View.VISIBLE)).start();
-      } else {
-        setVisibility(View.VISIBLE);
-      }
+    public SelectedCountToolbar(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setNavigationOnClickListener(v -> clearSelectionIntent.onNext(true));
+        setNavigationIcon(R.drawable.ic_back_selection_count_toolbar);
+        inflateMenu(R.menu.shopping_cart_toolbar);
+        setOnMenuItemClickListener(item -> {
+            deleteSelectedItemsIntent.onNext(true);
+            return true;
+        });
     }
-  }
 
-  @Override protected void onAttachedToWindow() {
-    super.onAttachedToWindow();
-    mviDelegate.onAttachedToWindow();
-  }
+    @Override
+    public Observable<Boolean> clearSelectionIntent() {
+        return clearSelectionIntent;
+    }
 
-  @Override protected void onDetachedFromWindow() {
-    super.onDetachedFromWindow();
-    mviDelegate.onDetachedFromWindow();
-  }
+    @Override
+    public Observable<Boolean> deleteSelectedItemsIntent() {
+        return deleteSelectedItemsIntent;
+    }
 
-  @Override public Parcelable onSaveInstanceState() {
-    return mviDelegate.onSaveInstanceState();
-  }
+    @NonNull
+    @Override
+    public SelectedCountToolbarView getMvpView() {
+        return this;
+    }
 
-  @Override public void onRestoreInstanceState(Parcelable state) {
-    mviDelegate.onRestoreInstanceState(state);
-  }
+    @NonNull
+    @Override
+    public SelectedCountToolbarPresenter createPresenter() {
+        Timber.d("create presenter");
+        return SampleApplication.getDependencyInjection(getContext())
+                .newSelectedCountToolbarPresenter();
+    }
 
-  @Override public Parcelable superOnSaveInstanceState() {
-    return super.onSaveInstanceState();
-  }
+    @Override
+    public void render(int selectedCount) {
+        Timber.d("render %d selected items", selectedCount);
+        if (selectedCount == 0) {
+            if (getVisibility() == View.VISIBLE) {
+                animate().alpha(0f).withEndAction(() -> setVisibility(View.GONE)).start();
+            } else {
+                setVisibility(View.GONE);
+            }
+        } else {
+            setTitle(getResources().getQuantityString(R.plurals.items, selectedCount, selectedCount));
 
-  @Override public void superOnRestoreInstanceState(Parcelable state) {
-    super.onRestoreInstanceState(state);
-  }
+            if (getVisibility() != View.VISIBLE) {
+                animate().alpha(1f).withStartAction(() -> setVisibility(View.VISIBLE)).start();
+            } else {
+                setVisibility(View.VISIBLE);
+            }
+        }
+    }
 
-  @Override public void setRestoringViewState(boolean restoringViewState) {
-    // Don't needed for this view
-  }
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mviDelegate.onAttachedToWindow();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mviDelegate.onDetachedFromWindow();
+    }
+
+    @Override
+    public Parcelable onSaveInstanceState() {
+        return mviDelegate.onSaveInstanceState();
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        mviDelegate.onRestoreInstanceState(state);
+    }
+
+    @Override
+    public Parcelable superOnSaveInstanceState() {
+        return super.onSaveInstanceState();
+    }
+
+    @Override
+    public void superOnRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(state);
+    }
+
+    @Override
+    public void setRestoringViewState(boolean restoringViewState) {
+        // Don't needed for this view
+    }
 
 }

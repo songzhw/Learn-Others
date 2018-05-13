@@ -29,19 +29,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.hannesdorfmann.mosby3.mvi.MviFragment;
+import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout;
+import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView;
+
 import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import com.hannesdorfmann.mosby3.mvi.MviFragment;
 import ca.six.mvi1.R;
 import ca.six.mvi1.SampleApplication;
 import ca.six.mvi1.businesslogic.model.Product;
 import ca.six.mvi1.view.detail.ProductDetailsActivity;
-import ca.six.mvi1.view.ui.GridSpacingItemDecoration;
 import ca.six.mvi1.view.ui.viewholder.ProductViewHolder;
-import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout;
-import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView;
 import io.reactivex.Observable;
 import timber.log.Timber;
 
@@ -50,142 +51,157 @@ import timber.log.Timber;
  */
 
 public class HomeFragment extends MviFragment<HomeView, HomePresenter>
-    implements HomeView, ProductViewHolder.ProductClickedListener {
+        implements HomeView, ProductViewHolder.ProductClickedListener {
 
-  private HomeAdapter adapter;
-  private GridLayoutManager layoutManager;
-  private Unbinder unbinder;
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
+    @BindView(R.id.loadingView)
+    View loadingView;
+    @BindView(R.id.errorView)
+    TextView errorView;
+    @BindInt(R.integer.grid_span_size)
+    int spanCount;
+    private HomeAdapter adapter;
+    private GridLayoutManager layoutManager;
+    private Unbinder unbinder;
 
-  @BindView(R.id.swipeRefreshLayout) SwipeRefreshLayout swipeRefreshLayout;
-  @BindView(R.id.recyclerView) RecyclerView recyclerView;
-  @BindView(R.id.loadingView) View loadingView;
-  @BindView(R.id.errorView) TextView errorView;
-  @BindInt(R.integer.grid_span_size) int spanCount;
+    @NonNull
+    @Override
+    public HomePresenter createPresenter() {
+        Timber.d("createPresenter");
+        return SampleApplication.getDependencyInjection(getActivity()).newHomePresenter();
+    }
 
-  @NonNull @Override public HomePresenter createPresenter() {
-    Timber.d("createPresenter");
-    return SampleApplication.getDependencyInjection(getActivity()).newHomePresenter();
-  }
+    @Override
+    public void onProductClicked(Product product) {
+        ProductDetailsActivity.start(getActivity(), product);
+    }
 
-  @Override public void onProductClicked(Product product) {
-    ProductDetailsActivity.start(getActivity(), product);
-  }
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        unbinder = ButterKnife.bind(this, view);
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_home, container, false);
-    unbinder = ButterKnife.bind(this, view);
+        adapter = new HomeAdapter(inflater, this);
+        layoutManager = new GridLayoutManager(getActivity(), spanCount);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
 
-    adapter = new HomeAdapter(inflater, this);
-    layoutManager = new GridLayoutManager(getActivity(), spanCount);
-    layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-      @Override public int getSpanSize(int position) {
+                int viewType = adapter.getItemViewType(position);
+                if (viewType == HomeAdapter.VIEW_TYPE_LOADING_MORE_NEXT_PAGE
+                        || viewType == HomeAdapter.VIEW_TYPE_SECTION_HEADER) {
+                    return spanCount;
+                }
 
-        int viewType = adapter.getItemViewType(position);
-        if (viewType == HomeAdapter.VIEW_TYPE_LOADING_MORE_NEXT_PAGE
-            || viewType == HomeAdapter.VIEW_TYPE_SECTION_HEADER) {
-          return spanCount;
-        }
-
-        return 1;
-      }
-    });
+                return 1;
+            }
+        });
 
     /*
     recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount,
         getResources().getDimensionPixelSize(R.dimen.grid_spacing), true));
         */
 
-    recyclerView.setAdapter(adapter);
-    recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(layoutManager);
 
-    return view;
-  }
-
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-    unbinder.unbind();
-  }
-
-  @Override public Observable<Boolean> loadFirstPageIntent() {
-    return Observable.just(true);
-  }
-
-  @Override public Observable<Boolean> loadNextPageIntent() {
-    return RxRecyclerView.scrollStateChanges(recyclerView)
-        .filter(event -> !adapter.isLoadingNextPage())
-        .filter(event -> event == RecyclerView.SCROLL_STATE_IDLE)
-        .filter(event -> layoutManager.findLastCompletelyVisibleItemPosition()
-            == adapter.getItems().size() - 1)
-        .map(integer -> true);
-  }
-
-  @Override public Observable<Boolean> pullToRefreshIntent() {
-    return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout).map(ignored -> true);
-  }
-
-  @Override public Observable<String> loadAllProductsFromCategoryIntent() {
-    return adapter.loadMoreItemsOfCategoryObservable();
-  }
-
-  @Override public void render(HomeViewState viewState) {
-    Timber.d("render %s", viewState);
-    if (!viewState.isLoadingFirstPage() && viewState.getFirstPageError() == null) {
-      renderShowData(viewState);
-    } else if (viewState.isLoadingFirstPage()) {
-      renderFirstPageLoading();
-    } else if (viewState.getFirstPageError() != null) {
-      renderFirstPageError();
-    } else {
-      throw new IllegalStateException("Unknown view state " + viewState);
-    }
-  }
-
-  private void renderShowData(HomeViewState state) {
-    TransitionManager.beginDelayedTransition((ViewGroup) getView());
-    loadingView.setVisibility(View.GONE);
-    errorView.setVisibility(View.GONE);
-    swipeRefreshLayout.setVisibility(View.VISIBLE);
-    boolean changed = adapter.setLoadingNextPage(state.isLoadingNextPage());
-    if (changed && state.isLoadingNextPage()) {
-      // scroll to the end of the list so that the user sees the load more progress bar
-      recyclerView.smoothScrollToPosition(adapter.getItemCount());
-    }
-    adapter.setItems(state.getData()); // TODO error: this must be done before setLoading() otherwise error will occure. see https://github.com/sockeqwe/mosby/issues/244
-
-    boolean pullToRefreshFinished = swipeRefreshLayout.isRefreshing()
-        && !state.isLoadingPullToRefresh()
-        && state.getPullToRefreshError() == null;
-    if (pullToRefreshFinished) {
-      // Swipe to refresh finished successfully so scroll to the top of the list (to see inserted items)
-      recyclerView.smoothScrollToPosition(0);
+        return view;
     }
 
-    swipeRefreshLayout.setRefreshing(state.isLoadingPullToRefresh());
-
-    if (state.getNextPageError() != null) {
-      Snackbar.make(getView(), R.string.error_unknown, Snackbar.LENGTH_LONG)
-          .show(); // TODO callback
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
-    if (state.getPullToRefreshError() != null) {
-      Snackbar.make(getView(), R.string.error_unknown, Snackbar.LENGTH_LONG)
-          .show(); // TODO callback
+    @Override
+    public Observable<Boolean> loadFirstPageIntent() {
+        return Observable.just(true);
     }
-  }
 
-  private void renderFirstPageLoading() {
-    TransitionManager.beginDelayedTransition((ViewGroup) getView());
-    loadingView.setVisibility(View.VISIBLE);
-    errorView.setVisibility(View.GONE);
-    swipeRefreshLayout.setVisibility(View.GONE);
-  }
+    @Override
+    public Observable<Boolean> loadNextPageIntent() {
+        return RxRecyclerView.scrollStateChanges(recyclerView)
+                .filter(event -> !adapter.isLoadingNextPage())
+                .filter(event -> event == RecyclerView.SCROLL_STATE_IDLE)
+                .filter(event -> layoutManager.findLastCompletelyVisibleItemPosition()
+                        == adapter.getItems().size() - 1)
+                .map(integer -> true);
+    }
 
-  private void renderFirstPageError() {
-    TransitionManager.beginDelayedTransition((ViewGroup) getView());
-    loadingView.setVisibility(View.GONE);
-    swipeRefreshLayout.setVisibility(View.GONE);
-    errorView.setVisibility(View.VISIBLE);
-  }
+    @Override
+    public Observable<Boolean> pullToRefreshIntent() {
+        return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout).map(ignored -> true);
+    }
+
+    @Override
+    public Observable<String> loadAllProductsFromCategoryIntent() {
+        return adapter.loadMoreItemsOfCategoryObservable();
+    }
+
+    @Override
+    public void render(HomeViewState viewState) {
+        Timber.d("render %s", viewState);
+        if (!viewState.isLoadingFirstPage() && viewState.getFirstPageError() == null) {
+            renderShowData(viewState);
+        } else if (viewState.isLoadingFirstPage()) {
+            renderFirstPageLoading();
+        } else if (viewState.getFirstPageError() != null) {
+            renderFirstPageError();
+        } else {
+            throw new IllegalStateException("Unknown view state " + viewState);
+        }
+    }
+
+    private void renderShowData(HomeViewState state) {
+        TransitionManager.beginDelayedTransition((ViewGroup) getView());
+        loadingView.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
+        swipeRefreshLayout.setVisibility(View.VISIBLE);
+        boolean changed = adapter.setLoadingNextPage(state.isLoadingNextPage());
+        if (changed && state.isLoadingNextPage()) {
+            // scroll to the end of the list so that the user sees the load more progress bar
+            recyclerView.smoothScrollToPosition(adapter.getItemCount());
+        }
+        adapter.setItems(state.getData()); // TODO error: this must be done before setLoading() otherwise error will occure. see https://github.com/sockeqwe/mosby/issues/244
+
+        boolean pullToRefreshFinished = swipeRefreshLayout.isRefreshing()
+                && !state.isLoadingPullToRefresh()
+                && state.getPullToRefreshError() == null;
+        if (pullToRefreshFinished) {
+            // Swipe to refresh finished successfully so scroll to the top of the list (to see inserted items)
+            recyclerView.smoothScrollToPosition(0);
+        }
+
+        swipeRefreshLayout.setRefreshing(state.isLoadingPullToRefresh());
+
+        if (state.getNextPageError() != null) {
+            Snackbar.make(getView(), R.string.error_unknown, Snackbar.LENGTH_LONG)
+                    .show(); // TODO callback
+        }
+
+        if (state.getPullToRefreshError() != null) {
+            Snackbar.make(getView(), R.string.error_unknown, Snackbar.LENGTH_LONG)
+                    .show(); // TODO callback
+        }
+    }
+
+    private void renderFirstPageLoading() {
+        TransitionManager.beginDelayedTransition((ViewGroup) getView());
+        loadingView.setVisibility(View.VISIBLE);
+        errorView.setVisibility(View.GONE);
+        swipeRefreshLayout.setVisibility(View.GONE);
+    }
+
+    private void renderFirstPageError() {
+        TransitionManager.beginDelayedTransition((ViewGroup) getView());
+        loadingView.setVisibility(View.GONE);
+        swipeRefreshLayout.setVisibility(View.GONE);
+        errorView.setVisibility(View.VISIBLE);
+    }
 }

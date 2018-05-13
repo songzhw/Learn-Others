@@ -17,8 +17,9 @@
 
 package ca.six.mvi1.businesslogic.interactor.search;
 
-import ca.six.mvi1.businesslogic.model.Product;
 import java.util.List;
+
+import ca.six.mvi1.businesslogic.model.Product;
 
 /**
  * This class represents the ViewState Model for searching
@@ -27,89 +28,92 @@ import java.util.List;
  */
 public interface SearchViewState {
 
-  /**
-   * The search has not been stared yet
-   */
-  final class SearchNotStartedYet implements SearchViewState {
-  }
-
-  final class Loading implements SearchViewState {
-  }
-
-  /**
-   * Indicates that the search has delivered an empty result set
-   */
-  final class EmptyResult implements SearchViewState {
-    private final String searchQueryText;
-
-    public EmptyResult(String searchQueryText) {
-      this.searchQueryText = searchQueryText;
+    /**
+     * The search has not been stared yet
+     */
+    final class SearchNotStartedYet implements SearchViewState {
     }
 
-    public String getSearchQueryText() {
-      return searchQueryText;
+    final class Loading implements SearchViewState {
     }
 
-    @Override public String toString() {
-      return "EmptyResult{" +
-          "searchQueryText='" + searchQueryText + '\'' +
-          '}';
-    }
-  }
+    /**
+     * Indicates that the search has delivered an empty result set
+     */
+    final class EmptyResult implements SearchViewState {
+        private final String searchQueryText;
 
-  /**
-   * A valid search result. Contains a list of items that have matched the searching criteria.
-   */
-  final class SearchResult implements SearchViewState {
-    private final String searchQueryText;
-    private final List<Product> result;
+        public EmptyResult(String searchQueryText) {
+            this.searchQueryText = searchQueryText;
+        }
 
-    public SearchResult(String searchQueryText, List<Product> result) {
-      this.searchQueryText = searchQueryText;
-      this.result = result;
-    }
+        public String getSearchQueryText() {
+            return searchQueryText;
+        }
 
-    public String getSearchQueryText() {
-      return searchQueryText;
-    }
-
-    public List<Product> getResult() {
-      return result;
+        @Override
+        public String toString() {
+            return "EmptyResult{" +
+                    "searchQueryText='" + searchQueryText + '\'' +
+                    '}';
+        }
     }
 
-    @Override public String toString() {
-      return "SearchResult{" +
-          "searchQueryText='" + searchQueryText + '\'' +
-          ", result=" + result +
-          '}';
-    }
-  }
+    /**
+     * A valid search result. Contains a list of items that have matched the searching criteria.
+     */
+    final class SearchResult implements SearchViewState {
+        private final String searchQueryText;
+        private final List<Product> result;
 
-  /**
-   * Says that an error has occurred while searching
-   */
-  final class Error implements SearchViewState {
-    private final String searchQueryText;
-    private final Throwable error;
+        public SearchResult(String searchQueryText, List<Product> result) {
+            this.searchQueryText = searchQueryText;
+            this.result = result;
+        }
 
-    public Error(String searchQueryText, Throwable error) {
-      this.searchQueryText = searchQueryText;
-      this.error = error;
+        public String getSearchQueryText() {
+            return searchQueryText;
+        }
+
+        public List<Product> getResult() {
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "SearchResult{" +
+                    "searchQueryText='" + searchQueryText + '\'' +
+                    ", result=" + result +
+                    '}';
+        }
     }
 
-    public String getSearchQueryText() {
-      return searchQueryText;
-    }
+    /**
+     * Says that an error has occurred while searching
+     */
+    final class Error implements SearchViewState {
+        private final String searchQueryText;
+        private final Throwable error;
 
-    public Throwable getError() {
-      return error;
-    }
+        public Error(String searchQueryText, Throwable error) {
+            this.searchQueryText = searchQueryText;
+            this.error = error;
+        }
 
-    @Override public String toString() {
-      return "Error{" +
-          "searchQueryText='" + searchQueryText + '\'' +
-          ", error=" + error +
-          '}';
+        public String getSearchQueryText() {
+            return searchQueryText;
+        }
+
+        public Throwable getError() {
+            return error;
+        }
+
+        @Override
+        public String toString() {
+            return "Error{" +
+                    "searchQueryText='" + searchQueryText + '\'' +
+                    ", error=" + error +
+                    '}';
+        }
     }
-  }
 }

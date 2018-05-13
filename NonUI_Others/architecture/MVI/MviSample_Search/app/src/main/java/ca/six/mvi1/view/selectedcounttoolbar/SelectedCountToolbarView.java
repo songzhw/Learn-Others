@@ -18,6 +18,7 @@
 package ca.six.mvi1.view.selectedcounttoolbar;
 
 import com.hannesdorfmann.mosby3.mvp.MvpView;
+
 import io.reactivex.Observable;
 
 /**
@@ -25,18 +26,18 @@ import io.reactivex.Observable;
  */
 public interface SelectedCountToolbarView extends MvpView {
 
-  /**
-   * The intent to clear the selection
-   */
-  Observable<Boolean> clearSelectionIntent();
+    /**
+     * The intent to clear the selection
+     */
+    Observable<Boolean> clearSelectionIntent();
 
-  /**
-   * Intent to delete the selected items
-   */
-  Observable<Boolean> deleteSelectedItemsIntent();
+    /**
+     * Intent to delete the selected items
+     */
+    Observable<Boolean> deleteSelectedItemsIntent();
 
-  /**
-   * Render the selected state
-   */
-  void render(int selectedCount);
+    /**
+     * Render the selected state
+     */
+    void render(int selectedCount);
 }

@@ -26,55 +26,58 @@ import ca.six.mvi1.businesslogic.model.ProductDetail;
  */
 public interface ProductDetailsViewState {
 
-  /**
-   * Loads the list of all menu items
-   */
-  final class LoadingState implements ProductDetailsViewState {
+    /**
+     * Loads the list of all menu items
+     */
+    final class LoadingState implements ProductDetailsViewState {
 
-    @Override public String toString() {
-      return "LoadingState{}";
-    }
-  }
-
-  /**
-   * Ane error has ocurred while loading the data
-   */
-  final class ErrorState implements ProductDetailsViewState {
-    private final Throwable error;
-
-    public ErrorState(Throwable error) {
-      this.error = error;
+        @Override
+        public String toString() {
+            return "LoadingState{}";
+        }
     }
 
-    public Throwable getError() {
-      return error;
+    /**
+     * Ane error has ocurred while loading the data
+     */
+    final class ErrorState implements ProductDetailsViewState {
+        private final Throwable error;
+
+        public ErrorState(Throwable error) {
+            this.error = error;
+        }
+
+        public Throwable getError() {
+            return error;
+        }
+
+        @Override
+        public String toString() {
+            return "ErrorState{" +
+                    "error=" + error +
+                    '}';
+        }
     }
 
-    @Override public String toString() {
-      return "ErrorState{" +
-          "error=" + error +
-          '}';
-    }
-  }
+    /**
+     * Data has been loaded successfully and can now be displayed
+     */
+    final class DataState implements ProductDetailsViewState {
+        private final ProductDetail detail;
 
-  /**
-   * Data has been loaded successfully and can now be displayed
-   */
-  final class DataState implements ProductDetailsViewState {
-    private final ProductDetail detail;
+        public DataState(ProductDetail detail) {
+            this.detail = detail;
+        }
 
-    public DataState(ProductDetail detail) {
-      this.detail = detail;
-    }
+        public ProductDetail getDetail() {
+            return detail;
+        }
 
-    public ProductDetail getDetail() {
-      return detail;
+        @Override
+        public String toString() {
+            return "DataState{" +
+                    "detail=" + detail +
+                    '}';
+        }
     }
-
-    @Override public String toString() {
-      return "DataState{" +
-          "detail=" + detail +
-          '}';
-    }
-  }
 }

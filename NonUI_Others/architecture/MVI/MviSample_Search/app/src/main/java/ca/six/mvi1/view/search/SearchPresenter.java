@@ -18,6 +18,7 @@
 package ca.six.mvi1.view.search;
 
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter;
+
 import ca.six.mvi1.businesslogic.interactor.search.SearchInteractor;
 import ca.six.mvi1.businesslogic.interactor.search.SearchViewState;
 import io.reactivex.Observable;
@@ -30,20 +31,21 @@ import timber.log.Timber;
  * @author Hannes Dorfmann
  */
 public class SearchPresenter extends MviBasePresenter<SearchView, SearchViewState> {
-  private final SearchInteractor searchInteractor;
+    private final SearchInteractor searchInteractor;
 
-  public SearchPresenter(SearchInteractor interactor) {
-    super(new SearchViewState.SearchNotStartedYet());
-    this.searchInteractor = interactor;
-  }
+    public SearchPresenter(SearchInteractor interactor) {
+        super(new SearchViewState.SearchNotStartedYet());
+        this.searchInteractor = interactor;
+    }
 
-  @Override protected void bindIntents() {
-    Observable<SearchViewState> search =
-        intent(SearchView::searchIntent)
-            .doOnNext(s -> Timber.d("intent: Search '%s'", s))
-            .switchMap(searchInteractor::search)
-            .observeOn(AndroidSchedulers.mainThread());
+    @Override
+    protected void bindIntents() {
+        Observable<SearchViewState> search =
+                intent(SearchView::searchIntent)
+                        .doOnNext(s -> Timber.d("intent: Search '%s'", s))
+                        .switchMap(searchInteractor::search)
+                        .observeOn(AndroidSchedulers.mainThread());
 
-    subscribeViewState(search, SearchView::render);
-  }
+        subscribeViewState(search, SearchView::render);
+    }
 }

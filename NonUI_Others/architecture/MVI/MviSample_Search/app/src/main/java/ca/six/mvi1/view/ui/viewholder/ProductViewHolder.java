@@ -22,11 +22,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.bumptech.glide.Glide;
 import ca.six.mvi1.R;
-import ca.six.mvi1.businesslogic.http.ProductBackendApi;
 import ca.six.mvi1.businesslogic.model.Product;
 import ca.six.mvi1.dependencyinjection.DependencyInjection;
 
@@ -37,31 +38,31 @@ import ca.six.mvi1.dependencyinjection.DependencyInjection;
  */
 public class ProductViewHolder extends RecyclerView.ViewHolder {
 
-  public interface ProductClickedListener {
-    void onProductClicked(Product product);
-  }
+    @BindView(R.id.productImage)
+    ImageView image;
+    @BindView(R.id.productName)
+    TextView name;
+    private Product product;
+    private ProductViewHolder(View itemView, ProductClickedListener clickedListener) {
+        super(itemView);
+        ButterKnife.bind(this, itemView);
+        itemView.setOnClickListener(v -> clickedListener.onProductClicked(product));
+    }
 
-  public static ProductViewHolder create(LayoutInflater inflater, ProductClickedListener listener) {
-    return new ProductViewHolder(inflater.inflate(R.layout.item_product, null, false), listener);
-  }
+    public static ProductViewHolder create(LayoutInflater inflater, ProductClickedListener listener) {
+        return new ProductViewHolder(inflater.inflate(R.layout.item_product, null, false), listener);
+    }
 
-  @BindView(R.id.productImage) ImageView image;
-  @BindView(R.id.productName) TextView name;
+    public void bind(Product product) {
+        this.product = product;
+        Glide.with(itemView.getContext())
+                .load(DependencyInjection.BASE_IMAGE_URL + product.getImage())
+                .centerCrop()
+                .into(image);
+        name.setText(product.getName());
+    }
 
-  private Product product;
-
-  private ProductViewHolder(View itemView, ProductClickedListener clickedListener) {
-    super(itemView);
-    ButterKnife.bind(this, itemView);
-    itemView.setOnClickListener(v -> clickedListener.onProductClicked(product));
-  }
-
-  public void bind(Product product) {
-    this.product = product;
-    Glide.with(itemView.getContext())
-        .load(DependencyInjection.BASE_IMAGE_URL + product.getImage())
-        .centerCrop()
-        .into(image);
-    name.setText(product.getName());
-  }
+    public interface ProductClickedListener {
+        void onProductClicked(Product product);
+    }
 }

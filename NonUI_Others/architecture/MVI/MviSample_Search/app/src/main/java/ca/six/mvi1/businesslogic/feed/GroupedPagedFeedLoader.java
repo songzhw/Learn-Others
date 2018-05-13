@@ -17,13 +17,14 @@
 
 package ca.six.mvi1.businesslogic.feed;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ca.six.mvi1.businesslogic.model.AdditionalItemsLoadable;
 import ca.six.mvi1.businesslogic.model.FeedItem;
 import ca.six.mvi1.businesslogic.model.Product;
 import ca.six.mvi1.businesslogic.model.SectionHeader;
 import io.reactivex.Observable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Takes a {@link PagingFeedLoader} but groups the resulting list of products into categories.
@@ -33,47 +34,47 @@ import java.util.List;
  * @author Hannes Dorfmann
  */
 public class GroupedPagedFeedLoader {
-  private final PagingFeedLoader feedLoader;
-  private final int collapsedGroupProductItemCount = 3;
+    private final PagingFeedLoader feedLoader;
+    private final int collapsedGroupProductItemCount = 3;
 
-  public GroupedPagedFeedLoader(PagingFeedLoader feedLoader) {
-    this.feedLoader = feedLoader;
-  }
+    public GroupedPagedFeedLoader(PagingFeedLoader feedLoader) {
+        this.feedLoader = feedLoader;
+    }
 
-  public Observable<List<FeedItem>> getGroupedFirstPage() {
-    return getGroupedNextPage();
-  }
+    public Observable<List<FeedItem>> getGroupedFirstPage() {
+        return getGroupedNextPage();
+    }
 
-  public Observable<List<FeedItem>> getGroupedNextPage() {
-    return groupByCategory(feedLoader.nextPage());
-  }
+    public Observable<List<FeedItem>> getGroupedNextPage() {
+        return groupByCategory(feedLoader.nextPage());
+    }
 
-  public Observable<List<FeedItem>> getNewestPage() {
-    return groupByCategory(feedLoader.newestPage());
-  }
+    public Observable<List<FeedItem>> getNewestPage() {
+        return groupByCategory(feedLoader.newestPage());
+    }
 
-  private Observable<List<FeedItem>> groupByCategory(
-      Observable<List<Product>> originalListToGroup) {
-    return originalListToGroup.flatMap(Observable::fromIterable)
-        .groupBy(Product::getCategory)
-        .flatMap(groupedByCategory -> groupedByCategory.toList().map(productsInGroup -> {
-          String groupName = groupedByCategory.getKey();
-          List<FeedItem> items = new ArrayList<FeedItem>();
-          items.add(new SectionHeader(groupName));
-          if (collapsedGroupProductItemCount < productsInGroup.size()) {
-            for (int i = 0; i < collapsedGroupProductItemCount; i++) {
-              items.add(productsInGroup.get(i));
-            }
-            items.add(
-                new AdditionalItemsLoadable(productsInGroup.size() - collapsedGroupProductItemCount,
-                    groupName, false, null));
-          } else {
-            items.addAll(productsInGroup);
-          }
-          return items;
-        }).toObservable())
-        .concatMap(Observable::fromIterable)
-        .toList()
-        .toObservable();
-  }
+    private Observable<List<FeedItem>> groupByCategory(
+            Observable<List<Product>> originalListToGroup) {
+        return originalListToGroup.flatMap(Observable::fromIterable)
+                .groupBy(Product::getCategory)
+                .flatMap(groupedByCategory -> groupedByCategory.toList().map(productsInGroup -> {
+                    String groupName = groupedByCategory.getKey();
+                    List<FeedItem> items = new ArrayList<FeedItem>();
+                    items.add(new SectionHeader(groupName));
+                    if (collapsedGroupProductItemCount < productsInGroup.size()) {
+                        for (int i = 0; i < collapsedGroupProductItemCount; i++) {
+                            items.add(productsInGroup.get(i));
+                        }
+                        items.add(
+                                new AdditionalItemsLoadable(productsInGroup.size() - collapsedGroupProductItemCount,
+                                        groupName, false, null));
+                    } else {
+                        items.addAll(productsInGroup);
+                    }
+                    return items;
+                }).toObservable())
+                .concatMap(Observable::fromIterable)
+                .toList()
+                .toObservable();
+    }
 }

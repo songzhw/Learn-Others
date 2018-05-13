@@ -18,6 +18,7 @@
 package ca.six.mvi1.view.category;
 
 import com.hannesdorfmann.mosby3.mvp.MvpView;
+
 import io.reactivex.Observable;
 
 /**
@@ -27,15 +28,15 @@ import io.reactivex.Observable;
  */
 public interface CategoryView extends MvpView {
 
-  /**
-   * Observable that triggers the intent to load the data
-   *
-   * @return Observable containing the category name as String
-   */
-  Observable<String> loadIntents();
+    /**
+     * Observable that triggers the intent to load the data
+     *
+     * @return Observable containing the category name as String
+     */
+    Observable<String> loadIntents();
 
-  /**
-   * Render the state on the view
-   */
-  void render(CategoryViewState state);
+    /**
+     * Render the state on the view
+     */
+    void render(CategoryViewState state);
 }

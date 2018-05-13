@@ -22,26 +22,27 @@ package ca.six.mvi1.businesslogic.model;
  */
 public class ProductDetail {
 
-  private final Product product;
-  private final boolean isInShoppingCart;
+    private final Product product;
+    private final boolean isInShoppingCart;
 
-  public ProductDetail(Product product, boolean isInShoppingCart) {
-    this.product = product;
-    this.isInShoppingCart = isInShoppingCart;
-  }
+    public ProductDetail(Product product, boolean isInShoppingCart) {
+        this.product = product;
+        this.isInShoppingCart = isInShoppingCart;
+    }
 
-  public Product getProduct() {
-    return product;
-  }
+    public Product getProduct() {
+        return product;
+    }
 
-  public boolean isInShoppingCart() {
-    return isInShoppingCart;
-  }
+    public boolean isInShoppingCart() {
+        return isInShoppingCart;
+    }
 
-  @Override public String toString() {
-    return "ProductDetail{" +
-        "product=" + product +
-        ", isInShoppingCart=" + isInShoppingCart +
-        '}';
-  }
+    @Override
+    public String toString() {
+        return "ProductDetail{" +
+                "product=" + product +
+                ", isInShoppingCart=" + isInShoppingCart +
+                '}';
+    }
 }

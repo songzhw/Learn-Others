@@ -18,10 +18,12 @@
 package ca.six.mvi1.view.shoppingcartlabel;
 
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter;
+
+import java.util.List;
+
 import ca.six.mvi1.businesslogic.ShoppingCart;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import java.util.List;
 import timber.log.Timber;
 
 /**
@@ -32,20 +34,21 @@ import timber.log.Timber;
  */
 public class ShoppingCartLabelPresenter extends MviBasePresenter<ShoppingCartLabelView, Integer> {
 
-  private final ShoppingCart shoppingCart;
+    private final ShoppingCart shoppingCart;
 
-  public ShoppingCartLabelPresenter(ShoppingCart shoppingCart) {
-    this.shoppingCart = shoppingCart;
-  }
+    public ShoppingCartLabelPresenter(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
 
-  @Override protected void bindIntents() {
-    Observable<Integer> numberOfItemsInShoppingCart =
-        intent(ShoppingCartLabelView::loadIntent).doOnNext(
-            ignored -> Timber.d("intent: load number of items in shopping cart"))
-            .flatMap(ignored -> shoppingCart.itemsInShoppingCart())
-            .map(List::size)
-            .observeOn(AndroidSchedulers.mainThread());
+    @Override
+    protected void bindIntents() {
+        Observable<Integer> numberOfItemsInShoppingCart =
+                intent(ShoppingCartLabelView::loadIntent).doOnNext(
+                        ignored -> Timber.d("intent: load number of items in shopping cart"))
+                        .flatMap(ignored -> shoppingCart.itemsInShoppingCart())
+                        .map(List::size)
+                        .observeOn(AndroidSchedulers.mainThread());
 
-    subscribeViewState(numberOfItemsInShoppingCart, ShoppingCartLabelView::render);
-  }
+        subscribeViewState(numberOfItemsInShoppingCart, ShoppingCartLabelView::render);
+    }
 }

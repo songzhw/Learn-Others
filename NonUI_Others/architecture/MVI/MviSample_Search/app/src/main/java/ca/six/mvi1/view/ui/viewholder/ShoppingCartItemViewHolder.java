@@ -25,15 +25,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.bumptech.glide.Glide;
 import ca.six.mvi1.R;
-import ca.six.mvi1.businesslogic.http.ProductBackendApi;
 import ca.six.mvi1.businesslogic.model.Product;
 import ca.six.mvi1.dependencyinjection.DependencyInjection;
 import ca.six.mvi1.view.shoppingcartoverview.ShoppingCartOverviewItem;
-import java.util.Locale;
 
 /**
  * @author Hannes Dorfmann
@@ -41,60 +43,62 @@ import java.util.Locale;
 
 public class ShoppingCartItemViewHolder extends RecyclerView.ViewHolder {
 
-  public interface ItemSelectedListener {
-    public void onItemClicked(ShoppingCartOverviewItem product);
+    private final ItemSelectedListener selectedListener;
+    private final Drawable selectedDrawable;
+    @BindView(R.id.image)
+    ImageView image;
+    @BindView(R.id.name)
+    TextView name;
+    @BindView(R.id.price)
+    TextView price;
+    private ShoppingCartOverviewItem item;
+    private ShoppingCartItemViewHolder(View itemView, ItemSelectedListener itemSelectedListener) {
+        super(itemView);
+        this.selectedListener = itemSelectedListener;
+        itemView.setOnClickListener(v -> selectedListener.onItemClicked(item));
+        itemView.setOnLongClickListener(v -> selectedListener.onItemLongPressed(item));
+        selectedDrawable = new ColorDrawable(
+                itemView.getContext().getResources().getColor(R.color.selected_shopping_cart_item));
 
-    public boolean onItemLongPressed(ShoppingCartOverviewItem product);
-  }
-
-  public static ShoppingCartItemViewHolder create(LayoutInflater inflater,
-      ItemSelectedListener selectedListener) {
-    return new ShoppingCartItemViewHolder(
-        inflater.inflate(R.layout.item_shopping_cart, null, false), selectedListener);
-  }
-
-  private final ItemSelectedListener selectedListener;
-  private ShoppingCartOverviewItem item;
-  private final Drawable selectedDrawable;
-  @BindView(R.id.image) ImageView image;
-  @BindView(R.id.name) TextView name;
-  @BindView(R.id.price) TextView price;
-
-  private ShoppingCartItemViewHolder(View itemView, ItemSelectedListener itemSelectedListener) {
-    super(itemView);
-    this.selectedListener = itemSelectedListener;
-    itemView.setOnClickListener(v -> selectedListener.onItemClicked(item));
-    itemView.setOnLongClickListener(v -> selectedListener.onItemLongPressed(item));
-    selectedDrawable = new ColorDrawable(
-        itemView.getContext().getResources().getColor(R.color.selected_shopping_cart_item));
-
-    ButterKnife.bind(this, itemView);
-  }
-
-  public void bind(ShoppingCartOverviewItem item) {
-    this.item = item;
-    Product product = item.getProduct();
-
-    Glide.with(itemView.getContext())
-        .load(DependencyInjection.BASE_IMAGE_URL + product.getImage())
-        .centerCrop()
-        .into(image);
-
-    name.setText(product.getName());
-    price.setText(String.format(Locale.US, "$ %.2f", product.getPrice()));
-
-    if (item.isSelected()) {
-      if (Build.VERSION.SDK_INT >= 23) {
-        itemView.setForeground(selectedDrawable);
-      } else {
-        itemView.setBackground(selectedDrawable);
-      }
-    } else {
-      if (Build.VERSION.SDK_INT >= 23) {
-        itemView.setForeground(null);
-      } else {
-        itemView.setBackground(null);
-      }
+        ButterKnife.bind(this, itemView);
     }
-  }
+
+    public static ShoppingCartItemViewHolder create(LayoutInflater inflater,
+                                                    ItemSelectedListener selectedListener) {
+        return new ShoppingCartItemViewHolder(
+                inflater.inflate(R.layout.item_shopping_cart, null, false), selectedListener);
+    }
+
+    public void bind(ShoppingCartOverviewItem item) {
+        this.item = item;
+        Product product = item.getProduct();
+
+        Glide.with(itemView.getContext())
+                .load(DependencyInjection.BASE_IMAGE_URL + product.getImage())
+                .centerCrop()
+                .into(image);
+
+        name.setText(product.getName());
+        price.setText(String.format(Locale.US, "$ %.2f", product.getPrice()));
+
+        if (item.isSelected()) {
+            if (Build.VERSION.SDK_INT >= 23) {
+                itemView.setForeground(selectedDrawable);
+            } else {
+                itemView.setBackground(selectedDrawable);
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= 23) {
+                itemView.setForeground(null);
+            } else {
+                itemView.setBackground(null);
+            }
+        }
+    }
+
+    public interface ItemSelectedListener {
+        public void onItemClicked(ShoppingCartOverviewItem product);
+
+        public boolean onItemLongPressed(ShoppingCartOverviewItem product);
+    }
 }

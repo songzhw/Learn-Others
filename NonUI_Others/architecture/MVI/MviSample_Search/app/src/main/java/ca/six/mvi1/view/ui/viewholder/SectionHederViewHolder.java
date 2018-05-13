@@ -21,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ca.six.mvi1.R;
@@ -31,19 +32,20 @@ import ca.six.mvi1.businesslogic.model.SectionHeader;
  */
 public class SectionHederViewHolder extends RecyclerView.ViewHolder {
 
-  public static SectionHederViewHolder create(LayoutInflater layoutInflater) {
-    return new SectionHederViewHolder(
-        layoutInflater.inflate(R.layout.item_section_header, null, false));
-  }
+    @BindView(R.id.sectionName)
+    TextView sectionName;
 
-  @BindView(R.id.sectionName) TextView sectionName;
+    private SectionHederViewHolder(View itemView) {
+        super(itemView);
+        ButterKnife.bind(this, itemView);
+    }
 
-  private SectionHederViewHolder(View itemView) {
-    super(itemView);
-    ButterKnife.bind(this, itemView);
-  }
+    public static SectionHederViewHolder create(LayoutInflater layoutInflater) {
+        return new SectionHederViewHolder(
+                layoutInflater.inflate(R.layout.item_section_header, null, false));
+    }
 
-  public void onBind(SectionHeader item) {
-    sectionName.setText(item.getName());
-  }
+    public void onBind(SectionHeader item) {
+        sectionName.setText(item.getName());
+    }
 }

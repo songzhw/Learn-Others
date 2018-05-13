@@ -18,64 +18,68 @@
 package ca.six.mvi1.view.menu;
 
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import ca.six.mvi1.businesslogic.http.ProductBackendApiDecorator;
 import ca.six.mvi1.businesslogic.model.MainMenuItem;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import java.util.ArrayList;
-import java.util.List;
 import timber.log.Timber;
 
 /**
  * @author Hannes Dorfmann
  */
 public class MainMenuPresenter extends MviBasePresenter<MainMenuView, MenuViewState> {
-  private final ProductBackendApiDecorator backendApi;
+    private final ProductBackendApiDecorator backendApi;
 
-  public MainMenuPresenter(ProductBackendApiDecorator backendApi) {
-    this.backendApi = backendApi;
-  }
+    public MainMenuPresenter(ProductBackendApiDecorator backendApi) {
+        this.backendApi = backendApi;
+    }
 
-  @Override protected void bindIntents() {
+    @Override
+    protected void bindIntents() {
 
-    Observable<List<String>> loadCategories = intent(MainMenuView::loadCategoriesIntent).doOnNext(
-        categoryName -> Timber.d("intent: load category %s", categoryName))
-        .flatMap(ignored -> backendApi.getAllCategories().subscribeOn(Schedulers.io()));
+        Observable<List<String>> loadCategories = intent(MainMenuView::loadCategoriesIntent).doOnNext(
+                categoryName -> Timber.d("intent: load category %s", categoryName))
+                .flatMap(ignored -> backendApi.getAllCategories().subscribeOn(Schedulers.io()));
 
-    Observable<String> selectCategory = intent(MainMenuView::selectCategoryIntent).doOnNext(
-        categoryName -> Timber.d("intent: select category %s", categoryName))
-        .startWith(MainMenuItem.HOME);
+        Observable<String> selectCategory = intent(MainMenuView::selectCategoryIntent).doOnNext(
+                categoryName -> Timber.d("intent: select category %s", categoryName))
+                .startWith(MainMenuItem.HOME);
 
-    List<Observable<?>> allIntents = new ArrayList<>(2);
-    allIntents.add(loadCategories);
-    allIntents.add(selectCategory);
+        List<Observable<?>> allIntents = new ArrayList<>(2);
+        allIntents.add(loadCategories);
+        allIntents.add(selectCategory);
 
-    Observable<MenuViewState> menuViewStateObservable =
-        Observable.combineLatest(allIntents, (Function<Object[], MenuViewState>) objects -> {
-          List<String> categories = (List<String>) objects[0];
-          String selectedCategory = (String) objects[1];
+        Observable<MenuViewState> menuViewStateObservable =
+                Observable.combineLatest(allIntents, (Function<Object[], MenuViewState>) objects -> {
+                    List<String> categories = (List<String>) objects[0];
+                    String selectedCategory = (String) objects[1];
 
-          List<MainMenuItem> categoriesItems = new ArrayList<MainMenuItem>(categories.size() + 1);
-          categoriesItems.add(
-              new MainMenuItem(MainMenuItem.HOME, selectedCategory.equals(MainMenuItem.HOME)));
+                    List<MainMenuItem> categoriesItems = new ArrayList<MainMenuItem>(categories.size() + 1);
+                    categoriesItems.add(
+                            new MainMenuItem(MainMenuItem.HOME, selectedCategory.equals(MainMenuItem.HOME)));
 
-          for (int i = 0; i < categories.size(); i++) {
-            String category = categories.get(i);
-            categoriesItems.add(new MainMenuItem(category, category.equals(selectedCategory)));
-          }
+                    for (int i = 0; i < categories.size(); i++) {
+                        String category = categories.get(i);
+                        categoriesItems.add(new MainMenuItem(category, category.equals(selectedCategory)));
+                    }
 
-          return new MenuViewState.DataState(categoriesItems);
-        })
-            .startWith(new MenuViewState.LoadingState())
-            .onErrorReturn(MenuViewState.ErrorState::new)
-            .observeOn(AndroidSchedulers.mainThread());
+                    return new MenuViewState.DataState(categoriesItems);
+                })
+                        .startWith(new MenuViewState.LoadingState())
+                        .onErrorReturn(MenuViewState.ErrorState::new)
+                        .observeOn(AndroidSchedulers.mainThread());
 
-    subscribeViewState(menuViewStateObservable, MainMenuView::render);
-  }
+        subscribeViewState(menuViewStateObservable, MainMenuView::render);
+    }
 
-  @Override public Observable<MenuViewState> getViewStateObservable() {
-    return super.getViewStateObservable();
-  }
+    @Override
+    public Observable<MenuViewState> getViewStateObservable() {
+        return super.getViewStateObservable();
+    }
 }

@@ -23,31 +23,32 @@ package ca.six.mvi1.businesslogic.model;
  * @author Hannes Dorfmann
  */
 public class MainMenuItem {
-  /**
-   * Preserved "category" name for the menu item that triggers to the "home" screen
-   */
-  public static final String HOME = "Home";
+    /**
+     * Preserved "category" name for the menu item that triggers to the "home" screen
+     */
+    public static final String HOME = "Home";
 
-  private final String name;
-  private final boolean selected;
+    private final String name;
+    private final boolean selected;
 
-  public MainMenuItem(String name, boolean selected) {
-    this.name = name;
-    this.selected = selected;
-  }
+    public MainMenuItem(String name, boolean selected) {
+        this.name = name;
+        this.selected = selected;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public boolean isSelected() {
-    return selected;
-  }
+    public boolean isSelected() {
+        return selected;
+    }
 
-  @Override public String toString() {
-    return "MainMenuItem{" +
-        "name='" + name + '\'' +
-        ", selected=" + selected +
-        '}';
-  }
+    @Override
+    public String toString() {
+        return "MainMenuItem{" +
+                "name='" + name + '\'' +
+                ", selected=" + selected +
+                '}';
+    }
 }

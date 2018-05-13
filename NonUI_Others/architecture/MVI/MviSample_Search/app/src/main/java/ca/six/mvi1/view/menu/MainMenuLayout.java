@@ -23,9 +23,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+
+import com.hannesdorfmann.mosby3.mvi.layout.MviFrameLayout;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.hannesdorfmann.mosby3.mvi.layout.MviFrameLayout;
 import ca.six.mvi1.R;
 import ca.six.mvi1.SampleApplication;
 import io.reactivex.Observable;
@@ -35,56 +37,63 @@ import timber.log.Timber;
  * @author Hannes Dorfmann
  */
 public class MainMenuLayout extends MviFrameLayout<MainMenuView, MainMenuPresenter>
-    implements MainMenuView {
+        implements MainMenuView {
 
-  private final MainMenuAdapter adapter;
-  @BindView(R.id.loadingView) View loadingView;
-  @BindView(R.id.recyclerView) RecyclerView recyclerView;
-  @BindView(R.id.errorView) View errorView;
+    private final MainMenuAdapter adapter;
+    @BindView(R.id.loadingView)
+    View loadingView;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
+    @BindView(R.id.errorView)
+    View errorView;
 
-  public MainMenuLayout(Context context, AttributeSet attrs) {
-    super(context, attrs);
+    public MainMenuLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
-    inflate(context, R.layout.view_mainmenu, this);
-    ButterKnife.bind(this, this);
+        inflate(context, R.layout.view_mainmenu, this);
+        ButterKnife.bind(this, this);
 
-    adapter = new MainMenuAdapter(LayoutInflater.from(context));
-    recyclerView.setAdapter(adapter);
-  }
-
-  @Override public MainMenuPresenter createPresenter() {
-    Timber.d("Create MainMenuPresenter");
-    return SampleApplication.getDependencyInjection(getContext()).getMainMenuPresenter();
-  }
-
-  @Override public Observable<Boolean> loadCategoriesIntent() {
-    return Observable.just(true);
-  }
-
-  @Override public Observable<String> selectCategoryIntent() {
-    return adapter.getSelectedItemObservable();
-  }
-
-  @Override public void render(MenuViewState menuViewState) {
-    Timber.d("Render %s", menuViewState);
-
-    TransitionManager.beginDelayedTransition(this);
-    if (menuViewState instanceof MenuViewState.LoadingState) {
-      loadingView.setVisibility(View.VISIBLE);
-      recyclerView.setVisibility(View.GONE);
-      errorView.setVisibility(View.GONE);
-    } else if (menuViewState instanceof MenuViewState.DataState) {
-      adapter.setItems(((MenuViewState.DataState) menuViewState).getCategories());
-      adapter.notifyDataSetChanged();
-      loadingView.setVisibility(View.GONE);
-      recyclerView.setVisibility(View.VISIBLE);
-      errorView.setVisibility(View.GONE);
-    } else if (menuViewState instanceof MenuViewState.ErrorState) {
-      loadingView.setVisibility(View.GONE);
-      recyclerView.setVisibility(View.GONE);
-      errorView.setVisibility(View.VISIBLE);
-    } else {
-      throw new IllegalStateException("Unknown state " + menuViewState);
+        adapter = new MainMenuAdapter(LayoutInflater.from(context));
+        recyclerView.setAdapter(adapter);
     }
-  }
+
+    @Override
+    public MainMenuPresenter createPresenter() {
+        Timber.d("Create MainMenuPresenter");
+        return SampleApplication.getDependencyInjection(getContext()).getMainMenuPresenter();
+    }
+
+    @Override
+    public Observable<Boolean> loadCategoriesIntent() {
+        return Observable.just(true);
+    }
+
+    @Override
+    public Observable<String> selectCategoryIntent() {
+        return adapter.getSelectedItemObservable();
+    }
+
+    @Override
+    public void render(MenuViewState menuViewState) {
+        Timber.d("Render %s", menuViewState);
+
+        TransitionManager.beginDelayedTransition(this);
+        if (menuViewState instanceof MenuViewState.LoadingState) {
+            loadingView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
+        } else if (menuViewState instanceof MenuViewState.DataState) {
+            adapter.setItems(((MenuViewState.DataState) menuViewState).getCategories());
+            adapter.notifyDataSetChanged();
+            loadingView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.GONE);
+        } else if (menuViewState instanceof MenuViewState.ErrorState) {
+            loadingView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
+            errorView.setVisibility(View.VISIBLE);
+        } else {
+            throw new IllegalStateException("Unknown state " + menuViewState);
+        }
+    }
 }

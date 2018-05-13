@@ -17,13 +17,14 @@
 
 package ca.six.mvi1.businesslogic;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import ca.six.mvi1.businesslogic.model.Product;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Holds a list of items that has been added to the shopping cart
@@ -31,46 +32,46 @@ import java.util.List;
  * @author Hannes Dorfmann
  */
 public class ShoppingCart {
-  private BehaviorSubject<List<Product>> itemsInShoppingCart =
-      BehaviorSubject.createDefault(Collections.emptyList());
+    private BehaviorSubject<List<Product>> itemsInShoppingCart =
+            BehaviorSubject.createDefault(Collections.emptyList());
 
-  /**
-   * An observable to observe the items in the shopping cart
-   */
-  public Observable<List<Product>> itemsInShoppingCart() {
-    return itemsInShoppingCart;
-  }
+    /**
+     * An observable to observe the items in the shopping cart
+     */
+    public Observable<List<Product>> itemsInShoppingCart() {
+        return itemsInShoppingCart;
+    }
 
-  /**
-   * Adds a product to the shopping cart
-   */
-  public Completable addProduct(Product product) {
-    List<Product> updatedShoppingCart = new ArrayList<>();
-    updatedShoppingCart.addAll(itemsInShoppingCart.getValue());
-    updatedShoppingCart.add(product);
-    itemsInShoppingCart.onNext(updatedShoppingCart);
-    return Completable.complete();
-  }
+    /**
+     * Adds a product to the shopping cart
+     */
+    public Completable addProduct(Product product) {
+        List<Product> updatedShoppingCart = new ArrayList<>();
+        updatedShoppingCart.addAll(itemsInShoppingCart.getValue());
+        updatedShoppingCart.add(product);
+        itemsInShoppingCart.onNext(updatedShoppingCart);
+        return Completable.complete();
+    }
 
-  /**
-   * Remove a product to the shopping cart
-   */
-  public Completable removeProduct(Product product) {
-    List<Product> updatedShoppingCart = new ArrayList<>();
-    updatedShoppingCart.addAll(itemsInShoppingCart.getValue());
-    updatedShoppingCart.remove(product);
-    itemsInShoppingCart.onNext(updatedShoppingCart);
-    return Completable.complete();
-  }
+    /**
+     * Remove a product to the shopping cart
+     */
+    public Completable removeProduct(Product product) {
+        List<Product> updatedShoppingCart = new ArrayList<>();
+        updatedShoppingCart.addAll(itemsInShoppingCart.getValue());
+        updatedShoppingCart.remove(product);
+        itemsInShoppingCart.onNext(updatedShoppingCart);
+        return Completable.complete();
+    }
 
-  /**
-   * Remove a list of Products from the shopping cart
-   */
-  public Completable removeProducts(List<Product> products) {
-    List<Product> updatedShoppingCart = new ArrayList<>();
-    updatedShoppingCart.addAll(itemsInShoppingCart.getValue());
-    updatedShoppingCart.removeAll(products);
-    itemsInShoppingCart.onNext(updatedShoppingCart);
-    return Completable.complete();
-  }
+    /**
+     * Remove a list of Products from the shopping cart
+     */
+    public Completable removeProducts(List<Product> products) {
+        List<Product> updatedShoppingCart = new ArrayList<>();
+        updatedShoppingCart.addAll(itemsInShoppingCart.getValue());
+        updatedShoppingCart.removeAll(products);
+        itemsInShoppingCart.onNext(updatedShoppingCart);
+        return Completable.complete();
+    }
 }

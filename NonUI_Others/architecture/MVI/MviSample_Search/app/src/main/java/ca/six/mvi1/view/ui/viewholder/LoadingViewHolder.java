@@ -20,6 +20,7 @@ package ca.six.mvi1.view.ui.viewholder;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+
 import ca.six.mvi1.R;
 
 /**
@@ -30,11 +31,11 @@ import ca.six.mvi1.R;
  */
 public class LoadingViewHolder extends RecyclerView.ViewHolder {
 
-  public static LoadingViewHolder create(LayoutInflater inflater) {
-    return new LoadingViewHolder(inflater.inflate(R.layout.item_loading, null, false));
-  }
+    private LoadingViewHolder(View itemView) {
+        super(itemView);
+    }
 
-  private LoadingViewHolder(View itemView) {
-    super(itemView);
-  }
+    public static LoadingViewHolder create(LayoutInflater inflater) {
+        return new LoadingViewHolder(inflater.inflate(R.layout.item_loading, null, false));
+    }
 }

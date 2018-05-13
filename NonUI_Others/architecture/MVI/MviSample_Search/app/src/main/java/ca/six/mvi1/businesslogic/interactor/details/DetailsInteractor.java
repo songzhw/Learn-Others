@@ -17,6 +17,9 @@
 
 package ca.six.mvi1.businesslogic.interactor.details;
 
+import java.util.Arrays;
+import java.util.List;
+
 import ca.six.mvi1.businesslogic.ShoppingCart;
 import ca.six.mvi1.businesslogic.http.ProductBackendApiDecorator;
 import ca.six.mvi1.businesslogic.model.Product;
@@ -24,8 +27,6 @@ import ca.six.mvi1.businesslogic.model.ProductDetail;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Interactor that is responsible to load product details
@@ -33,51 +34,51 @@ import java.util.List;
  * @author Hannes Dorfmann
  */
 public class DetailsInteractor {
-  private final ProductBackendApiDecorator backendApi;
-  private final ShoppingCart shoppingCart;
+    private final ProductBackendApiDecorator backendApi;
+    private final ShoppingCart shoppingCart;
 
-  public DetailsInteractor(ProductBackendApiDecorator backendApi, ShoppingCart shoppingCart) {
-    this.backendApi = backendApi;
-    this.shoppingCart = shoppingCart;
-  }
+    public DetailsInteractor(ProductBackendApiDecorator backendApi, ShoppingCart shoppingCart) {
+        this.backendApi = backendApi;
+        this.shoppingCart = shoppingCart;
+    }
 
 
-  private Observable<ProductDetail> getProductWithShoppingCartInfo(int productId) {
-    List<Observable<?>> observables =
-        Arrays.asList(backendApi.getProduct(productId), shoppingCart.itemsInShoppingCart());
+    private Observable<ProductDetail> getProductWithShoppingCartInfo(int productId) {
+        List<Observable<?>> observables =
+                Arrays.asList(backendApi.getProduct(productId), shoppingCart.itemsInShoppingCart());
 
-    return Observable.combineLatest(observables, objects -> {
-      Product product = (Product) objects[0];
-      List<Product> productsInShoppingCart = (List<Product>) objects[1];
-      boolean inShoppingCart = false;
-      for (Product p : productsInShoppingCart) {
-        if (p.getId() == productId) {
-          inShoppingCart = true;
-          break;
-        }
-      }
+        return Observable.combineLatest(observables, objects -> {
+            Product product = (Product) objects[0];
+            List<Product> productsInShoppingCart = (List<Product>) objects[1];
+            boolean inShoppingCart = false;
+            for (Product p : productsInShoppingCart) {
+                if (p.getId() == productId) {
+                    inShoppingCart = true;
+                    break;
+                }
+            }
 
-      return new ProductDetail(product, inShoppingCart);
-    });
-  }
+            return new ProductDetail(product, inShoppingCart);
+        });
+    }
 
-  /**
-   * Get the details of a given product
-   */
-  public Observable<ProductDetailsViewState> getDetails(int productId) {
-    return getProductWithShoppingCartInfo(productId)
-        .subscribeOn(Schedulers.io())
-        .map(ProductDetailsViewState.DataState::new)
-        .cast(ProductDetailsViewState.class)
-        .startWith(new ProductDetailsViewState.LoadingState())
-        .onErrorReturn(ProductDetailsViewState.ErrorState::new);
-  }
+    /**
+     * Get the details of a given product
+     */
+    public Observable<ProductDetailsViewState> getDetails(int productId) {
+        return getProductWithShoppingCartInfo(productId)
+                .subscribeOn(Schedulers.io())
+                .map(ProductDetailsViewState.DataState::new)
+                .cast(ProductDetailsViewState.class)
+                .startWith(new ProductDetailsViewState.LoadingState())
+                .onErrorReturn(ProductDetailsViewState.ErrorState::new);
+    }
 
-  public Completable addToShoppingCart(Product product) {
-    return shoppingCart.addProduct(product);
-  }
+    public Completable addToShoppingCart(Product product) {
+        return shoppingCart.addProduct(product);
+    }
 
-  public Completable removeFromShoppingCart(Product product) {
-    return shoppingCart.removeProduct(product);
-  }
+    public Completable removeFromShoppingCart(Product product) {
+        return shoppingCart.removeProduct(product);
+    }
 }

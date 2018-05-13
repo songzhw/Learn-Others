@@ -26,31 +26,31 @@ import io.reactivex.Observable;
  * @author Hannes Dorfmann
  */
 public class SearchInteractor {
-  private final SearchEngine searchEngine;
+    private final SearchEngine searchEngine;
 
-  public SearchInteractor(SearchEngine searchEngine) {
-    this.searchEngine = searchEngine;
-  }
-
-  /**
-   * Search for items
-   */
-  public Observable<SearchViewState> search(String searchString) {
-    // Empty String, so no search
-    if (searchString.isEmpty()) {
-      return Observable.just(new SearchViewState.SearchNotStartedYet());
+    public SearchInteractor(SearchEngine searchEngine) {
+        this.searchEngine = searchEngine;
     }
 
-    // search for product
-    return searchEngine.searchFor(searchString)
-        .map(products -> {
-          if (products.isEmpty()) {
-            return new SearchViewState.EmptyResult(searchString);
-          } else {
-            return new SearchViewState.SearchResult(searchString, products);
-          }
-        })
-        .startWith(new SearchViewState.Loading())
-        .onErrorReturn(error -> new SearchViewState.Error(searchString, error));
-  }
+    /**
+     * Search for items
+     */
+    public Observable<SearchViewState> search(String searchString) {
+        // Empty String, so no search
+        if (searchString.isEmpty()) {
+            return Observable.just(new SearchViewState.SearchNotStartedYet());
+        }
+
+        // search for product
+        return searchEngine.searchFor(searchString)
+                .map(products -> {
+                    if (products.isEmpty()) {
+                        return new SearchViewState.EmptyResult(searchString);
+                    } else {
+                        return new SearchViewState.SearchResult(searchString, products);
+                    }
+                })
+                .startWith(new SearchViewState.Loading())
+                .onErrorReturn(error -> new SearchViewState.Error(searchString, error));
+    }
 }

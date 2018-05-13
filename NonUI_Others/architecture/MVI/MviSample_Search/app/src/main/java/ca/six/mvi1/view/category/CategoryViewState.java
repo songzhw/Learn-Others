@@ -17,65 +17,70 @@
 
 package ca.six.mvi1.view.category;
 
-import ca.six.mvi1.businesslogic.model.Product;
 import java.util.List;
+
+import ca.six.mvi1.businesslogic.model.Product;
 
 /**
  * The View state for the Menu
+ *
  * @author Hannes Dorfmann
  */
 public interface CategoryViewState {
 
-  /**
-   * Loads the list of all menu items
-   */
-  final class LoadingState implements CategoryViewState {
+    /**
+     * Loads the list of all menu items
+     */
+    final class LoadingState implements CategoryViewState {
 
-    @Override public String toString() {
-      return "LoadingState{}";
-    }
-  }
-
-  /**
-   * Ane error has ocurred while loading the data
-   */
-  final class ErrorState implements CategoryViewState {
-    private final Throwable error;
-
-    public ErrorState(Throwable error) {
-      this.error = error;
+        @Override
+        public String toString() {
+            return "LoadingState{}";
+        }
     }
 
-    public Throwable getError() {
-      return error;
+    /**
+     * Ane error has ocurred while loading the data
+     */
+    final class ErrorState implements CategoryViewState {
+        private final Throwable error;
+
+        public ErrorState(Throwable error) {
+            this.error = error;
+        }
+
+        public Throwable getError() {
+            return error;
+        }
+
+        @Override
+        public String toString() {
+            return "ErrorState{" +
+                    "error=" + error +
+                    '}';
+        }
     }
 
-    @Override public String toString() {
-      return "ErrorState{" +
-          "error=" + error +
-          '}';
-    }
-  }
+    /**
+     * Data has been loaded successfully and can now be displayed
+     */
+    final class DataState implements CategoryViewState {
+        private final List<Product> products;
 
-  /**
-   * Data has been loaded successfully and can now be displayed
-   */
-  final class DataState implements CategoryViewState {
-    private final List<Product> products;
+        public DataState(List<Product> products) {
+            this.products = products;
+        }
 
-    public DataState(List<Product> products) {
-      this.products = products;
-    }
+        public List<Product> getProducts() {
+            return products;
+        }
 
-    public List<Product> getProducts() {
-      return products;
+        @Override
+        public String toString() {
+            return "DataState{" +
+                    "products=" + products +
+                    '}';
+        }
     }
-
-    @Override public String toString() {
-      return "DataState{" +
-          "products=" + products +
-          '}';
-    }
-  }
 
 }

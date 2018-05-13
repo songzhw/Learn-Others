@@ -18,6 +18,7 @@
 package ca.six.mvi1.view.detail;
 
 import com.hannesdorfmann.mosby3.mvp.MvpView;
+
 import ca.six.mvi1.businesslogic.interactor.details.ProductDetailsViewState;
 import ca.six.mvi1.businesslogic.model.Product;
 import io.reactivex.Observable;
@@ -28,23 +29,23 @@ import io.reactivex.Observable;
 
 public interface ProductDetailsView extends MvpView {
 
-  /**
-   * The intent to load details of a certain product
-   */
-  Observable<Integer> loadDetailsIntent();
+    /**
+     * The intent to load details of a certain product
+     */
+    Observable<Integer> loadDetailsIntent();
 
-  /**
-   * The intent to add a product to the shopping cart
-   */
-  Observable<Product> addToShoppingCartIntent();
+    /**
+     * The intent to add a product to the shopping cart
+     */
+    Observable<Product> addToShoppingCartIntent();
 
-  /**
-   * the intent to remove a product from the shopping cart
-   */
-  Observable<Product> removeFromShoppingCartIntent();
+    /**
+     * the intent to remove a product from the shopping cart
+     */
+    Observable<Product> removeFromShoppingCartIntent();
 
-  /**
-   * Render the state n the UI
-   */
-  void render(ProductDetailsViewState state);
+    /**
+     * Render the state n the UI
+     */
+    void render(ProductDetailsViewState state);
 }

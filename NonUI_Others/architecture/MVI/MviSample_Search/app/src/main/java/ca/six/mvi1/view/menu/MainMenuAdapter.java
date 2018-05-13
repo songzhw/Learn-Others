@@ -20,45 +20,52 @@ package ca.six.mvi1.view.menu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
+import java.util.List;
+
 import ca.six.mvi1.businesslogic.model.MainMenuItem;
 import ca.six.mvi1.view.ui.viewholder.MainMenuViewHolder;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
-import java.util.List;
 
 /**
  * @author Hannes Dorfmann
  */
 
-public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder> implements MainMenuViewHolder.MainMenuSelectionListener{
-  private final LayoutInflater layoutInflater;
-  private List<MainMenuItem> items;
-  private final PublishSubject<String> selectedItem = PublishSubject.create();
-  public MainMenuAdapter(LayoutInflater layoutInflater) {
-    this.layoutInflater = layoutInflater;
-  }
+public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder> implements MainMenuViewHolder.MainMenuSelectionListener {
+    private final LayoutInflater layoutInflater;
+    private final PublishSubject<String> selectedItem = PublishSubject.create();
+    private List<MainMenuItem> items;
 
-  @Override public MainMenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    return MainMenuViewHolder.create(layoutInflater, this);
-  }
+    public MainMenuAdapter(LayoutInflater layoutInflater) {
+        this.layoutInflater = layoutInflater;
+    }
 
-  @Override public void onBindViewHolder(MainMenuViewHolder holder, int position) {
-    holder.bind(items.get(position));
-  }
+    @Override
+    public MainMenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return MainMenuViewHolder.create(layoutInflater, this);
+    }
 
-  @Override public int getItemCount() {
-    return items == null ? 0 : items.size();
-  }
+    @Override
+    public void onBindViewHolder(MainMenuViewHolder holder, int position) {
+        holder.bind(items.get(position));
+    }
 
-  @Override public void onItemSelected(String categoryName) {
-    selectedItem.onNext(categoryName);
-  }
+    @Override
+    public int getItemCount() {
+        return items == null ? 0 : items.size();
+    }
 
-  public Observable<String> getSelectedItemObservable() {
-    return selectedItem;
-  }
+    @Override
+    public void onItemSelected(String categoryName) {
+        selectedItem.onNext(categoryName);
+    }
 
-  public void setItems(List<MainMenuItem> items) {
-    this.items = items;
-  }
+    public Observable<String> getSelectedItemObservable() {
+        return selectedItem;
+    }
+
+    public void setItems(List<MainMenuItem> items) {
+        this.items = items;
+    }
 }

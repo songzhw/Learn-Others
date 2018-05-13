@@ -18,6 +18,7 @@
 package ca.six.mvi1.view.checkoutbutton;
 
 import com.hannesdorfmann.mosby3.mvp.MvpView;
+
 import io.reactivex.Observable;
 
 /**
@@ -26,10 +27,10 @@ import io.reactivex.Observable;
 
 public interface CheckoutButtonView extends MvpView {
 
-  /**
-   * Intent to load the data
-   */
-  Observable<Boolean> loadIntent();
+    /**
+     * Intent to load the data
+     */
+    Observable<Boolean> loadIntent();
 
-  void render(double sum);
+    void render(double sum);
 }

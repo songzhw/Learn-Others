@@ -17,11 +17,12 @@
 
 package ca.six.mvi1.businesslogic.feed;
 
+import java.util.Collections;
+import java.util.List;
+
 import ca.six.mvi1.businesslogic.http.ProductBackendApiDecorator;
 import ca.six.mvi1.businesslogic.model.Product;
 import io.reactivex.Observable;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author Hannes Dorfmann
@@ -29,40 +30,40 @@ import java.util.List;
 
 public class PagingFeedLoader {
 
-  private final ProductBackendApiDecorator backend;
-  private int currentPage = 1;
-  private boolean endReached = false;
-  private boolean newestPageLoaded = false;
+    private final ProductBackendApiDecorator backend;
+    private int currentPage = 1;
+    private boolean endReached = false;
+    private boolean newestPageLoaded = false;
 
-  public PagingFeedLoader(ProductBackendApiDecorator backend) {
-    this.backend = backend;
-  }
-
-  public Observable<List<Product>> newestPage() {
-    if (newestPageLoaded) {
-      return Observable.fromCallable(() -> {
-        Thread.sleep(2000);
-        return Collections.emptyList();
-      });
+    public PagingFeedLoader(ProductBackendApiDecorator backend) {
+        this.backend = backend;
     }
 
-    return backend.getProducts(0).doOnNext(products -> newestPageLoaded = true);
-  }
+    public Observable<List<Product>> newestPage() {
+        if (newestPageLoaded) {
+            return Observable.fromCallable(() -> {
+                Thread.sleep(2000);
+                return Collections.emptyList();
+            });
+        }
 
-  public Observable<List<Product>> nextPage() {
-    // I know, it's not a pure function nor elegant code
-    // but that is not the purpose of this demo.
-    // This code should be understandable by everyone.
-
-    if (endReached) {
-      return Observable.just(Collections.emptyList());
+        return backend.getProducts(0).doOnNext(products -> newestPageLoaded = true);
     }
 
-    return backend.getProducts(currentPage).doOnNext(result -> {
-      currentPage++;
-      if (result.isEmpty()) {
-        endReached = true;
-      }
-    });
-  }
+    public Observable<List<Product>> nextPage() {
+        // I know, it's not a pure function nor elegant code
+        // but that is not the purpose of this demo.
+        // This code should be understandable by everyone.
+
+        if (endReached) {
+            return Observable.just(Collections.emptyList());
+        }
+
+        return backend.getProducts(currentPage).doOnNext(result -> {
+            currentPage++;
+            if (result.isEmpty()) {
+                endReached = true;
+            }
+        });
+    }
 }

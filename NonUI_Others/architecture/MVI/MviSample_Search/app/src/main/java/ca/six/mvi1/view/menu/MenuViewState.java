@@ -17,65 +17,70 @@
 
 package ca.six.mvi1.view.menu;
 
-import ca.six.mvi1.businesslogic.model.MainMenuItem;
 import java.util.List;
+
+import ca.six.mvi1.businesslogic.model.MainMenuItem;
 
 /**
  * The View state for the Menu
+ *
  * @author Hannes Dorfmann
  */
 public interface MenuViewState {
 
-  /**
-   * Loads the list of all menu items
-   */
-  final class LoadingState implements MenuViewState{
+    /**
+     * Loads the list of all menu items
+     */
+    final class LoadingState implements MenuViewState {
 
-    @Override public String toString() {
-      return "LoadingState{}";
-    }
-  }
-
-  /**
-   * Ane error has ocurred while loading the data
-   */
-  final class ErrorState implements  MenuViewState{
-    private final Throwable error;
-
-    public ErrorState(Throwable error) {
-      this.error = error;
+        @Override
+        public String toString() {
+            return "LoadingState{}";
+        }
     }
 
-    public Throwable getError() {
-      return error;
+    /**
+     * Ane error has ocurred while loading the data
+     */
+    final class ErrorState implements MenuViewState {
+        private final Throwable error;
+
+        public ErrorState(Throwable error) {
+            this.error = error;
+        }
+
+        public Throwable getError() {
+            return error;
+        }
+
+        @Override
+        public String toString() {
+            return "ErrorState{" +
+                    "error=" + error +
+                    '}';
+        }
     }
 
-    @Override public String toString() {
-      return "ErrorState{" +
-          "error=" + error +
-          '}';
-    }
-  }
+    /**
+     * Data has been loaded successfully and can now be displayed
+     */
+    final class DataState implements MenuViewState {
+        private final List<MainMenuItem> categories;
 
-  /**
-   * Data has been loaded successfully and can now be displayed
-   */
-  final class DataState implements  MenuViewState {
-    private final List<MainMenuItem> categories;
+        public DataState(List<MainMenuItem> categories) {
+            this.categories = categories;
+        }
 
-    public DataState(List<MainMenuItem> categories) {
-      this.categories = categories;
-    }
+        public List<MainMenuItem> getCategories() {
+            return categories;
+        }
 
-    public List<MainMenuItem> getCategories() {
-      return categories;
+        @Override
+        public String toString() {
+            return "DataState{" +
+                    "categories=" + categories +
+                    '}';
+        }
     }
-
-    @Override public String toString() {
-      return "DataState{" +
-          "categories=" + categories +
-          '}';
-    }
-  }
 
 }

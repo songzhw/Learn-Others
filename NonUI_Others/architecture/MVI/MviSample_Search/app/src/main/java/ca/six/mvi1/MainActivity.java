@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     toolbar.setTitle("Mosby MVI");
     toolbar.inflateMenu(R.menu.activity_main_toolbar);
     toolbar.setOnMenuItemClickListener(item -> {
-
       getSupportFragmentManager().beginTransaction()
           .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out,
               android.R.anim.fade_in, android.R.anim.fade_out)

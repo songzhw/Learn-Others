@@ -15,7 +15,8 @@
  */
 package com.example.saulmm.splashes.itemanimator;
 
-import android.support.v4.animation.AnimatorCompatHelper;
+import android.animation.TimeInterpolator;
+import android.animation.ValueAnimator;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
@@ -512,7 +513,9 @@ abstract public class BaseItemAnimator extends SimpleItemAnimator {
     }
 
     private void resetAnimation(ViewHolder holder) {
-        AnimatorCompatHelper.clearInterpolator(holder.itemView);
+        TimeInterpolator mDefaultInterpolator = new ValueAnimator().getInterpolator();
+        holder.itemView.animate().setInterpolator(mDefaultInterpolator);
+
         endAnimation(holder);
     }
 

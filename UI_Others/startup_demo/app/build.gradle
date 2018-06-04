@@ -17,6 +17,10 @@ android {
         enabled = true
     }
 
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 def SUPPORT = "27.1.1"

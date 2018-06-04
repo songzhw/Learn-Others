@@ -45,7 +45,6 @@ public class OnboardingWithCenterAnimationActivity extends AppCompatActivity {
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-
         if (!hasFocus || animationStarted) {
             return;
         }

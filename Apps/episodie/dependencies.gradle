@@ -1,0 +1,282 @@
+ext {
+    android = [
+            compileSdkVersion: 27,
+            buildToolsVersion: "27.0.3",
+            minSdkVersion    : 21,
+            targetSdkVersion : 27,
+            versionCode      : 2,
+            versionName      : "1.0.1"
+    ]
+
+    /* build plugins versions */
+    build = [
+            gradle: "3.1.2",
+            kotlin: "1.2.41",
+    ]
+
+    buildPlugins = [
+            gradle: "com.android.tools.build:gradle:$build.gradle",
+            kotlin: "org.jetbrains.kotlin:kotlin-gradle-plugin:$build.kotlin",
+    ]
+
+    /* dependencies versions */
+    def androidSupportLibs = '27.1.0'
+    def constraintLayoutVersion = '1.0.2'
+    def androidMultiDexVersion = '1.0.3'
+    def jUnitVersion = '4.12'
+    def mockitoVersion = '2.10.0'
+    def mockitoKotlinVersion = '1.5.0'
+    def kluentVersion = '1.29'
+    def espressoVersion = '2.2.2'
+    def pagingLibraryVersion = '1.0.0-alpha6'
+    def rxJavaVersion = '2.1.0'
+    def rxAndroidVersion = '2.0.1'
+    def rxBindingVersion = '2.0.0'
+    def okHttpVersion = '3.8.0'
+    def leakCanaryVersion = '1.5.1'
+    def blockCanaryVersion = '1.5.0'
+    def gsonVersion = '2.8.1'
+    def retrofitVersion = '2.3.0'
+    def daggerVersion = '2.11'
+    def javaxInjectVersion = '1'
+    def stethoVersion = '1.5.0'
+    def stethoOkHttpVersion = "1.5.0"
+    def extensiblePageIndicatorVersion = '1.0.1'
+    def butterKnifeVersion = '8.6.0'
+    def glideVersion = '4.0.0'
+    def rippleVersion = '1.3.1'
+    def calligraphyVersion = '2.3.0'
+    def multiSectionVersion = 'v0.1'
+    def slidingRootNavVersion = '1.1.0'
+    def rxCacheVersion = '1.8.0-2.x'
+    def jolyglotGsonVersion = '0.0.3'
+    def androidAnimationsVersion = '2.2@aar'
+    def easingLibraryVersion = '2.1@aar'
+    def architectureComponentsVersion = '1.1.0'
+    def roomVersion = '1.0.0'
+    def particlesDrawableVersion = '1.0.7'
+    def lottieVersion = '2.0.0'
+    def groupieVersion = '2.0.0-alpha2'
+    def noiseViewVersion = '1.0'
+    def hTextViewVersion = '0.1.1'
+    def yearClassVersion = '2.0.0'
+    def materialSearchVersion = '1.4.0'
+    def materialTimelineViewVersion = '1.0'
+    def diagonalLayoutVersion = '1.0.8'
+    def fabButtonVersion = '1.10.1'
+    def androidJobVersion = '1.2.0'
+    def gcmVersion = '11.6.0'
+    def kenBurnsViewVersion = "1.0.7"
+    def discreteScrollVersion = "1.4.4"
+    def adaptableBottomVersion = "2951e832b7"
+    def roboElectricVersion = '3.5.1'
+
+    def libs = [
+            /* support */
+            supportAppCompat            : [group: 'com.android.support', name: 'appcompat-v7', version: androidSupportLibs],
+            supportCardView             : [group: 'com.android.support', name: 'cardview-v7', version: androidSupportLibs],
+            supportDesign               : [group: 'com.android.support', name: 'design', version: androidSupportLibs],
+            supportPalette              : [group: 'com.android.support', name: 'palette-v7', version: androidSupportLibs],
+            supportRecyclerView         : [group: 'com.android.support', name: 'recyclerview-v7', version: androidSupportLibs],
+            supportV4                   : [group: 'com.android.support', name: 'support-v4', version: androidSupportLibs],
+            supportV7                   : [group: 'com.android.support', name: 'support-v7', version: androidSupportLibs],
+            supportMultiDex             : [group: 'com.android.support', name: 'multidex', version: androidMultiDexVersion],
+            constrainLayout             : [group: 'com.android.support.constraint', name: 'constraint-layout', version: constraintLayoutVersion],
+            kotlin_stdlib               : [group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: build.kotlin],
+            archLifecycleExtensions     : [group: 'android.arch.lifecycle', name: 'extensions', version: architectureComponentsVersion],
+            archLifecycleCompiler       : [group: 'android.arch.lifecycle', name: 'compiler', version: architectureComponentsVersion],
+            archPersistenceRoom         : [group: 'android.arch.persistence.room', name: 'runtime', version: roomVersion],
+            archPersistenceRoomCompiler : [group: 'android.arch.persistence.room', name: 'compiler', version: roomVersion],
+            archPersistenceRoomRxSupport: [group: 'android.arch.persistence.room', name: 'rxjava2', version: roomVersion],
+            archPagingLibrary           : [group: 'android.arch.paging', name: 'runtime', version: pagingLibraryVersion],
+            yearClass                   : [group: 'com.facebook.device.yearclass', name: 'yearclass', version: yearClassVersion],
+            gcm                         : [group: 'com.google.android.gms', name: 'play-services-gcm', version: gcmVersion],
+            androidJob                  : [group: 'com.evernote', name: 'android-job', version: androidJobVersion],
+            /* rx */
+            rxJava                      : [group: 'io.reactivex.rxjava2', name: 'rxjava', version: rxJavaVersion],
+            rxAndroid                   : [group: 'io.reactivex.rxjava2', name: 'rxandroid', version: rxAndroidVersion],
+            rxBinding                   : [group: 'com.jakewharton.rxbinding2', name: 'rxbinding-kotlin', version: rxBindingVersion],
+            /* networking */
+            okHttp                      : [group: 'com.squareup.okhttp3', name: 'okhttp', version: okHttpVersion],
+            gson                        : [group: 'com.google.code.gson', name: 'gson', version: gsonVersion],
+            retrofit                    : [group: 'com.squareup.retrofit2', name: 'retrofit', version: retrofitVersion],
+            retrofitRxJavaAdapater      : [group: 'com.squareup.retrofit2', name: 'adapter-rxjava2', version: retrofitVersion],
+            retrofitGsonConverter       : [group: 'com.squareup.retrofit2', name: 'converter-gson', version: retrofitVersion],
+            /* dependency injection */
+            dagger                      : [group: 'com.google.dagger', name: 'dagger', version: daggerVersion],
+            daggerCompiler              : [group: 'com.google.dagger', name: 'dagger-compiler', version: daggerVersion],
+            javaxInject                 : [group: 'javax.inject', name: 'javax.inject', version: javaxInjectVersion],
+            butterKnife                 : [group: 'com.jakewharton', name: 'butterknife', version: butterKnifeVersion],
+            butterKnifeCompiler         : [group: 'com.jakewharton', name: 'butterknife-compiler', version: butterKnifeVersion],
+            /* persistence */
+            rxCache                     : [group: 'com.github.VictorAlbertos.RxCache', name: 'runtime', version: rxCacheVersion],
+            jolyglotGson                : [group: 'com.github.VictorAlbertos.Jolyglot', name: 'gson', version: jolyglotGsonVersion],
+            /* frontend */
+            glide                       : [group: 'com.github.bumptech.glide', name: 'glide', version: glideVersion],
+            glideCompiler               : [group: 'com.github.bumptech.glide', name: 'compiler', version: glideVersion],
+            ripple                      : [group: 'com.patrickpissurno', name: 'ripple-effect', version: rippleVersion],
+            calligraphy                 : [group: 'uk.co.chrisjenx', name: 'calligraphy', version: calligraphyVersion],
+            multiSection                : [group: 'com.github.yalantis', name: 'multi-selection', version: multiSectionVersion],
+            slidingRootNav              : [group: 'com.yarolegovich', name: 'sliding-root-nav', version: slidingRootNavVersion],
+            particlesDrawable           : [group: 'com.github.doctoror.particlesdrawable', name: 'library', version: particlesDrawableVersion],
+            lottie                      : [group: 'com.airbnb.android', name: 'lottie', version: lottieVersion],
+            groupie                     : [group: 'com.xwray', name: 'groupie', version: groupieVersion],
+            noiseView                   : [group: 'pl.hypeapp', name: 'noiseview', version: noiseViewVersion],
+            hTextView                   : [group: 'com.hanks', name: 'htextview-evaporate', version: hTextViewVersion],
+            materialSearch              : [group: 'com.miguelcatalan', name: 'materialsearchview', version: materialSearchVersion],
+            materialTimelineView        : [group: 'pl.hypeapp', name: 'materialtimelineview', version: materialTimelineViewVersion],
+            diagonalLayout              : [group: 'com.github.florent37', name: 'diagonallayout', version: diagonalLayoutVersion],
+            fabButton                   : [group: 'com.getbase', name: 'floatingactionbutton', version: fabButtonVersion],
+            kenBurnsView                : [group: 'com.flaviofaria', name: 'kenburnsview', version: kenBurnsViewVersion],
+            discreteScroll              : [group: 'com.yarolegovich', name: 'discrete-scrollview', version: discreteScrollVersion],
+            adaptableBottomNavigation   : [group: 'com.github.bufferapp', name: 'AdaptableBottomNavigation', version: adaptableBottomVersion],
+            // For some reason gradle cannot resolve version of this dependency and must be hardcoded in that way.
+            androidAnimations           : "com.daimajia.androidanimations:library:$androidAnimationsVersion",
+            easingLibrary               : "com.daimajia.easing:library:$easingLibraryVersion"
+    ]
+
+    def testLibs = [
+            junit        : [group: 'junit', name: 'junit', version: jUnitVersion],
+            espressoCore : [group: 'com.android.support.test.espresso', name: 'espresso-core', version: espressoVersion],
+            mockito      : [group: 'org.mockito', name: 'mockito-inline', version: mockitoVersion],
+            mockitoKotlin: [group: 'com.nhaarman', name: 'mockito-kotlin-kt1.1', version: mockitoKotlinVersion],
+            kluent       : [group: 'org.amshove.kluent', name: 'kluent', version: kluentVersion],
+            roboElectrcic: [group: 'org.robolectric', name: 'robolectric', version: roboElectricVersion]
+    ]
+
+    def modules = [
+            dataproviders: ':dataproviders',
+            domain       : ':domain',
+            presentation : ':presentation'
+    ]
+
+    def supportAnnotationsExclude = {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+
+    applicationModuleDependencies = [
+            // support libs
+            [configuration: "implementation", dependency: libs.supportAppCompat],
+            [configuration: "implementation", dependency: libs.supportCardView],
+            [configuration: "implementation", dependency: libs.supportDesign],
+            [configuration: "implementation", dependency: libs.supportPalette],
+            [configuration: "implementation", dependency: libs.supportRecyclerView],
+            [configuration: "implementation", dependency: libs.supportV4],
+            [configuration: "implementation", dependency: libs.supportMultiDex],
+            [configuration: "implementation", dependency: libs.kotlin_stdlib],
+            [configuration: "implementation", dependency: libs.archLifecycleExtensions],
+            [configuration: "kapt", dependency: libs.archLifecycleCompiler],
+            [configuration: "implementation", dependency: libs.yearClass],
+            [configuration: "implementation", dependency: libs.gcm],
+            [configuration: "implementation", dependency: libs.androidJob],
+            // frontend
+            [configuration: "implementation", dependency: libs.constrainLayout],
+            [configuration: "implementation", dependency: libs.glide],
+            [configuration: "implementation", dependency: libs.ripple],
+            [configuration: "implementation", dependency: libs.calligraphy],
+            [configuration: "implementation", dependency: libs.multiSection],
+            [configuration: "implementation", dependency: libs.slidingRootNav],
+            [configuration: "implementation", dependency: libs.androidAnimations],
+            [configuration: "kapt", dependency: libs.glideCompiler],
+            [configuration: "implementation", dependency: libs.particlesDrawable],
+            [configuration: "implementation", dependency: libs.lottie],
+            [configuration: "implementation", dependency: libs.groupie],
+            [configuration: "implementation", dependency: libs.noiseView],
+            [configuration: "implementation", dependency: libs.hTextView],
+            [configuration: "implementation", dependency: libs.easingLibrary],
+            [configuration: "implementation", dependency: libs.materialSearch],
+            [configuration: "implementation", dependency: libs.materialTimelineView],
+            [configuration: "implementation", dependency: libs.diagonalLayout],
+            [configuration: "implementation", dependency: libs.fabButton],
+            [configuration: "implementation", dependency: libs.discreteScroll],
+            [configuration: "implementation", dependency: libs.adaptableBottomNavigation],
+            [configuration: "implementation", dependency: libs.kenBurnsView],
+            // dependency injection
+            [configuration: "implementation", dependency: libs.butterKnife],
+            [configuration: "kapt", dependency: libs.butterKnifeCompiler],
+            [configuration: "implementation", dependency: libs.dagger],
+            [configuration: "kapt", dependency: libs.daggerCompiler],
+            // rx
+            [configuration: "implementation", dependency: libs.rxJava],
+            [configuration: "implementation", dependency: libs.rxAndroid],
+            [configuration: "implementation", dependency: libs.rxBinding],
+            // test
+            [configuration: "testImplementation", dependency: testLibs.junit],
+            [configuration: "testImplementation", dependency: testLibs.mockito],
+            [configuration: "testImplementation", dependency: testLibs.mockitoKotlin],
+            [configuration: "testImplementation", dependency: testLibs.kluent],
+            [configuration: "testImplementation", dependency: testLibs.roboElectrcic],
+            // modules
+            [configuration: "implementation", dependency: project(modules.presentation)],
+            [configuration: "implementation", dependency: project(modules.dataproviders)],
+    ]
+
+    presentationModuleDependencies = [
+            [configuration: "implementation", dependency: libs.kotlin_stdlib],
+            // dependency injection
+            [configuration: "implementation", dependency: libs.javaxInject],
+            // rx
+            [configuration: "implementation", dependency: libs.rxJava],
+            // test
+            [configuration: "testImplementation", dependency: testLibs.junit],
+            [configuration: "testImplementation", dependency: testLibs.mockito],
+            [configuration: "testImplementation", dependency: testLibs.mockitoKotlin],
+            [configuration: "testImplementation", dependency: testLibs.kluent],
+            // modules
+            [configuration: "implementation", dependency: project(modules.domain)]
+    ]
+
+    domainModuleDependencies = [
+            [configuration: "implementation", dependency: libs.kotlin_stdlib],
+            //dependency injection
+            [configuration: "implementation", dependency: libs.javaxInject],
+            //rx
+            [configuration: "implementation", dependency: libs.rxJava],
+            // test
+            [configuration: "testImplementation", dependency: testLibs.junit],
+            [configuration: "testImplementation", dependency: testLibs.mockito],
+            [configuration: "testImplementation", dependency: testLibs.mockitoKotlin],
+            [configuration: "testImplementation", dependency: testLibs.kluent],
+    ]
+
+    dataprovidersModuleDependencies = [
+            [configuration: "implementation", dependency: libs.kotlin_stdlib],
+            // networking
+            [configuration: "api", dependency: libs.okHttp],
+            [configuration: "api", dependency: libs.retrofit],
+            [configuration: "api", dependency: libs.retrofitGsonConverter],
+            [configuration: "api", dependency: libs.retrofitRxJavaAdapater],
+            // dependency injection
+            [configuration: "implementation", dependency: libs.javaxInject],
+            // rx
+            [configuration: "implementation", dependency: libs.rxJava],
+            // cache
+            [configuration: "api", dependency: libs.rxCache],
+            [configuration: "api", dependency: libs.jolyglotGson],
+            // persistence
+            [configuration: "api", dependency: libs.archPersistenceRoom],
+            [configuration: "implementation", dependency: libs.archPersistenceRoomRxSupport],
+            [configuration: "kapt", dependency: libs.archPersistenceRoomCompiler],
+            [configuration: "implementation", dependency: libs.archPagingLibrary],
+            // test
+            [configuration: "testImplementation", dependency: testLibs.junit],
+            [configuration: "testImplementation", dependency: testLibs.mockito],
+            [configuration: "testImplementation", dependency: testLibs.mockitoKotlin],
+            [configuration: "testImplementation", dependency: testLibs.kluent],
+            // modules
+            [configuration: "api", dependency: project(modules.domain)]
+    ]
+
+    def plugins = [
+            android_library    : 'com.android.library',
+            android_application: 'com.android.application',
+            kotlin_android     : 'kotlin-android',
+            kotlin             : 'kotlin',
+            kotlin_kapt        : 'kotlin-kapt'
+    ]
+
+    applicationModulePlugins = [plugins.android_application, plugins.kotlin_android, plugins.kotlin_kapt]
+    presentationModulePlugins = [plugins.kotlin, plugins.kotlin_kapt]
+    domainModulePlugins = [plugins.kotlin, plugins.kotlin_kapt]
+    dataprovidersModulePlugins = [plugins.android_library, plugins.kotlin_android, plugins.kotlin_kapt]
+}

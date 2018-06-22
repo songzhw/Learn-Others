@@ -22,7 +22,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug{
+        debug {
             minifyEnabled false
             testCoverageEnabled true
         }
@@ -71,7 +71,7 @@ android {
 //}
 
 dependencies {
-        rootProject.applicationModuleDependencies.each {
+    rootProject.applicationModuleDependencies.each {
         add(it.configuration, it.dependency, it.options)
     }
 }

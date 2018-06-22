@@ -1,8 +1,13 @@
 buildscript {
     repositories {
-        maven { url 'https://dl.google.com/dl/android/maven2/' }
-        jcenter()
         google()
+        jcenter()
+        maven { url "https://jitpack.io" }
+        maven {
+            url 'http://www.idescout.com/maven/repo/'
+            name 'IDEScout, Inc.'
+        }
+        maven { url "http://dl.bintray.com/arturbosch/code-analysis" }
     }
     dependencies {
         apply from: 'dependencies.gradle'
@@ -13,14 +18,14 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         jcenter()
-        maven { url 'https://maven.google.com' }
         maven { url "https://jitpack.io" }
-        mavenCentral()
         maven {
             url 'http://www.idescout.com/maven/repo/'
             name 'IDEScout, Inc.'
         }
+        maven { url "http://dl.bintray.com/arturbosch/code-analysis" }
     }
 }
 
@@ -28,10 +33,14 @@ subprojects {
     // Detek
     def detekVersion = "1.0.0.M10.2"
     repositories {
-        mavenCentral()
-        maven { url "https://jitpack.io" }
-        maven { url "http://dl.bintray.com/arturbosch/code-analysis" }
         google()
+        jcenter()
+        maven { url "https://jitpack.io" }
+        maven {
+            url 'http://www.idescout.com/maven/repo/'
+            name 'IDEScout, Inc.'
+        }
+        maven { url "http://dl.bintray.com/arturbosch/code-analysis" }
     }
     configurations {
         detekt

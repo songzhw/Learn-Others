@@ -25,11 +25,11 @@ import android.graphics.Bitmap;
 
 /**
  * Public interface used for passing ascii bitmap after async task is completed.
+ *
  * @author Muhammad Umar (ee_umar@yahoo.com)
  */
 
 
-public interface OnBitmapTaskListener
-{
+public interface OnBitmapTaskListener {
     public void onTaskCompleted(Bitmap data);
 }

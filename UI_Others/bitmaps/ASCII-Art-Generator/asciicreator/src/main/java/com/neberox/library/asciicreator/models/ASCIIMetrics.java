@@ -23,37 +23,32 @@ package com.neberox.library.asciicreator.models;
 
 /**
  * Created by Muhammad Umar on 17/06/2018.
+ *
  * @author Muhammad Umar (ee_umar@yahoo.com)
  */
 
-public class ASCIIMetrics
-{
+public class ASCIIMetrics {
     private String ascii = null;
-    private float  luminance = 0;
+    private float luminance = 0;
 
-    public ASCIIMetrics(String characters, float luminance)
-    {
+    public ASCIIMetrics(String characters, float luminance) {
         this.ascii = characters;
         this.luminance = luminance;
     }
 
-    public float getLuminance()
-    {
+    public float getLuminance() {
         return luminance;
     }
 
-    public void setLuminance(float luminance)
-    {
+    public void setLuminance(float luminance) {
         this.luminance = luminance;
     }
 
-    public String getAscii()
-    {
+    public String getAscii() {
         return ascii;
     }
 
-    public void setAscii(String ascii)
-    {
+    public void setAscii(String ascii) {
         this.ascii = ascii;
     }
 }

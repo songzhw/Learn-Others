@@ -29,13 +29,12 @@ import com.neberox.library.asciicreator.models.PixelBlock;
 
 /**
  * Utility functions
+ *
  * @author Muhammad Umar (ee_umar@yahoo.com)
  */
 
-public class ASCIIUtilities
-{
-    public static Bitmap resizeBitmap(Bitmap bitmap, int scaleFactor)
-    {
+public class ASCIIUtilities {
+    public static Bitmap resizeBitmap(Bitmap bitmap, int scaleFactor) {
         int outWidth;
         int outHeight;
 
@@ -48,22 +47,20 @@ public class ASCIIUtilities
         float ratio = (float) scaleFactor / (float) bitmap.getWidth();
 
         outWidth = scaleFactor;
-        outHeight = (int)(ratio * bitmap.getHeight());
+        outHeight = (int) (ratio * bitmap.getHeight());
 
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, outWidth, outHeight, true);
         return resizedBitmap;
     }
 
-    public static int getColor(PixelBlock block)
-    {
+    public static int getColor(PixelBlock block) {
         return ((int) (block.a * 255.0f + 0.5f) << 24) |
-                ((int) (block.r   * 255.0f + 0.5f) << 16) |
-                ((int) (block.g * 255.0f + 0.5f) <<  8) |
-                (int) (block.b  * 255.0f + 0.5f);
+                ((int) (block.r * 255.0f + 0.5f) << 16) |
+                ((int) (block.g * 255.0f + 0.5f) << 8) |
+                (int) (block.b * 255.0f + 0.5f);
     }
 
-    public static int spToPx(float sp, Context context)
-    {
+    public static int spToPx(float sp, Context context) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
     }
 }

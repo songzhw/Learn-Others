@@ -23,10 +23,10 @@ package com.neberox.library.asciicreator.utilities;
 
 /**
  * Public interface used for passing string ascii after async task is completed.
+ *
  * @author Muhammad Umar (ee_umar@yahoo.com)
  */
 
-public interface OnStringTaskListener
-{
+public interface OnStringTaskListener {
     public void onTaskCompleted(String data);
 }

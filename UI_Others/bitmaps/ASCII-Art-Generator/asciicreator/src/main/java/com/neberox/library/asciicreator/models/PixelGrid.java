@@ -23,11 +23,11 @@ package com.neberox.library.asciicreator.models;
 
 /**
  * Created by Muhammad Umar on 17/06/2018.
+ *
  * @author Muhammad Umar (ee_umar@yahoo.com)
  */
 
-public class PixelGrid
-{
+public class PixelGrid {
     public int width;
     public int height;
 
@@ -35,8 +35,7 @@ public class PixelGrid
 
     public PixelBlock[][] blocks;
 
-    public void add(float r, float g, float b, float a, int row, int column)
-    {
+    public void add(float r, float g, float b, float a, int row, int column) {
         PixelBlock block = new PixelBlock();
         block.r = r;
         block.g = g;
@@ -46,9 +45,8 @@ public class PixelGrid
         blocks[row][column] = (block);
     }
 
-    public PixelGrid(int width, int height, int length)
-    {
-        this.width  = width;
+    public PixelGrid(int width, int height, int length) {
+        this.width = width;
         this.height = height;
 
         blocks = new PixelBlock[width][height];

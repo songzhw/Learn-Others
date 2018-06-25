@@ -23,11 +23,11 @@ package com.neberox.library.asciicreator.models;
 
 /**
  * Created by Muhammad Umar on 17/06/2018.
+ *
  * @author Muhammad Umar (ee_umar@yahoo.com)
  */
 
-public class PixelBlock
-{
+public class PixelBlock {
     public float r;
     public float g;
     public float b;

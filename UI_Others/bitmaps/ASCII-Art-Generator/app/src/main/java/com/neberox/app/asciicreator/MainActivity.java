@@ -38,37 +38,35 @@ import com.neberox.library.asciicreator.ASCIIConverter;
 import com.neberox.library.asciicreator.utilities.OnBitmapTaskListener;
 import com.neberox.library.asciicreator.utilities.OnStringTaskListener;
 
-public class MainActivity extends AppCompatActivity
-{
+public class MainActivity extends AppCompatActivity {
     private TextView fontText;
 
     private SeekBar seekBar;
 
-    private ImageView mainImage;
-    private ImageView imgView;
+    private ImageView ivShow;
+    private ImageView iv;
 
     private ASCIIConverter converter;
 
-    private Switch grayScaleSwith;
-    private Switch reverseLumSwitch;
+    private Switch switchGrayScale;
+    private Switch swtichReverseLum;
 
     private int SEEK_BAR_STEP = 10;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainImage = (ImageView) findViewById(R.id.mainImage);
-        imgView = (ImageView) findViewById(R.id.imageView);
+        ivShow =  findViewById(R.id.mainImage);
+        iv =  findViewById(R.id.imageView);
 
-        grayScaleSwith = (Switch) findViewById(R.id.switch2);
-        reverseLumSwitch = (Switch) findViewById(R.id.switch1);
+        switchGrayScale =  findViewById(R.id.switch2);
+        swtichReverseLum =  findViewById(R.id.switch1);
 
-        fontText = (TextView) findViewById(R.id.fontText);
+        fontText =  findViewById(R.id.fontText);
 
-        seekBar = (SeekBar) findViewById(R.id.fontSeekBar);
+        seekBar =  findViewById(R.id.fontSeekBar);
         seekBar.setMax(50); // We are going from 10 to 60
         seekBar.setProgress(8);
 
@@ -80,80 +78,58 @@ public class MainActivity extends AppCompatActivity
         converter.setReversedLuminance(false);
         converter.setGrayScale(false);
 
-        findViewById(R.id.convertBtn).setOnClickListener(new View.OnClickListener()
-        {
+        findViewById(R.id.convertBtn).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test_image);
-                try
-                {
-                    converter.createASCIIImage(bitmap, new OnBitmapTaskListener()
-                    {
+            public void onClick(View v) {
+                Bitmap bitmapSrc = BitmapFactory.decodeResource(getResources(), R.drawable.beauty);
+                try {
+                    converter.createASCIIImage(bitmapSrc, new OnBitmapTaskListener() {
                         @Override
-                        public void onTaskCompleted(Bitmap data)
-                        {
-                            imgView.setImageBitmap(data);
+                        public void onTaskCompleted(Bitmap data) {
+                            iv.setImageBitmap(data);
                         }
                     });
-                    Log.d("ASCII-GENERATOR", converter.createASCIIString(bitmap));
 
-                    converter.createASCIIString(bitmap, new OnStringTaskListener()
-                    {
+                    converter.createASCIIString(bitmapSrc, new OnStringTaskListener() {
                         @Override
-                        public void onTaskCompleted(String data)
-                        {
+                        public void onTaskCompleted(String data) {
                             Log.d("ASCII-GENERATOR", data);
                         }
                     });
 
 
-                }catch (Exception e)
-                {
+                } catch (Exception e) {
                     Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
 
-        grayScaleSwith.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
+        switchGrayScale.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 converter.setGrayScale(isChecked);
             }
         });
 
-        reverseLumSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
+        swtichReverseLum.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 converter.setReversedLuminance(isChecked);
             }
         });
 
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
-        {
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
-            {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 converter.setFontSize(progress + SEEK_BAR_STEP);
                 fontText.setText("Font : " + String.valueOf(seekBar.getProgress() + SEEK_BAR_STEP));
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar)
-            {
-
-            }
-
+            public void onStartTrackingTouch(SeekBar seekBar) {            }
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar)
-            {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) {            }
         });
 
     }

@@ -32,15 +32,14 @@ import java.util.Map;
 
 /**
  * A class to store ASCII and their luminance metrics
+ *
  * @author Muhammad Umar (ee_umar@yahoo.com)
  */
 
-public class ASCIIConverterHelper
-{
+public class ASCIIConverterHelper {
     private ArrayList<ASCIIMetrics> mMetrices;
 
-    private static Map<String, Float> createDefaultMap()
-    {
+    private static Map<String, Float> createDefaultMap() {
         Map<String, Float> map = new HashMap<String, Float>();
         map.put(" ", 1.0f);
         map.put("`", 0.95f);
@@ -61,30 +60,24 @@ public class ASCIIConverterHelper
         return map;
     }
 
-    public ASCIIConverterHelper()
-    {
+    public ASCIIConverterHelper() {
         this(createDefaultMap());
     }
 
-    public ASCIIConverterHelper(Map<String, Float> mappingData)
-    {
+    public ASCIIConverterHelper(Map<String, Float> mappingData) {
         mMetrices = buildDataForMapping(mappingData);
     }
 
-    private ArrayList<ASCIIMetrics> buildDataForMapping(Map<String, Float> mappingData)
-    {
+    private ArrayList<ASCIIMetrics> buildDataForMapping(Map<String, Float> mappingData) {
         ArrayList<ASCIIMetrics> metrics = new ArrayList<>();
-        for (Map.Entry<String, Float> entry : mappingData.entrySet())
-        {
+        for (Map.Entry<String, Float> entry : mappingData.entrySet()) {
             ASCIIMetrics metric = new ASCIIMetrics(entry.getKey(), entry.getValue());
             metrics.add(metric);
         }
 
-        Collections.sort(metrics, new Comparator<ASCIIMetrics>()
-        {
+        Collections.sort(metrics, new Comparator<ASCIIMetrics>() {
             @Override
-            public int compare(ASCIIMetrics o1, ASCIIMetrics o2)
-            {
+            public int compare(ASCIIMetrics o1, ASCIIMetrics o2) {
                 Float lum1 = o1.getLuminance();
                 Float lum2 = o2.getLuminance();
                 return lum2.compareTo(lum1);//  In DESC Order
@@ -94,15 +87,12 @@ public class ASCIIConverterHelper
         return metrics;
     }
 
-    public String asciiFromLuminance(float luminance)
-    {
+    public String asciiFromLuminance(float luminance) {
         int searchedIndex = 0;
 
-        for (int i = 0; i < mMetrices.size(); i++)
-        {
+        for (int i = 0; i < mMetrices.size(); i++) {
             ASCIIMetrics mMetrice = mMetrices.get(i);
-            if (luminance >= mMetrice.getLuminance())
-            {
+            if (luminance >= mMetrice.getLuminance()) {
                 searchedIndex = i;
                 break;
             }
@@ -111,8 +101,7 @@ public class ASCIIConverterHelper
         return mMetrices.get(searchedIndex).getAscii();
     }
 
-    public static float getLuminance(PixelBlock block, boolean reversed)
-    {
+    public static float getLuminance(PixelBlock block, boolean reversed) {
         float r = block.r;
         float g = block.g;
         float b = block.b;
@@ -120,8 +109,7 @@ public class ASCIIConverterHelper
         // See wikipedia article on grayscale for an explanation of this formula.
         // http://en.wikipedia.org/wiki/Grayscale
         double luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-        if (reversed)
-        {
+        if (reversed) {
             luminance = (1.0 - luminance);
         }
         return (float) luminance;

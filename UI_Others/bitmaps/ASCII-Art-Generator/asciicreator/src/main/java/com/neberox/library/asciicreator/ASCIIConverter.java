@@ -49,8 +49,7 @@ import java.util.concurrent.ExecutionException;
  * @author Muhammad Umar (ee_umar@yahoo.com)
  */
 
-public class ASCIIConverter
-{
+public class ASCIIConverter {
     private Context mContext;
 
     /* Grid columns count calculated based on the font size */
@@ -71,22 +70,19 @@ public class ASCIIConverter
     private OnBitmapTaskListener mBitmapTaskListener;
 
     /**
-     * @param mContext  Context of the app
+     * @param mContext Context of the app
      */
-    public ASCIIConverter(Context mContext)
-    {
+    public ASCIIConverter(Context mContext) {
         this.mContext = mContext;
         initDefaults();
         this.mHelper = new ASCIIConverterHelper();
     }
 
     /**
-     *
-     * @param mContext  Context of the app
-     * @param mHelper   Customized ASCIIConverterHelper Class
+     * @param mContext Context of the app
+     * @param mHelper  Customized ASCIIConverterHelper Class
      */
-    public ASCIIConverter(Context mContext, ASCIIConverterHelper mHelper)
-    {
+    public ASCIIConverter(Context mContext, ASCIIConverterHelper mHelper) {
         this.mContext = mContext;
         initDefaults();
         this.mHelper = mHelper;
@@ -96,8 +92,7 @@ public class ASCIIConverter
      * @param mContext  Context of the app
      * @param mFontSize font size of the ascii text in bitmap
      */
-    public ASCIIConverter(Context mContext, int mFontSize)
-    {
+    public ASCIIConverter(Context mContext, int mFontSize) {
         this.mContext = mContext;
         initDefaults();
         this.mFontSize = ASCIIUtilities.spToPx(mFontSize, mContext);
@@ -105,13 +100,11 @@ public class ASCIIConverter
     }
 
     /**
-     *
      * @param mContext  Context of the app
      * @param mHelper   Customized ASCIIConverterHelper Class
      * @param mFontSize font size of the ascii text in bitmap
      */
-    public ASCIIConverter(Context mContext, ASCIIConverterHelper mHelper, int mFontSize)
-    {
+    public ASCIIConverter(Context mContext, ASCIIConverterHelper mHelper, int mFontSize) {
         this.mContext = mContext;
         initDefaults();
         this.mFontSize = ASCIIUtilities.spToPx(mFontSize, mContext);
@@ -121,14 +114,12 @@ public class ASCIIConverter
     /**
      * @param dictionary Accepts key pair value of character and its luminance
      */
-    public ASCIIConverter(Map<String, Float> dictionary)
-    {
+    public ASCIIConverter(Map<String, Float> dictionary) {
         this.mHelper = new ASCIIConverterHelper(dictionary);
         initDefaults();
     }
 
-    private void initDefaults()
-    {
+    private void initDefaults() {
         setFontSize(18);
         setReversedLuminance(false);
         setGrayScale(false);
@@ -138,54 +129,49 @@ public class ASCIIConverter
     /**
      * @param mGrayScale Enable to disable gray scale of the bitmap. Default is false to create colored ASCII Bitmap
      */
-    public void setGrayScale(boolean mGrayScale)
-    {
+    public void setGrayScale(boolean mGrayScale) {
         this.mGrayScale = mGrayScale;
     }
 
     /**
      * @param mReversedLuminance Reverses the luminance by subtracting from 1. Default is false
      */
-    public void setReversedLuminance(boolean mReversedLuminance)
-    {
+    public void setReversedLuminance(boolean mReversedLuminance) {
         this.mReversedLuminance = mReversedLuminance;
     }
 
     /**
      * @param mFontSize Set the font size in sp
      */
-    public void setFontSize(float mFontSize)
-    {
+    public void setFontSize(float mFontSize) {
         this.mFontSize = ASCIIUtilities.spToPx(mFontSize, mContext);
     }
 
     /**
      * @param mBackgroundColor Adds a background color to ASCII Bitmap. Default is transparent
      */
-    public void setBackgroundColor(int mBackgroundColor)
-    {
+    public void setBackgroundColor(int mBackgroundColor) {
         this.mBackgroundColor = mBackgroundColor;
     }
 
     /******************************************************************************************
-    *
-    *
-    *
-    *
-    ******************************************************************************************/
+     *
+     *
+     *
+     *
+     ******************************************************************************************/
 
     /**
      * Creates an ASCII String of a bitmap
+     *
      * @param originalBitmap bitmap to create ASCII Bitmap
      * @return returns ASCII String
      */
-    public String createASCIIString(Bitmap originalBitmap) throws ExecutionException, InterruptedException, InvalidParameterException
-    {
+    public String createASCIIString(Bitmap originalBitmap) throws ExecutionException, InterruptedException, InvalidParameterException {
         return createASCIIString(originalBitmap, null);
     }
 
-    public String createASCIIString(Bitmap originalBitmap, OnStringTaskListener mTask) throws ExecutionException, InterruptedException, InvalidParameterException
-    {
+    public String createASCIIString(Bitmap originalBitmap, OnStringTaskListener mTask) throws ExecutionException, InterruptedException, InvalidParameterException {
         mColumns = getGridWidth(originalBitmap.getWidth());
 
         if (originalBitmap == null)
@@ -196,43 +182,33 @@ public class ASCIIConverter
 
         mStringTaskListener = mTask;
 
-        if (mStringTaskListener == null)
-        {
-            try
-            {
+        if (mStringTaskListener == null) {
+            try {
                 return new CreateASCIIString().execute(originalBitmap).get();
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw e;
             }
-        }
-        else
+        } else
             new CreateASCIIString().execute(originalBitmap);
 
         return null;
     }
 
-    private class CreateASCIIString extends AsyncTask<Bitmap, Void, String>
-    {
+    private class CreateASCIIString extends AsyncTask<Bitmap, Void, String> {
         @Override
-        protected String doInBackground(Bitmap... bitmaps)
-        {
+        protected String doInBackground(Bitmap... bitmaps) {
             String mainString = "";
             Bitmap scaledImage = ASCIIUtilities.resizeBitmap(bitmaps[0], (int) mColumns);  // 240 & 456
 
             PixelGrid grid = getGridData(scaledImage);
-            for (int row = 0; row < grid.height; row++)
-            {
-                for (int col = 0; col < grid.width; col++)
-                {
-                    try
-                    {
+            for (int row = 0; row < grid.height; row++) {
+                for (int col = 0; col < grid.width; col++) {
+                    try {
                         PixelBlock block = grid.blocks[row][col];//(index);
                         float luminance = ASCIIConverterHelper.getLuminance(block, mReversedLuminance);
                         String ascii = mHelper.asciiFromLuminance(luminance);
                         mainString = mainString + ascii + " ";
-                    } catch (Exception e)
-                    {
+                    } catch (Exception e) {
                     }
                 }
 
@@ -243,8 +219,7 @@ public class ASCIIConverter
         }
 
         @Override
-        protected void onPostExecute(String result)
-        {
+        protected void onPostExecute(String result) {
             if (mStringTaskListener != null)
                 mStringTaskListener.onTaskCompleted(result);
         }
@@ -259,17 +234,16 @@ public class ASCIIConverter
 
     /**
      * Creates an ASCII String of a bitmap
+     *
      * @param bitmap bitmap to create ASCII Bitmap
      * @return returns ASCII Bitmap
      */
 
-    public Bitmap createASCIIImage(Bitmap bitmap) throws ExecutionException, InterruptedException, InvalidParameterException
-    {
+    public Bitmap createASCIIImage(Bitmap bitmap) throws ExecutionException, InterruptedException, InvalidParameterException {
         return createASCIIImage(bitmap, null);
     }
 
-    public Bitmap createASCIIImage(final Bitmap originalBitmap, final OnBitmapTaskListener mTask) throws ExecutionException, InterruptedException, InvalidParameterException
-    {
+    public Bitmap createASCIIImage(final Bitmap originalBitmap, final OnBitmapTaskListener mTask) throws ExecutionException, InterruptedException, InvalidParameterException {
         mColumns = getGridWidth(originalBitmap.getWidth());
 
         if (originalBitmap == null)
@@ -280,27 +254,21 @@ public class ASCIIConverter
 
         mBitmapTaskListener = mTask;
 
-        if (mBitmapTaskListener == null)
-        {
-            try
-            {
+        if (mBitmapTaskListener == null) {
+            try {
                 return new CreateASCIIBitmap().execute(originalBitmap).get();
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw e;
             }
-        }
-        else
+        } else
             new CreateASCIIBitmap().execute(originalBitmap);
 
         return null;
     }
 
-    private class CreateASCIIBitmap extends AsyncTask<Bitmap, Void, Bitmap>
-    {
+    private class CreateASCIIBitmap extends AsyncTask<Bitmap, Void, Bitmap> {
         @Override
-        protected Bitmap doInBackground(Bitmap... bitmaps)
-        {
+        protected Bitmap doInBackground(Bitmap... bitmaps) {
             Bitmap originalBitmap = bitmaps[0];
             Bitmap scaledImage = ASCIIUtilities.resizeBitmap(originalBitmap, (int) mColumns);
             PixelGrid grid = getGridData(scaledImage);
@@ -309,8 +277,7 @@ public class ASCIIConverter
 
             Canvas canvas = new Canvas(newBitmap);
 
-            if (mBackgroundColor != Color.TRANSPARENT)
-            {
+            if (mBackgroundColor != Color.TRANSPARENT) {
                 Paint mPaint = new Paint();
                 mPaint.setColor(mBackgroundColor);
                 mPaint.setStyle(Paint.Style.FILL);
@@ -322,12 +289,9 @@ public class ASCIIConverter
             paint.setTextSize(mFontSize); // Text Size
 
             canvas.drawBitmap(newBitmap, 0, 0, paint);
-            for (int row = 0; row < grid.width; row++)
-            {
-                for (int col = 0; col < grid.height; col++)
-                {
-                    try
-                    {
+            for (int row = 0; row < grid.width; row++) {
+                for (int col = 0; col < grid.height; col++) {
+                    try {
                         PixelBlock block = grid.blocks[row][col];
                         float luminance = ASCIIConverterHelper.getLuminance(block, mReversedLuminance);
                         String ascii = mHelper.asciiFromLuminance(luminance);
@@ -335,15 +299,13 @@ public class ASCIIConverter
                         int color = ASCIIUtilities.getColor(block);
                         if (!mGrayScale)
                             paint.setColor(color); // Text Color
-                        else
-                        {
-                            paint.setAlpha((int)(luminance * 255.0f));
+                        else {
+                            paint.setAlpha((int) (luminance * 255.0f));
                             paint.setColor(Color.GRAY);
                         }
 
                         canvas.drawText(ascii, row * mFontSize, col * mFontSize, paint);
-                    } catch (Exception e)
-                    {
+                    } catch (Exception e) {
                     }
                 }
             }
@@ -352,20 +314,17 @@ public class ASCIIConverter
         }
 
         @Override
-        protected void onPostExecute(Bitmap result)
-        {
+        protected void onPostExecute(Bitmap result) {
             if (mBitmapTaskListener != null)
                 mBitmapTaskListener.onTaskCompleted(result);
         }
     }
 
     /**
-     *
      * @param width width of the image
      * @return returns the columns count
      */
-    private float getGridWidth(int width)
-    {
+    private float getGridWidth(int width) {
         if (mColumns == 0) //
             return width / mFontSize;
         else
@@ -373,28 +332,24 @@ public class ASCIIConverter
     }
 
     /**
-     *
      * @param bitmap Bitmap for fetching rgba data
      * @return returns grid containing rgba data of bitmap
      */
-    private PixelGrid getGridData(Bitmap bitmap)
-    {
-        int width  = bitmap.getWidth();
+    private PixelGrid getGridData(Bitmap bitmap) {
+        int width = bitmap.getWidth();
         int height = bitmap.getHeight();
 
         PixelGrid grid = new PixelGrid(width, height, bitmap.getWidth() * bitmap.getHeight());
-        for (int row = 0; row < grid.width; row++)
-        {
-            for (int col = 0; col < grid.height; col++)
-            {
+        for (int row = 0; row < grid.width; row++) {
+            for (int col = 0; col < grid.height; col++) {
                 int pixel = bitmap.getPixel(row, col);
 
                 float r = ((pixel >> 16) & 0xff) / 255.0f;
-                float g = ((pixel >>  8) & 0xff) / 255.0f;
-                float b = ((pixel      ) & 0xff) / 255.0f;
+                float g = ((pixel >> 8) & 0xff) / 255.0f;
+                float b = ((pixel) & 0xff) / 255.0f;
                 float a = ((pixel >> 24) & 0xff) / 255.0f;
 
-                grid.add(r,g,b,a, row, col);
+                grid.add(r, g, b, a, row, col);
             }
         }
 

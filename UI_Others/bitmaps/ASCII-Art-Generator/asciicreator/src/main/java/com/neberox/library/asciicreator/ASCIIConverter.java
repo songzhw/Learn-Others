@@ -288,7 +288,6 @@ public class ASCIIConverter {
             paint.setColor(Color.WHITE); // Text Color
             paint.setTextSize(mFontSize); // Text Size
 
-            canvas.drawBitmap(newBitmap, 0, 0, paint);
             for (int row = 0; row < grid.width; row++) {
                 for (int col = 0; col < grid.height; col++) {
                     try {

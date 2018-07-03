@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Naming convention: <WHAT>_<WHERE>_(OPTIONAL)<DESCRIPTION>_(OPTIONAL)<SIZE>-->
+    <!--navigation bottom view-->
+    <dimen name="height_navigation_bottom_view">58dp</dimen>
+    <dimen name="elevation_feed_navigation_bottom_view">0dp</dimen>
+    <!--toolbar-->
+    <dimen name="inset_start_with_navigation_toolbar">16dp</dimen>
+    <item name="scale_toolbar_feed_title_animation" type="dimen" format="float">0.50</item>
+    <item name="height_all_divider" type="dimen">0.25dp</item>
+    <!--Item error-->
+    <dimen name="width_item_error_icon">64dp</dimen>
+    <dimen name="height_tem_error_icon">64dp</dimen>
+    <!--item loading-->
+    <dimen name="width_item_loading_animation_view">82dp</dimen>
+    <dimen name="height_item_loading_animation_view">82dp</dimen>
+    <!--item most popular-->
+    <dimen name="height_item_most_popular_cover">170dp</dimen>
+    <dimen name="width_item_most_popular_runtime">30dp</dimen>
+    <dimen name="height_item_most_popular_runtime">30dp</dimen>
+    <dimen name="padding_top_item_most_popular_runtime">2dp</dimen>
+    <dimen name="text_size_item_most_popular_runtime">12sp</dimen>
+    <dimen name="text_size_item_most_popular_title">14sp</dimen>
+    <!--top list fragment-->
+    <dimen name="padding_text_view_top_list_appbar_title">52dp</dimen>
+    <dimen name="text_size_top_list_appbar_title">30sp</dimen>
+    <dimen name="height_top_list_gradient">160dp</dimen>
+    <!--item top list-->
+    <dimen name="text_size_item_top_list_title">18sp</dimen>
+    <dimen name="width_item_top_list_cover">120dp</dimen>
+    <dimen name="height_item_top_list_cover">170dp</dimen>
+    <dimen name="text_size_item_top_list_position">42sp</dimen>
+    <dimen name="size_item_top_list_runtime">30dp</dimen>
+    <dimen name="padding_top_item_top_list_runtime">2dp</dimen>
+    <dimen name="text_size_item_top_list_runtime">12sp</dimen>
+    <!--navigation drawer-->
+    <dimen name="logo_drawer_size">64dp</dimen>
+    <dimen name="size_drawer_text_item">20sp</dimen>
+    <dimen name="width_drawer_item_icon">24dp</dimen>
+    <dimen name="padding_drawer">30dp</dimen>
+    <!--tv show summary-->
+    <dimen name="size_tv_show_summary_ic_more">24dp</dimen>
+    <dimen name="text_size_tv_show_summary_header">20sp</dimen>
+    <dimen name="height_tv_show_summary_ic_runtime">18dp</dimen>
+    <dimen name="height_tv_show_summary_ic_network">18dp</dimen>
+    <dimen name="margin_bottom_tv_show_summary_nested_scroll">32dp</dimen>
+    <!--tv show details-->
+    <dimen name="margin_top_tv_show_details_top_corner">32dp</dimen>
+    <dimen name="corner_radius_tv_show_details">8dp</dimen>
+    <dimen name="card_elevation_tv_show_details">12dp</dimen>
+    <dimen name="size_tv_show_details_ic_full_runtime">20dp</dimen>
+    <dimen name="text_size_tv_show_details_full_runtime">16sp</dimen>
+    <dimen name="text_size_tv_show_details_title">20sp</dimen>
+    <dimen name="corner_radius_tv_show_details_cover">3dp</dimen>
+    <dimen name="card_elevation_tv_show_details_cover">4dp</dimen>
+    <dimen name="width_tv_show_details_cover">120dp</dimen>
+    <dimen name="height_tv_show_details_cover">170dp</dimen>
+    <dimen name="height_tab_indicator">1dp</dimen>
+    <dimen name="padding_bottom_tv_show_details_tab">4dp</dimen>
+    <dimen name="height_tab_layout">40dp</dimen>
+    <dimen name="width_height_all_diamond">24dp</dimen>
+    <dimen name="margin_bottom_tv_show_details_fab_button">48dp</dimen>
+    <dimen name="margin_end_tv_show_details_fab_button">32dp</dimen>
+    <!--iheaderViewModelason-->
+    <dimen name="width_item_season_screen">70dp</dimen>
+    <dimen name="height_item_season_screen">90dp</dimen>
+    <!--seasons fragment-->
+    <dimen name="margin_bottom_fragment_season_recycler_view">90dp</dimen>
+    <!--vfullRuntimetime alerter-->
+    <dimen name="height_view_runtime_alerter">140dp</dimen>
+    <dimen name="padding_top_view_runtime_alerter">40dp</dimen>
+    <dimen name="size_icon_view_runtime_alerter">32dp</dimen>
+    <dimen name="min_width_evaporate_text_view_runtime_alerter">50dp</dimen>
+    <dimen name="text_size_view_runtime_alerter">18sp</dimen>
+    <!--view time calculator counter-->
+    <dimen name="text_size_view_counter">18sp</dimen>
+    <!--misc-->
+    <dimen name="padding_bottom_item_all">36dp</dimen>
+    <dimen name="padding_top_item_all">24dp</dimen>
+    <dimen name="padding_small">4dp</dimen>
+    <dimen name="padding_big">16dp</dimen>
+    <dimen name="padding_default">8dp</dimen>
+    <dimen name="border_width_fab_button">0dp</dimen>
+    <dimen name="status_bar_padding">0dp</dimen>
+    <dimen name="margin_default">8dp</dimen>
+    <dimen name="margin_small">4dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_big">16dp</dimen>
+    <dimen name="height_all_diamond">24dp</dimen>
+    <dimen name="text_size_time_calculator_toolbar_title">17sp</dimen>
+    <dimen name="drawable_padding_time_calculator_backdrop">24dp</dimen>
+    <dimen name="text_size_time_calculator_backdrop">16sp</dimen>
+    <dimen name="size_time_calculator_icon">24dp</dimen>
+    <dimen name="text_size_time_calculator_all_increment">13sp</dimen>
+    <dimen name="margin_start_time_calculator_all_increment">24dp</dimen>
+    <dimen name="padding_top_time_calculator_recycler_view">60dp</dimen>
+    <dimen name="text_size_time_calculator_info_header">15sp</dimen>
+    <dimen name="padding_time_calculator_info_header">50dp</dimen>
+    <!--season tracker item header-->
+    <dimen name="card_elevation_season_tracker_cover">4dp</dimen>
+    <dimen name="corner_radius_season_tracker_cover">3dp</dimen>
+    <dimen name="width_season_tracker_cover">120dp</dimen>
+    <dimen name="height_season_tracker_cover">170dp</dimen>
+    <dimen name="text_size_season_tracker_title">20sp</dimen>
+    <dimen name="margin_top_season_tracker_top_corner">32dp</dimen>
+    <dimen name="corner_radius_season_tracker">8dp</dimen>
+    <dimen name="card_elevation_season_tracker">12dp</dimen>
+    <dimen name="size_season_tracker_ic_full_runtime">20dp</dimen>
+    <dimen name="text_size_season_tracker_full_runtime">16sp</dimen>
+    <dimen name="text_size_toolbar_title_search">17sp</dimen>
+    <dimen name="height_all_icons">24dp</dimen>
+    <dimen name="padding_bottom_your_library_diamond_icon">10dp</dimen>
+    <dimen name="margin_bottom_your_library_diamond_icon_land">13dp</dimen>
+    <dimen name="margin_bottom_your_library_diamond_icon">4dp</dimen>
+</resources>

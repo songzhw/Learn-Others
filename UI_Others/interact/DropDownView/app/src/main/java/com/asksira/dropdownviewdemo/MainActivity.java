@@ -47,31 +47,31 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private List<String> generateList () {
+    private List<String> generateList() {
         List<String> list = new ArrayList<>();
-        for (int i=1; i < 51; i++) {
+        for (int i = 1; i < 51; i++) {
             list.add(String.valueOf(i));
         }
         return list;
     }
 
-    private List<String> generateOddList () {
+    private List<String> generateOddList() {
         List<String> list = new ArrayList<>();
-        for (int i=1; i < 51; i = i + 2) {
+        for (int i = 1; i < 51; i = i + 2) {
             list.add(String.valueOf(i));
         }
         return list;
     }
 
-    private List<String> generateEvenList () {
+    private List<String> generateEvenList() {
         List<String> list = new ArrayList<>();
-        for (int i=2; i < 51; i = i + 2) {
+        for (int i = 2; i < 51; i = i + 2) {
             list.add(String.valueOf(i));
         }
         return list;
     }
 
-    private List<String> generateFilterList () {
+    private List<String> generateFilterList() {
         List<String> list = new ArrayList<>();
         list.add("All");
         list.add("odd");

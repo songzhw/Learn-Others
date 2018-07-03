@@ -149,7 +149,7 @@ open class DropDownView : LinearLayout {
             }
         }
     @DrawableRes
-    var dropdownItemCompoundDrawable:Int = 0
+    var dropdownItemCompoundDrawable: Int = 0
     @ColorRes
     var topDecoratorColor: Int = 0
     @Px
@@ -237,7 +237,7 @@ open class DropDownView : LinearLayout {
             dropdownItemGravity = when (a.getInt(R.styleable.DropDownView_dropdownItem_text_gravity, Gravity.CENTER)) {
                 START -> Gravity.START
                 END -> Gravity.END
-                else  -> Gravity.CENTER
+                else -> Gravity.CENTER
             }
             dropdownItemCompoundDrawable = a.getResourceId(R.styleable.DropDownView_dropdownItem_compound_drawable_selected, 0)
             topDecoratorColor = a.getResourceId(R.styleable.DropDownView_top_decorator_color, android.R.color.transparent)
@@ -372,7 +372,8 @@ open class DropDownView : LinearLayout {
         companion object {
 
             //required field that makes Parcelables from a Parcel
-            @JvmField val CREATOR = object : Parcelable.Creator<SavedState> {
+            @JvmField
+            val CREATOR = object : Parcelable.Creator<SavedState> {
                 override fun createFromParcel(source: Parcel): SavedState {
                     return SavedState(source)
                 }
@@ -508,7 +509,7 @@ open class DropDownView : LinearLayout {
         return view
     }
 
-    private fun generateTopDecorator() : View {
+    private fun generateTopDecorator(): View {
         val view = View(context)
         val lp = LinearLayout.LayoutParams(
                 MATCH_PARENT, topDecoratorHeight.toInt())
@@ -517,7 +518,7 @@ open class DropDownView : LinearLayout {
         return view
     }
 
-    private fun generateBottomDecorator() : View {
+    private fun generateBottomDecorator(): View {
         val view = View(context)
         val lp = LinearLayout.LayoutParams(
                 MATCH_PARENT, bottomDecoratorHeight.toInt())

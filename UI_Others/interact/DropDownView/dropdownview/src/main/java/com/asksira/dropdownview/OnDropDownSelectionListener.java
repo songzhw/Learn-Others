@@ -2,6 +2,6 @@ package com.asksira.dropdownview;
 
 public interface OnDropDownSelectionListener {
 
-    void onItemSelected (DropDownView dropDownView, int position);
+    void onItemSelected(DropDownView dropDownView, int position);
 
 }

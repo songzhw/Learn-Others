@@ -128,7 +128,9 @@ public class MainActivity extends AppCompatActivity {
         if (!closeDrawerIfOpen()) {
             if (selectedCountToolbar.getVisibility() == View.VISIBLE) {
                 clearSelectionRelay.onNext(true);
-            } else if (!closeSlidingUpPanelIfOpen()) super.onBackPressed();
+            } else if (!closeSlidingUpPanelIfOpen()) {
+                super.onBackPressed();
+            }
         }
     }
 

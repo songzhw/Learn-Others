@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2016 Hannes Dorfmann.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +19,12 @@
     android:id="@+id/sectionName"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="42dp"
     android:paddingBottom="4dp"
     android:paddingLeft="@dimen/grid_spacing"
     android:paddingRight="@dimen/grid_spacing"
-    android:textSize="22sp"
-    android:textAllCaps="true">
+    android:paddingTop="42dp"
+    android:textAllCaps="true"
+    android:textSize="22sp">
 
 
 </TextView>

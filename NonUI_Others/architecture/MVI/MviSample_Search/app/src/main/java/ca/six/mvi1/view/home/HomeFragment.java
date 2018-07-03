@@ -91,7 +91,6 @@ public class HomeFragment extends MviFragment<HomeView, HomePresenter>
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-
                 int viewType = adapter.getItemViewType(position);
                 if (viewType == HomeAdapter.VIEW_TYPE_LOADING_MORE_NEXT_PAGE
                         || viewType == HomeAdapter.VIEW_TYPE_SECTION_HEADER) {
@@ -105,7 +104,7 @@ public class HomeFragment extends MviFragment<HomeView, HomePresenter>
     /*
     recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount,
         getResources().getDimensionPixelSize(R.dimen.grid_spacing), true));
-        */
+    */
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
@@ -136,7 +135,8 @@ public class HomeFragment extends MviFragment<HomeView, HomePresenter>
 
     @Override
     public Observable<Boolean> pullToRefreshIntent() {
-        return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout).map(ignored -> true);
+        return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout)
+                .map(ignored -> true);
     }
 
     @Override

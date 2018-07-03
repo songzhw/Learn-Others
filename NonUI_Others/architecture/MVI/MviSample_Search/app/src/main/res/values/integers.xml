@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2016 Hannes Dorfmann.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,5 +16,5 @@
   -->
 
 <resources>
-  <integer name="grid_span_size">2</integer>
+    <integer name="grid_span_size">2</integer>
 </resources>

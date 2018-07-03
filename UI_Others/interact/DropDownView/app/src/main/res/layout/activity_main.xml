@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="56dp"/>
+
+    <com.asksira.dropdownview.DropDownView
+        android:id="@+id/dropdownview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:placeholder_text="Please select"
+        app:expand_include_selected_item="true"
+        app:dropdownItem_text_gravity="start"
+        app:dropdownItem_compound_drawable_selected="@drawable/ic_done_black_24dp"
+        app:filter_bar_background_color="@android:color/holo_orange_dark"
+        app:filter_text_color="@android:color/white"
+        app:arrow_drawable="@drawable/expand_arrow"
+        app:arrow_width="24dp"
+        app:dropDownItem_text_color_selected="@android:color/holo_orange_dark"
+        app:divider_color="@android:color/holo_orange_light"
+        app:dropDownItem_text_size_selected="18sp"
+        app:bottom_decorator_color="@android:color/holo_orange_dark"
+        app:bottom_decorator_height="4dp"
+        app:expansion_style="drawer"
+        app:last_item_has_divider="false"/>
+
+
+</RelativeLayout>

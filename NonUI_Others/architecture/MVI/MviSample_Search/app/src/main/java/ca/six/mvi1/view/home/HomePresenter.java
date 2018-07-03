@@ -50,24 +50,26 @@ public class HomePresenter extends MviBasePresenter<HomeView, HomeViewState> {
         //
         // In a real app this code would rather be moved to an Interactor
         //
-        Observable<PartialStateChanges> loadFirstPage = intent(HomeView::loadFirstPageIntent).doOnNext(
-                ignored -> Timber.d("intent: load first page"))
+        Observable<PartialStateChanges> loadFirstPage = intent(HomeView::loadFirstPageIntent)
+                .doOnNext(ignored -> Timber.d("intent: load first page"))
                 .flatMap(ignored -> feedLoader.loadFirstPage()
-                        .map(items -> (PartialStateChanges) new PartialStateChanges.FirstPageLoaded(items))
-                        .startWith(new PartialStateChanges.FirstPageLoading())
-                        .onErrorReturn(PartialStateChanges.FirstPageError::new)
-                        .subscribeOn(Schedulers.io()));
+                                            .map(items -> (PartialStateChanges) new PartialStateChanges.FirstPageLoaded(items))
+                                            .startWith(new PartialStateChanges.FirstPageLoading())
+                                            .onErrorReturn(PartialStateChanges.FirstPageError::new)
+                                            .subscribeOn(Schedulers.io())
+                );
 
         Observable<PartialStateChanges> nextPage =
-                intent(HomeView::loadNextPageIntent).doOnNext(ignored -> Timber.d("intent: load next page"))
+                intent(HomeView::loadNextPageIntent)
+                        .doOnNext(ignored -> Timber.d("intent: load next page"))
                         .flatMap(ignored -> feedLoader.loadNextPage()
                                 .map(items -> (PartialStateChanges) new PartialStateChanges.NextPageLoaded(items))
                                 .startWith(new PartialStateChanges.NextPageLoading())
                                 .onErrorReturn(PartialStateChanges.NexPageLoadingError::new)
                                 .subscribeOn(Schedulers.io()));
 
-        Observable<PartialStateChanges> pullToRefresh = intent(HomeView::pullToRefreshIntent).doOnNext(
-                ignored -> Timber.d("intent: pull to refresh"))
+        Observable<PartialStateChanges> pullToRefresh = intent(HomeView::pullToRefreshIntent)
+                .doOnNext(ignored -> Timber.d("intent: pull to refresh"))
                 .flatMap(ignored -> feedLoader.loadNewestPage()
                         .subscribeOn(Schedulers.io())
                         .map(items -> (PartialStateChanges) new PartialStateChanges.PullToRefreshLoaded(items))
@@ -75,8 +77,8 @@ public class HomePresenter extends MviBasePresenter<HomeView, HomeViewState> {
                         .onErrorReturn(PartialStateChanges.PullToRefeshLoadingError::new));
 
         Observable<PartialStateChanges> loadMoreFromGroup =
-                intent(HomeView::loadAllProductsFromCategoryIntent).doOnNext(
-                        categoryName -> Timber.d("intent: load more from category %s", categoryName))
+                intent(HomeView::loadAllProductsFromCategoryIntent)
+                        .doOnNext(categoryName -> Timber.d("intent: load more from category %s", categoryName))
                         .flatMap(categoryName -> feedLoader.loadProductsOfCategory(categoryName)
                                 .subscribeOn(Schedulers.io())
                                 .map(
@@ -91,10 +93,11 @@ public class HomePresenter extends MviBasePresenter<HomeView, HomeViewState> {
                 Observable.merge(loadFirstPage, nextPage, pullToRefresh, loadMoreFromGroup)
                         .observeOn(AndroidSchedulers.mainThread());
 
-        HomeViewState initialState = new HomeViewState.Builder().firstPageLoading(true).build();
+        HomeViewState initialViewState = new HomeViewState.Builder().firstPageLoading(true).build();
 
         subscribeViewState(
-                allIntentsObservable.scan(initialState, this::viewStateReducer).distinctUntilChanged(),
+                allIntentsObservable.scan(initialViewState, this::viewStateReducer)
+                        .distinctUntilChanged(),
                 HomeView::render);
     }
 

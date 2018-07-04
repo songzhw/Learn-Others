@@ -40,16 +40,16 @@ open class DropDownView : LinearLayout {
     /**
      * Below are views that opens get method to users.
      */
-    lateinit var filterContainer: LinearLayout
+    lateinit var llayTitle: LinearLayout
         private set
-    lateinit var filterTextView: TextView
+    lateinit var tvTitle: TextView
         private set
-    lateinit var filterArrow: ImageView
+    lateinit var ivTitle: ImageView
         private set
-    private lateinit var dropDownContainer: ScrollView
-    private lateinit var dropDownItemsContainer: LinearLayout
-    private lateinit var filterPadding: View
-    private lateinit var backgroundDimView: View
+    private lateinit var svOptions: ScrollView
+    private lateinit var llayOptions: LinearLayout
+    private lateinit var spaceTitle: View
+    private lateinit var viewDim: View
 
     //Configurable Attributes
     @Px
@@ -166,7 +166,7 @@ open class DropDownView : LinearLayout {
                     " It should be either REVEAL(0) or DRAWER(1).")
             field = value
             _expansionStyle = value
-            val lp = dropDownItemsContainer.layoutParams as FrameLayout.LayoutParams
+            val lp = llayOptions.layoutParams as FrameLayout.LayoutParams
             lp.gravity = if (value == REVEAL) {
                 Gravity.TOP
             } else {
@@ -187,12 +187,12 @@ open class DropDownView : LinearLayout {
         set(value) {
             field = value
             _selectingPosition = value
-            filterTextView.text = dropDownItemList[selectingPosition]
+            tvTitle.text = data[selectingPosition]
             onSelectionListener?.onItemSelected(this@DropDownView, selectingPosition)
             collapse(true)
         }
     var state = COLLAPSED
-    var dropDownItemList: List<String> = ArrayList()
+    var data: List<String> = ArrayList()
     var onSelectionListener: OnDropDownSelectionListener? = null
 
     constructor(context: Context) : super(context) {
@@ -252,71 +252,63 @@ open class DropDownView : LinearLayout {
 
         orientation = LinearLayout.VERTICAL
         View.inflate(context, R.layout.widget_dropdownview, this)
-        filterContainer = findViewById(R.id.filter_container)
-        filterTextView = findViewById(R.id.filter_text)
-        filterArrow = findViewById(R.id.filter_arrow)
-        dropDownContainer = findViewById(R.id.sv_dropdown_container)
-        dropDownItemsContainer = findViewById(R.id.ll_dropdown_items_container)
-        backgroundDimView = findViewById(R.id.background_dim)
-        filterPadding = findViewById(R.id.filter_padding)
+        llayTitle = findViewById(R.id.filter_container)
+        tvTitle = findViewById(R.id.filter_text)
+        ivTitle = findViewById(R.id.filter_arrow)
+        svOptions = findViewById(R.id.sv_dropdown_container)
+        llayOptions = findViewById(R.id.ll_dropdown_items_container)
+        viewDim = findViewById(R.id.background_dim)
+        spaceTitle = findViewById(R.id.filter_padding)
 
         //Configure filter bar
-        val lp = filterContainer.layoutParams as LinearLayout.LayoutParams
+        val lp = llayTitle.layoutParams as LinearLayout.LayoutParams
         lp.height = filterHeight.toInt()
-        filterContainer.layoutParams = lp
-        filterContainer.setBackgroundColor(ContextCompat.getColor(context, filterBarBackgroundColor))
-        filterContainer.setOnClickListener { toggle(true) }
+        llayTitle.layoutParams = lp
+        llayTitle.setBackgroundColor(ContextCompat.getColor(context, filterBarBackgroundColor))
+        llayTitle.setOnClickListener { toggle(true) }
 
         //Configure filter text
-        if (typeface != 0) filterTextView.typeface = ResourcesCompat.getFont(context, typeface)
-        filterTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
-        filterTextView.setTextColor(ContextCompat.getColor(context, filterTextColor))
+        if (typeface != 0) tvTitle.typeface = ResourcesCompat.getFont(context, typeface)
+        tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+        tvTitle.setTextColor(ContextCompat.getColor(context, filterTextColor))
         if (placeholderText?.isNotEmpty() == true) {
-            filterTextView.text = placeholderText
+            tvTitle.text = placeholderText
             _selectingPosition = -1
         } else {
             _selectingPosition = 0
         }
 
         //Configure filter and arrow spacing
-        val lpSpacing = filterPadding.layoutParams as LinearLayout.LayoutParams
+        val lpSpacing = spaceTitle.layoutParams as LinearLayout.LayoutParams
         lpSpacing.width = filterTextArrowPadding.toInt()
-        filterPadding.layoutParams = lpSpacing
+        spaceTitle.layoutParams = lpSpacing
 
         //Configure arrow
         if (arrowWidth > -1 || arrowHeight > -1) {
-            val arrowLp = filterArrow.layoutParams as LinearLayout.LayoutParams
+            val arrowLp = ivTitle.layoutParams as LinearLayout.LayoutParams
             if (arrowHeight > -1) arrowLp.height = arrowHeight.toInt()
             if (arrowWidth > -1) arrowLp.width = arrowWidth.toInt()
-            filterArrow.layoutParams = arrowLp
+            ivTitle.layoutParams = arrowLp
         }
         if (arrowDrawableResId != 0) {
-            filterArrow.setImageResource(arrowDrawableResId)
+            ivTitle.setImageResource(arrowDrawableResId)
         }
 
         //Configure background dim
-        backgroundDimView.setBackgroundColor(ContextCompat.getColor(context,
+        viewDim.setBackgroundColor(ContextCompat.getColor(context,
                 if (isExpandDimBackground) dimBackgroundColor else android.R.color.transparent))
-        backgroundDimView.setOnClickListener { collapse(true) }
+        viewDim.setOnClickListener { collapse(true) }
 
         //Configure expansion style
         expansionStyle = _expansionStyle
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        return if (keyCode == KeyEvent.KEYCODE_BACK && state == EXPANDED) {
-            collapse(true)
-            true
-        } else {
-            super.onKeyDown(keyCode, event)
-        }
-    }
 
     override fun onSaveInstanceState(): Parcelable? {
         val savedState = SavedState(super.onSaveInstanceState())
         savedState.state = this.state
         savedState.selectingPosition = this.selectingPosition
-        savedState.dropDownItems = this.dropDownItemList
+        savedState.dropDownItems = this.data
         return savedState
     }
 
@@ -330,22 +322,22 @@ open class DropDownView : LinearLayout {
 
         this.state = savedState.state
         this._selectingPosition = savedState.selectingPosition
-        this.dropDownItemList = savedState.dropDownItems
+        this.data = savedState.dropDownItems
 
         updateDropDownItems()
         if (selectingPosition >= 0) {
-            filterTextView.text = dropDownItemList[selectingPosition]
+            tvTitle.text = data[selectingPosition]
             onSelectionListener?.onItemSelected(this@DropDownView, selectingPosition)
         }
         if (this.state == EXPANDED) {
             isFocusableInTouchMode = true
             requestFocus()
             updateDropDownItems()
-            filterArrow.rotation = 180f
-            backgroundDimView.visibility = View.VISIBLE
-            val lp = dropDownContainer.layoutParams as FrameLayout.LayoutParams
+            ivTitle.rotation = 180f
+            viewDim.visibility = View.VISIBLE
+            val lp = svOptions.layoutParams as FrameLayout.LayoutParams
             lp.height = WRAP_CONTENT
-            dropDownContainer.layoutParams = lp
+            svOptions.layoutParams = lp
         }
     }
 
@@ -385,6 +377,16 @@ open class DropDownView : LinearLayout {
         }
     }
 
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        return if (keyCode == KeyEvent.KEYCODE_BACK && state == EXPANDED) {
+            collapse(true)
+            true
+        } else {
+            super.onKeyDown(keyCode, event)
+        }
+    }
+
+
     fun toggle(animated: Boolean) {
         when (state) {
             COLLAPSED -> expand(animated)
@@ -400,10 +402,10 @@ open class DropDownView : LinearLayout {
         updateDropDownItems()
         if (isArrowRotate) {
             if (animate) {
-                filterArrow.rotation = 0f
-                filterArrow.animate().rotationBy(-180f).setDuration(animationDuration.toLong()).start()
+                ivTitle.rotation = 0f
+                ivTitle.animate().rotationBy(-180f).setDuration(animationDuration.toLong()).start()
             } else {
-                filterArrow.rotation = -180f
+                ivTitle.rotation = -180f
             }
         }
         if (animate) {
@@ -413,10 +415,10 @@ open class DropDownView : LinearLayout {
             transitionSet.duration = animationDuration.toLong()
             TransitionManager.beginDelayedTransition(this, transitionSet)
         }
-        backgroundDimView.visibility = View.VISIBLE
-        val lp = dropDownContainer.layoutParams as FrameLayout.LayoutParams
+        viewDim.visibility = View.VISIBLE
+        val lp = svOptions.layoutParams as FrameLayout.LayoutParams
         lp.height = WRAP_CONTENT
-        dropDownContainer.layoutParams = lp
+        svOptions.layoutParams = lp
         state = EXPANDED
     }
 
@@ -424,10 +426,10 @@ open class DropDownView : LinearLayout {
         if (state == COLLAPSED) return
         if (isArrowRotate) {
             if (animate) {
-                filterArrow.rotation = 180f
-                filterArrow.animate().rotationBy(180f).setDuration(animationDuration.toLong()).start()
+                ivTitle.rotation = 180f
+                ivTitle.animate().rotationBy(180f).setDuration(animationDuration.toLong()).start()
             } else {
-                filterArrow.rotation = 0f
+                ivTitle.rotation = 0f
             }
         }
         if (animate) {
@@ -435,39 +437,39 @@ open class DropDownView : LinearLayout {
             transitionSet.addTransition(ChangeBounds())
             transitionSet.addTransition(Fade())
             transitionSet.duration = animationDuration.toLong()
-            transitionSet.excludeTarget(filterTextView, true)
+            transitionSet.excludeTarget(tvTitle, true)
             TransitionManager.beginDelayedTransition(this, transitionSet)
         }
-        backgroundDimView.visibility = View.INVISIBLE
-        val lp = dropDownContainer.layoutParams as FrameLayout.LayoutParams
+        viewDim.visibility = View.INVISIBLE
+        val lp = svOptions.layoutParams as FrameLayout.LayoutParams
         lp.height = 0
-        dropDownContainer.layoutParams = lp
+        svOptions.layoutParams = lp
         state = COLLAPSED
     }
 
     fun setDropDownListItem(items: List<String>) {
-        this.dropDownItemList = items
+        this.data = items
         updateDropDownItems()
     }
 
     private fun updateDropDownItems() {
-        dropDownItemsContainer.removeAllViews()
+        llayOptions.removeAllViews()
         if (topDecoratorHeight > 0) {
-            dropDownItemsContainer.addView(generateTopDecorator())
+            llayOptions.addView(generateTopDecorator())
         }
-        for (i in dropDownItemList.indices) {
+        for (i in data.indices) {
             if (!isExpandIncludeSelectedItem) {
                 if (i == selectingPosition) continue
             }
-            dropDownItemsContainer.addView(generateDropDownItem(dropDownItemList[i], i))
-            if (i == dropDownItemList.size - 1) {
-                if (isLastItemHasDivider) dropDownItemsContainer.addView(generateDivider())
+            llayOptions.addView(generateDropDownItem(data[i], i))
+            if (i == data.size - 1) {
+                if (isLastItemHasDivider) llayOptions.addView(generateDivider())
             } else {
-                dropDownItemsContainer.addView(generateDivider())
+                llayOptions.addView(generateDivider())
             }
         }
         if (bottomDecoratorHeight > 0) {
-            dropDownItemsContainer.addView(generateBottomDecorator())
+            llayOptions.addView(generateBottomDecorator())
         }
     }
 

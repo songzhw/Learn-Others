@@ -23,7 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:text="Filter Text"/>
 
         <android.support.v4.widget.Space
             android:id="@+id/filter_padding"

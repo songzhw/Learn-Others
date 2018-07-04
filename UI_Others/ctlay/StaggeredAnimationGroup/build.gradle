@@ -1,0 +1,40 @@
+ext {
+    configuration = [
+            package          : "staggeredanimationgroup",
+            compileVersion   : 27,
+            buildToolsVersion: "27.0.3",
+            minSdk           : 21,
+            targetSdk        : 27,
+            versionCode      : 1,
+            versionName      : "1.0.0"
+    ]
+
+    libraries = [
+            support         : "27.1.0",
+            constraintlayout: "1.1.0"
+    ]
+
+    dryRun = 'true'
+}
+
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.3'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        google()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+

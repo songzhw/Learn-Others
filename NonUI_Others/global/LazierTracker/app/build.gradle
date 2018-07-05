@@ -1,0 +1,94 @@
+apply plugin: 'com.android.application'
+apply plugin: 'jacoco'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
+    defaultConfig {
+        applicationId "com.codeless.demo"
+        minSdkVersion 17
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        buildConfigField("String", "APP_KEY", "\"3c11d60d903e49d5a47ad2a58bb0db97\"")
+        buildConfigField("String", "APP_SECRET", "\"ca5137e40b874abd893e762f1d53d839\"")
+    }
+    signingConfigs {
+        releaseConfig {
+            // keystore
+            storeFile file('../laziertracker.jks')
+            // keys
+            Properties properties = new Properties()
+            File propertyFile = new File(rootDir.getAbsolutePath() + "/release.properties")
+            properties.load(propertyFile.newDataInputStream())
+            storePassword properties.get('storepassword')
+            keyAlias properties.get('keyalias')
+            keyPassword properties.get('keypassword')
+        }
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.releaseConfig
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    compile ('com.jakewharton:butterknife:8.5.1') {
+        exclude group: 'com.android.support', module: 'support-compat'
+    }
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile project(':tracker')
+
+    compile group: 'org.jacoco', name: 'org.jacoco.core', version: '0.8.1'
+
+    // data-sdk依赖库
+    compile 'com.alibaba:fastjson:1.2.8'
+    // ui-sdk依赖库
+    compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+    compile "com.readystatesoftware.systembartint:systembartint:$rootProject.systembartintVersion"
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
+    compile "com.netease.youliao:newsfeeds-data:$rootProject.newsfeedsDataVersion"
+    compile "com.netease.youliao:newsfeeds-ui:$rootProject.newsfeedsUIVersion"
+
+    // 定位 sdk
+    compile 'com.amap.api:location:latest.integration'
+
+    // 微信分享
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.0.2'
+}
+
+// 直接引用buildsrc的插件类
+apply plugin: com.codeless.plugin.InjectPluginImpl
+// 引用远程maven仓库的插件
+//apply plugin: 'com.codeless'
+codelessConfig {
+    //this will determine the name of this plugin transform, no practical use.
+    pluginName = 'myPluginTest'
+    //turn this on to make it print help content, default value is true
+    showHelp = true
+    //this flag will decide whether the log of the modifying process be printed or not, default value is false
+    keepQuiet = false
+    //this is a kit feature of the plugin, set it true to see the time consume of this build
+    watchTimeConsume = false
+
+    //this is the most important part, 3rd party JAR packages that want our plugin to inject;
+    //our plugin will inject package defined in 'AndroidManifest.xml' and 'butterknife.internal.butterknife.internal.DebouncingOnClickListener' by default.
+    //structure is like ['butterknife.internal','com.a.c'], type is HashSet<String>.
+    //You can also specify the name of the class;
+    //example: ['com.xxx.xxx.BaseFragment']
+    targetPackages = ['com.netease.youliao.newsfeeds.ui']
+}

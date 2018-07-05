@@ -29,7 +29,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-       StaggeredAnimationGroup group = findViewById(R.id.group);
         binding.showButton.setOnClickListener(this);
         binding.showReversedButton.setOnClickListener(this);
         binding.hideButton.setOnClickListener(this);

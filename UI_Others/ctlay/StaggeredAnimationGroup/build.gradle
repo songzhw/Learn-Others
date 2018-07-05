@@ -10,8 +10,8 @@ ext {
     ]
 
     libraries = [
-            support         : "27.1.0",
-            constraintlayout: "1.1.0"
+            support         : "27.1.1",
+            constraintlayout: "1.1.2"
     ]
 
     dryRun = 'true'

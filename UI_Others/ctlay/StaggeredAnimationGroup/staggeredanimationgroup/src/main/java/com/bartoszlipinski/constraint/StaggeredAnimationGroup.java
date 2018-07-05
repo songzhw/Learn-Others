@@ -66,6 +66,7 @@ public class StaggeredAnimationGroup extends Group {
     @VisibleForTesting PartialTransitionFactory partialTransitionFactory = defaultPartialTransitionFactory;
     @VisibleForTesting OnTransitionPreparedListener onPreparedListener = defaultOnPreparedListener;
 
+
     public StaggeredAnimationGroup(Context context) {
         super(context);
     }
@@ -90,8 +91,12 @@ public class StaggeredAnimationGroup extends Group {
             return allIds;
         }
         int[] groupIds = new int[nonZeroIdsCount];
-        for (int i = 0; i < nonZeroIdsCount; i++) {
-            groupIds[i] = allIds[i];
+        int index = 0;
+        for (int id : allIds) {
+            if (id != 0) {
+                groupIds[index] = id;
+                index++;
+            }
         }
         return groupIds;
     }

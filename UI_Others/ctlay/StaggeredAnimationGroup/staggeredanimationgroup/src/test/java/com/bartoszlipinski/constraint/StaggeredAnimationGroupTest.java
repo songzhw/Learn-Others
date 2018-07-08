@@ -161,7 +161,7 @@ public class StaggeredAnimationGroupTest {
 
         //then
         assertThat(spiedGroup.partialTransitionFactory)
-                .isEqualTo(StaggeredAnimationGroup.defaultPartialTransitionFactory);
+                .isEqualTo(StaggeredAnimationGroup.defaultFade);
     }
 
     @Test(expected = NullPointerException.class)
@@ -206,7 +206,7 @@ public class StaggeredAnimationGroupTest {
 
         //then
         assertThat(spiedGroup.partialTransitionFactory)
-                .isEqualTo(StaggeredAnimationGroup.defaultPartialTransitionFactory);
+                .isEqualTo(StaggeredAnimationGroup.defaultFade);
     }
 
     @Test

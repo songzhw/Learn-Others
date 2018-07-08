@@ -24,7 +24,7 @@ class InjectPluginImpl implements Plugin<Project> {
         }
     }
 
-    def static registerTransform(Project project) {
+    static void registerTransform(Project project) {
 //        def isApp = project.plugins.hasPlugin("com.android.application")
         BaseExtension android = project.extensions.getByType(BaseExtension)
         InjectTransform transform = new InjectTransform(project)
@@ -38,4 +38,6 @@ class InjectPluginImpl implements Plugin<Project> {
         }
         com.codeless.plugin.utils.DataHelper.ext.pluginTmpDir = pluginTmpDir
     }
+
+
 }

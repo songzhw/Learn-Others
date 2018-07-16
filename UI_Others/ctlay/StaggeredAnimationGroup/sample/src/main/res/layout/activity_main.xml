@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data></data>
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,7 +22,7 @@
             app:layout_constraintBottom_toTopOf="@+id/secondCard"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.v7.widget.CardView
             android:id="@+id/secondCard"
@@ -29,7 +30,7 @@
             app:layout_constraintBottom_toTopOf="@+id/thirdCard"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/firstCard"/>
+            app:layout_constraintTop_toBottomOf="@+id/firstCard" />
 
         <android.support.v7.widget.CardView
             android:id="@+id/thirdCard"
@@ -37,7 +38,7 @@
             app:layout_constraintBottom_toTopOf="@+id/fourthCard"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/secondCard"/>
+            app:layout_constraintTop_toBottomOf="@+id/secondCard" />
 
         <android.support.v7.widget.CardView
             android:id="@+id/fourthCard"
@@ -45,7 +46,7 @@
             app:layout_constraintBottom_toTopOf="@+id/fifthCard"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/thirdCard"/>
+            app:layout_constraintTop_toBottomOf="@+id/thirdCard" />
 
         <android.support.v7.widget.CardView
             android:id="@+id/fifthCard"
@@ -53,7 +54,7 @@
             app:layout_constraintBottom_toTopOf="@+id/sixthCard"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fourthCard"/>
+            app:layout_constraintTop_toBottomOf="@+id/fourthCard" />
 
         <android.support.v7.widget.CardView
             android:id="@+id/sixthCard"
@@ -62,7 +63,7 @@
             app:layout_constraintBottom_toTopOf="@+id/showButton"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fifthCard"/>
+            app:layout_constraintTop_toBottomOf="@+id/fifthCard" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/showButton"
@@ -73,7 +74,7 @@
             android:text="Show"
             app:layout_constraintBottom_toTopOf="@+id/hideButton"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/showReversedButton"/>
+            app:layout_constraintRight_toLeftOf="@+id/showReversedButton" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/showReversedButton"
@@ -84,7 +85,7 @@
             android:text="Show (reversed)"
             app:layout_constraintBottom_toBottomOf="@+id/showButton"
             app:layout_constraintLeft_toRightOf="@+id/showButton"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/hideButton"
@@ -95,7 +96,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/hideReversedButton"/>
+            app:layout_constraintRight_toLeftOf="@+id/hideReversedButton" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/hideReversedButton"
@@ -105,14 +106,14 @@
             android:text="Hide (reversed)"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/hideButton"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent" />
 
         <!--HERE'S THE GROUP-->
         <com.bartoszlipinski.constraint.StaggeredAnimationGroup
             android:id="@+id/group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="firstCard, secondCard, thirdCard, fourthCard, fifthCard, sixthCard"/>
+            app:constraint_referenced_ids="firstCard, secondCard, thirdCard, fourthCard, fifthCard, sixthCard" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

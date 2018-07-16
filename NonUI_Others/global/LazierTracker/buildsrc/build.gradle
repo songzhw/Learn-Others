@@ -1,0 +1,34 @@
+apply plugin: 'groovy'
+
+repositories {
+    jcenter()
+    maven {
+        url 'https://maven.google.com/'
+        name 'Google'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile gradleApi()
+    compile localGroovy()
+    compile 'com.android.tools.build:gradle:3.1.3'
+    compile 'commons-io:commons-io:1.4'
+    compile 'org.ow2.asm:asm:5.0'
+}
+
+
+
+apply plugin: 'maven'
+uploadArchives{
+    repositories.mavenDeployer {
+        // maven savePath
+        def deployPath = file('/Users/zhangdan/StudioProjects/Gradle_Plugin_Repo')
+        repository(url:"file://${deployPath.absolutePath}")
+        pom.project{
+            groupId "com.codeless"
+            artifactId "codeless-gradle-plugin"
+            version "0.0.1"
+        }
+    }
+}

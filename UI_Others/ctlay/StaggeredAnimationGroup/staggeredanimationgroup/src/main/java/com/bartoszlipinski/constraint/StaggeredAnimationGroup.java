@@ -39,7 +39,7 @@ public class StaggeredAnimationGroup extends Group {
     @VisibleForTesting static final int DEFAULT_PARTIAL_DURATION = 250;
     @VisibleForTesting static final int DEFAULT_PARTIAL_TRANSITION_DELAY = 50;
     @VisibleForTesting static final TimeInterpolator DEFAULT_PARTIAL_INTERPOLATOR = new FastOutSlowInInterpolator();
-    @VisibleForTesting static PartialTransitionFactory defaultPartialTransitionFactory =
+    @VisibleForTesting static PartialTransitionFactory defaultFade =
             new PartialTransitionFactory() {
                 @NonNull
                 @Override
@@ -63,8 +63,9 @@ public class StaggeredAnimationGroup extends Group {
     @VisibleForTesting int partialDelay = DEFAULT_PARTIAL_TRANSITION_DELAY;
     @VisibleForTesting int partialDuration = DEFAULT_PARTIAL_DURATION;
     @VisibleForTesting TimeInterpolator partialInterpolator = DEFAULT_PARTIAL_INTERPOLATOR;
-    @VisibleForTesting PartialTransitionFactory partialTransitionFactory = defaultPartialTransitionFactory;
+    @VisibleForTesting PartialTransitionFactory partialTransitionFactory = defaultFade;
     @VisibleForTesting OnTransitionPreparedListener onPreparedListener = defaultOnPreparedListener;
+
 
     public StaggeredAnimationGroup(Context context) {
         super(context);
@@ -90,8 +91,12 @@ public class StaggeredAnimationGroup extends Group {
             return allIds;
         }
         int[] groupIds = new int[nonZeroIdsCount];
-        for (int i = 0; i < nonZeroIdsCount; i++) {
-            groupIds[i] = allIds[i];
+        int index = 0;
+        for (int id : allIds) {
+            if (id != 0) {
+                groupIds[index] = id;
+                index++;
+            }
         }
         return groupIds;
     }
@@ -120,11 +125,11 @@ public class StaggeredAnimationGroup extends Group {
 
     @VisibleForTesting
     final void addTransitionToStaggeredTransition(Transition basePartialTransition,
-                                                  TransitionSet staggeredTransition,
+                                                  TransitionSet transitionSet,
                                                   int viewId, int indexInTransition) {
         Transition partialTransition =
                 applyStaggeredTransitionParams(basePartialTransition, viewId, indexInTransition);
-        staggeredTransition.addTransition(partialTransition);
+        transitionSet.addTransition(partialTransition);
     }
 
     @VisibleForTesting
@@ -179,7 +184,7 @@ public class StaggeredAnimationGroup extends Group {
     }
 
     public final void clearPartialTransitionFactory() {
-        partialTransitionFactory = defaultPartialTransitionFactory;
+        partialTransitionFactory = defaultFade;
     }
 
     public final void setOnTransitionPreparedListener(@NonNull OnTransitionPreparedListener listener) {

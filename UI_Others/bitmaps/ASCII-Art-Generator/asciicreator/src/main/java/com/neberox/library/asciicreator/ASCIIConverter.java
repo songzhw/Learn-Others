@@ -255,14 +255,10 @@ public class ASCIIConverter {
         mBitmapTaskListener = mTask;
 
         if (mBitmapTaskListener == null) {
-            try {
-                return new CreateASCIIBitmap().execute(originalBitmap).get();
-            } catch (Exception e) {
-                throw e;
-            }
-        } else
+            return new CreateASCIIBitmap().execute(originalBitmap).get();
+        } else {
             new CreateASCIIBitmap().execute(originalBitmap);
-
+        }
         return null;
     }
 
@@ -290,22 +286,19 @@ public class ASCIIConverter {
 
             for (int row = 0; row < grid.width; row++) {
                 for (int col = 0; col < grid.height; col++) {
-                    try {
-                        PixelBlock block = grid.blocks[row][col];
-                        float luminance = ASCIIConverterHelper.getLuminance(block, mReversedLuminance);
-                        String ascii = mHelper.asciiFromLuminance(luminance);
+                    PixelBlock block = grid.blocks[row][col];
+                    float luminance = ASCIIConverterHelper.getLuminance(block, mReversedLuminance);
+                    String ascii = mHelper.asciiFromLuminance(luminance);
 
-                        int color = ASCIIUtilities.getColor(block);
-                        if (!mGrayScale)
-                            paint.setColor(color); // Text Color
-                        else {
-                            paint.setAlpha((int) (luminance * 255.0f));
-                            paint.setColor(Color.GRAY);
-                        }
-
-                        canvas.drawText(ascii, row * mFontSize, col * mFontSize, paint);
-                    } catch (Exception e) {
+                    int color = ASCIIUtilities.getColor(block);
+                    if (!mGrayScale)
+                        paint.setColor(color); // Text Color
+                    else {
+                        paint.setAlpha((int) (luminance * 255.0f));
+                        paint.setColor(Color.GRAY);
                     }
+
+                    canvas.drawText(ascii, row * mFontSize, col * mFontSize, paint);
                 }
             }
 

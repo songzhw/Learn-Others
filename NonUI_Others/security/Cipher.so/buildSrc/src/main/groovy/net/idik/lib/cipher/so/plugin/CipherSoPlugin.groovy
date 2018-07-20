@@ -24,6 +24,37 @@ class CipherSoPlugin implements Plugin<Project> {
 
     }
 
+    private def setupProjectNativeSupport(Project project) {
+        project.afterEvaluate {
+            unzipNativeArchive(project)
+            def android = project.extensions.findByType(AppExtension)
+            originCmakeListPath = android.externalNativeBuild.cmake.path?.canonicalPath
+            File targetFile = generateCMakeListsFile(project, originCmakeListPath)
+            android.externalNativeBuild {
+                cmake {
+                    path targetFile.canonicalPath
+                }
+            }
+            createTasks(project, android)
+        }
+    }
+
+
+    private static File generateCMakeListsFile(Project project, String originCMakeListsPath) {
+        def outputDir = new File(project.buildDir, "/cipher.so/cmake")
+        if (!outputDir.exists()) {
+            outputDir.mkdirs()
+        }
+        def targetFile = new File(outputDir, "CMakeLists.txt")
+        def writer = new FileWriter(targetFile)
+        new CMakeListsBuilder("${project.buildDir.canonicalPath}/cipher.so/CMakeLists.txt").setOriginCMakePath(originCMakeListsPath).build().each {
+            writer.append(it)
+        }
+        writer.flush()
+        writer.close()
+        targetFile
+    }
+
     private def createTasks(Project project, AppExtension android) {
 
         def generateCmakeListFileTask = project.tasks.create("generateCmakeListFile") {
@@ -86,22 +117,6 @@ class CipherSoPlugin implements Plugin<Project> {
         }
     }
 
-
-    private def setupProjectNativeSupport(Project project) {
-        project.afterEvaluate {
-            unzipNativeArchive(project)
-            def android = project.extensions.findByType(AppExtension)
-            originCmakeListPath = android.externalNativeBuild.cmake.path?.canonicalPath
-            File targetFile = generateCMakeListsFile(project, originCmakeListPath)
-            android.externalNativeBuild {
-                cmake {
-                    path targetFile.canonicalPath
-                }
-            }
-            createTasks(project, android)
-        }
-    }
-
     private static def unzipNativeArchive(Project project) {
         def archiveFile = getNativeArchiveFile(project)
         project.copy {
@@ -141,19 +156,5 @@ class CipherSoPlugin implements Plugin<Project> {
         return archiveZip
     }
 
-    private
-    static File generateCMakeListsFile(Project project, String originCMakeListsPath) {
-        def outputDir = new File(project.buildDir, "/cipher.so/cmake")
-        if (!outputDir.exists()) {
-            outputDir.mkdirs()
-        }
-        def targetFile = new File(outputDir, "CMakeLists.txt")
-        def writer = new FileWriter(targetFile)
-        new CMakeListsBuilder("${project.buildDir.canonicalPath}/cipher.so/CMakeLists.txt").setOriginCMakePath(originCMakeListsPath).build().each {
-            writer.append(it)
-        }
-        writer.flush()
-        writer.close()
-        targetFile
-    }
+
 }

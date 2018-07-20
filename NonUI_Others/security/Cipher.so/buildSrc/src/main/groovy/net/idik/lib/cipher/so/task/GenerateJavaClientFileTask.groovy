@@ -34,20 +34,11 @@ class GenerateJavaClientFileTask extends DefaultTask {
                         .addStatement("throw new IllegalAccessException()")
                         .build())
 
-        def androidBase64ClassName = ClassName.get("android.util", "Base64")
         keyExts.each {
             classBuilder.addMethod(
                     MethodSpec.methodBuilder("${it.name}")
                             .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
                             .returns(String.class)
-//                            .addCode('''
-//                            try {
-//                                return new $T($T.decode(CipherCore.get("$L"), $T.DEFAULT), "UTF-8");
-//                            } catch ($T e) {
-//                                return "";
-//                            }
-//                            '''
-//                            , String.class, androidBase64ClassName, StringUtils.md5(it.name), androidBase64ClassName, ClassName.get("java.io", "UnsupportedEncodingException"))
                             .addStatement('return CipherCore.get("$L")', StringUtils.md5(it.name))
                             .build()
             )

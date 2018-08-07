@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/ivWeatherTypeNotification"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:contentDescription="@null"
+            android:tint="@color/fruit_salad" />
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/ivWeatherTypeNotification"
+            android:textSize="12sp"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/font_secondary" />
+
+        <TextView
+            android:id="@+id/text_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_title"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/ivWeatherTypeNotification"
+            android:fontFamily="@font/lato_black"
+            android:textColor="@color/font_primary"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/text_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/lato_light"
+            android:textColor="@color/font_thirdly"
+            android:textAllCaps="true"
+            android:textSize="12sp" />
+    </RelativeLayout>

@@ -66,7 +66,7 @@ public class MeteorView extends AppCompatImageView {
 
     private void anim() {
         setTranslationX(screenWidth);
-        setTranslationY((float) (-screenWidth * tag));
+        setTranslationY((float) (-screenWidth * tag)); //tag是Math.tan(计算出来的弧度), 在这是30度
         animate().translationX(-screenWidth)
                 .translationY((float) (screenWidth * tag))
                 .setStartDelay(random.nextInt(1500))

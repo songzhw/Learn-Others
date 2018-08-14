@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Debug控制台</string>
+    <string name="log_action">%s.controller.connection.start</string>
+    <string name="log_starting">开启中…</string>
+    <string name="log_status_off">点击按钮开启debug</string>
+    <string name="log_status_on">已连接</string>
+    <string name="log_status_waiting">等待客户端连接…</string>
+    <string name="log_status_stopping">正在断开连接…</string>
+    <string name="log_status_starting">正在开启连接</string>
+    <string name="share">分享</string>
+    <string name="copy_to_clipboard_success">已复制到剪贴板</string>
+    <string name="log_title">Logcat</string>
+    <string name="log_share_notice">日志记录（右上角按钮可分享&amp;复制）</string>
+    <string name="log_filter_hint">过滤…</string>
+    <string name="log_select_all">全选</string>
+    <string name="debug_json_view">查看Json</string>
+    <string name="debug_app_package_name_label">指定要连接的app包名</string>
+    <string name="debug_app_connect">前往连接</string>
+    <string name="log_clear">清除</string>
+    <string name="connection_error_different_sign">%s 的签名与当前应用不一致，无法连接</string>
+    <string name="connection_error_app_not_exist">该应用未安装或已被卸载</string>
+    <string name="log_view">查看</string>
+    <string name="env_title">环境切换</string>
+    <string name="env_type_sit">Sit</string>
+    <string name="env_type_release">Release</string>
+    <string name="env_type_pre">Pre</string>
+    <string name="env_status_current_lbl">当前环境</string>
+    <string name="env_unkunow_type">不能识别的环境配置：%s</string>
+    <string name="env_invalid_type">无效的环境配置</string>
+    <string name="statistics_on">埋点日志已开启</string>
+    <string name="statistics_off">埋点日志已关闭</string>
+    <string name="info_title">信息框</string>
+    <string name="turn_on_accessibility">开启辅助功能,用于检测topActivity等功能</string>
+</resources>

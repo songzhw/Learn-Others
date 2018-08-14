@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.billy.controller">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- 声明使用指定的权限 -->
+    <uses-permission android:name="com.billy.controller.broadcast.debugger" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <application
+        android:name=".MyApp"
+        android:allowBackup="true"
+        android:icon="@drawable/icon_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".WelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".log.collector.LogActivity"
+            android:label="@string/log_title"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            />
+        <activity android:name=".JsonViewActivity" android:label="@string/debug_json_view"/>
+        <activity android:name=".env.EnvSwitchActivity" android:label="@string/env_title"/>
+        <service android:name=".core.ServerConnectionService" />
+        <service
+            android:name=".info.DetectionService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/detection_service_config"/>
+        </service>
+    </application>
+
+</manifest>

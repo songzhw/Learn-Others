@@ -19,7 +19,7 @@ import com.yuyh.jsonviewer.library.adapter.BaseJsonViewerAdapter;
  */
 public class JsonItemView extends LinearLayout {
 
-    public static int TEXT_SIZE_DP = 12;
+    public static int TEXT_SIZE_DP = 18;
 
     private Context mContext;
 

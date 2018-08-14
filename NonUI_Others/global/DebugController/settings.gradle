@@ -1,0 +1,1 @@
+include ':app_debugger_controller', ':app-debugger', ':app_test'

@@ -1,0 +1,64 @@
+apply plugin: 'com.android.application'
+
+//默认使用根目录中的demo.jks来签名
+def storeFileValue = "../demo.jks"
+def storePasswordValue = "123456"
+def keyAliasValue = "debugger"
+def keyPasswordValue = "123456"
+def Properties props = new Properties()
+try {
+    //从工程根目录的local.properties文件中读取签名文件
+    //请务必保证客户端与服务端的apk签名一致
+    def localFile = project.rootProject.file('local.properties')
+    if (localFile != null && localFile.exists()) {
+        props.load(localFile.newDataInputStream())
+        if (props.getProperty("storeFileValue")) storeFileValue = props.getProperty("storeFileValue")
+        if (props.getProperty("storePasswordValue")) storePasswordValue = props.getProperty("storePasswordValue")
+        if (props.getProperty("keyAliasValue")) keyAliasValue = props.getProperty("keyAliasValue")
+        if (props.getProperty("keyPasswordValue")) keyPasswordValue = props.getProperty("keyPasswordValue")
+    }
+} catch (Exception ignored) {
+}
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "28.0.2"
+
+    defaultConfig {
+        applicationId "com.billy.controller.test"
+        minSdkVersion 14
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+    }
+    //签名Personal
+    signingConfigs {
+        debug {
+            storeFile file(storeFileValue)
+            storePassword storePasswordValue
+            keyAlias keyAliasValue
+            keyPassword keyPasswordValue
+        }
+    }
+
+    //构建类型
+    buildTypes {
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+        release {
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile project(':app-debugger')
+}

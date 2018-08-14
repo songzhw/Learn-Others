@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/log_background"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:layout_editor_absoluteY="81dp"
+    tools:layout_editor_absoluteX="0dp">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/log_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/theme_margin"
+        android:layout_marginLeft="@dimen/theme_margin"
+        android:layout_marginRight="@dimen/theme_margin"
+        android:layout_marginTop="@dimen/theme_margin"
+        android:scrollbars="vertical"
+        android:scrollbarStyle="outsideOverlay"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/log_level_group"
+        android:layout_marginStart="@dimen/theme_margin"
+        android:layout_marginEnd="@dimen/theme_margin" />
+
+    <CheckBox
+        android:id="@+id/log_select_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="@dimen/theme_margin"
+        android:layout_marginStart="@dimen/theme_margin"
+        android:text="@string/log_select_all"
+        android:textColor="@color/log_text"
+        />
+    <RadioGroup
+        android:id="@+id/log_level_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="@dimen/theme_margin"
+        app:layout_constraintLeft_toRightOf="@+id/log_select_all"
+        android:layout_marginStart="@dimen/theme_margin">
+        <RadioButton style="@style/log_level_radio" android:id="@+id/log_level_v" android:text="V" android:checked="true" />
+        <RadioButton style="@style/log_level_radio" android:id="@+id/log_level_d" android:text="D"  />
+        <RadioButton style="@style/log_level_radio" android:id="@+id/log_level_i" android:text="I"  />
+        <RadioButton style="@style/log_level_radio" android:id="@+id/log_level_w" android:text="W"  />
+        <RadioButton style="@style/log_level_radio" android:id="@+id/log_level_e" android:text="E"  />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/et_filter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/theme_margin"
+        android:layout_marginLeft="@dimen/theme_margin"
+        android:layout_marginStart="@dimen/theme_margin"
+        android:layout_marginTop="@dimen/theme_margin"
+        android:layout_marginRight="@dimen/theme_margin"
+        android:hint="@string/log_filter_hint"
+        android:background="@drawable/edit_text_bg"
+        android:inputType="text"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/theme_margin"
+        android:paddingRight="@dimen/theme_margin"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:textCursorDrawable="@drawable/edit_text_cursor"
+        android:textSize="@dimen/log_filter_hint_size"
+        app:layout_constraintBottom_toBottomOf="@+id/log_level_group"
+        app:layout_constraintLeft_toRightOf="@+id/log_level_group"
+        app:layout_constraintRight_toRightOf="@+id/log_recycler_view" />
+
+</android.support.constraint.ConstraintLayout>

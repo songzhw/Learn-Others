@@ -1,33 +1,27 @@
 package net.droidlabs.mvvmdemo.model;
 
-public class User
-{
-    private  String firstName;
-    private  String lastName;
+public class User {
+    private String firstName;
+    private String lastName;
 
-    public User(String firstName, String lastName)
-    {
+    public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public String getFirstName()
-    {
+    public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName)
-    {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    public String getLastName()
-    {
+    public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName)
-    {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 }

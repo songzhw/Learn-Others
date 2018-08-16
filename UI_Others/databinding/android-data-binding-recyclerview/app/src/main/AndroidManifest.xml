@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="net.droidlabs.mvvmdemo">
+    package="net.droidlabs.mvvmdemo">
 
     <application
         android:allowBackup="true"
@@ -11,8 +11,8 @@
             android:name=".view.UsersView"
             android:label="@string/title_activity_user">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>

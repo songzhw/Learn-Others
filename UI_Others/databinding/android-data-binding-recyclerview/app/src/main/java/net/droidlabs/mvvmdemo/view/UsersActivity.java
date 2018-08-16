@@ -24,7 +24,7 @@ import net.droidlabs.mvvmdemo.viewmodel.SuperUserViewModel;
 import net.droidlabs.mvvmdemo.viewmodel.UserViewModel;
 import net.droidlabs.mvvmdemo.viewmodel.UsersViewModel;
 
-public class UsersView extends AppCompatActivity {
+public class UsersActivity extends AppCompatActivity {
     private UsersViewModel usersViewModel;
     private UsersViewBinding binding;
 
@@ -59,7 +59,7 @@ public class UsersView extends AppCompatActivity {
         return new ClickHandler<UserViewModel>() {
             @Override
             public void onClick(UserViewModel user) {
-                Toast.makeText(UsersView.this, user.getFirstName() + " " + user.getLastName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(UsersActivity.this, user.getFirstName() + " " + user.getLastName(), Toast.LENGTH_SHORT).show();
             }
         };
     }
@@ -68,7 +68,7 @@ public class UsersView extends AppCompatActivity {
         return new LongClickHandler<UserViewModel>() {
             @Override
             public void onLongClick(UserViewModel user) {
-                Toast.makeText(UsersView.this, "LONG CLICK: " + user.getFirstName() + " " + user.getLastName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(UsersActivity.this, "LONG CLICK: " + user.getFirstName() + " " + user.getLastName(), Toast.LENGTH_SHORT).show();
             }
         };
     }

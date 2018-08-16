@@ -65,6 +65,12 @@ public class BindingRecyclerViewAdapter<T> extends RecyclerView.Adapter<BindingR
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return itemBinder.getLayoutRes(items.get(position));
+    }
+
+    // 第二参其实应该是int viewType. 但本类因为getItemViewType()就是用的layoutId当viewype, 所以可以这样用
+    @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int layoutId) {
         if (inflater == null) {
             inflater = LayoutInflater.from(viewGroup.getContext());
@@ -84,10 +90,7 @@ public class BindingRecyclerViewAdapter<T> extends RecyclerView.Adapter<BindingR
         viewHolder.binding.executePendingBindings();
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return itemBinder.getLayoutRes(items.get(position));
-    }
+
 
     @Override
     public int getItemCount() {

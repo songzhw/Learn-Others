@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".view.UsersView"
+            android:name=".view.UsersActivity"
             android:label="@string/title_activity_user">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

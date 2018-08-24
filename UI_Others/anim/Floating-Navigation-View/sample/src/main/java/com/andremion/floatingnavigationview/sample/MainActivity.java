@@ -12,7 +12,7 @@ import com.andremion.floatingnavigationview.FloatingNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FloatingNavigationView mFloatingNavigationView;
+    private FloatingNavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,18 +21,18 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mFloatingNavigationView = (FloatingNavigationView) findViewById(R.id.floating_navigation_view);
-        mFloatingNavigationView.setOnClickListener(new View.OnClickListener() {
+        navView = findViewById(R.id.floating_navigation_view);
+        navView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mFloatingNavigationView.open();
+                navView.open();
             }
         });
-        mFloatingNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
-                Snackbar.make((View) mFloatingNavigationView.getParent(), item.getTitle() + " Selected!", Snackbar.LENGTH_SHORT).show();
-                mFloatingNavigationView.close();
+                Snackbar.make((View) navView.getParent(), item.getTitle() + " Selected!", Snackbar.LENGTH_SHORT).show();
+                navView.close();
                 return true;
             }
         });
@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mFloatingNavigationView.isOpened()) {
-            mFloatingNavigationView.close();
+        if (navView.isOpened()) {
+            navView.close();
         } else {
             super.onBackPressed();
         }

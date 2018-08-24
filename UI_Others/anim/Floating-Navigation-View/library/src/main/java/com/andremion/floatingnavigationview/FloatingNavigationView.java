@@ -62,7 +62,7 @@ public class FloatingNavigationView extends FloatingActionButton {
 
     private final NavigationView mNavigationView;
     private final NavigationMenuView mNavigationMenuView;
-    private final ImageView mFabView;
+    private final ImageView ivInFabView;
 
     private final Rect mFabRect = new Rect();
     private final Rect mNavigationRect = new Rect();
@@ -111,10 +111,10 @@ public class FloatingNavigationView extends FloatingActionButton {
         mNavigationView.setOnTouchListener(mNavigationTouchListener);
         mNavigationMenuView = (NavigationMenuView) mNavigationView.findViewById(R.id.design_navigation_view);
 
-        mFabView = (ImageView) mNavigationView.findViewById(R.id.fab_view);
-        mFabView.setOnClickListener(mFabClickListener);
-        mFabView.setContentDescription(getContentDescription());
-        mFabView.bringToFront();
+        ivInFabView = (ImageView) mNavigationView.findViewById(R.id.fab_view);
+        ivInFabView.setOnClickListener(mFabClickListener);
+        ivInFabView.setContentDescription(getContentDescription());
+        ivInFabView.bringToFront();
 
         // Custom attributes
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MenuView, defStyleAttr, R.style.Widget_Design_NavigationView);
@@ -213,9 +213,8 @@ public class FloatingNavigationView extends FloatingActionButton {
     private void startOpenAnimations() {
 
         // Icon
-        AnimatedVectorDrawable menuIcon = (AnimatedVectorDrawable) ContextCompat.getDrawable(getContext(),
-                R.drawable.ic_menu_animated);
-        mFabView.setImageDrawable(menuIcon);
+        AnimatedVectorDrawable menuIcon = (AnimatedVectorDrawable) ContextCompat.getDrawable(getContext(), R.drawable.ic_menu_animated);
+        ivInFabView.setImageDrawable(menuIcon);
         menuIcon.start();
 
         // Reveal
@@ -223,9 +222,7 @@ public class FloatingNavigationView extends FloatingActionButton {
         int centerY = mFabRect.centerY();
         float startRadius = getMinRadius();
         float endRadius = getMaxRadius();
-        Animator reveal = ViewAnimationUtils
-                .createCircularReveal(mNavigationView,
-                        centerX, centerY, startRadius, endRadius);
+        Animator reveal = ViewAnimationUtils .createCircularReveal(mNavigationView, centerX, centerY, startRadius, endRadius);
 
         // Fade in
         mNavigationMenuView.setAlpha(0);
@@ -242,7 +239,7 @@ public class FloatingNavigationView extends FloatingActionButton {
         // Icon
         AnimatedVectorDrawable closeIcon = (AnimatedVectorDrawable) ContextCompat.getDrawable(getContext(),
                 R.drawable.ic_close_animated);
-        mFabView.setImageDrawable(closeIcon);
+        ivInFabView.setImageDrawable(closeIcon);
         closeIcon.start();
 
         // Unreveal
@@ -272,7 +269,7 @@ public class FloatingNavigationView extends FloatingActionButton {
     private void updateFabBounds() {
         updateFabRect();
         updateNavigationRect();
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mFabView.getLayoutParams();
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) ivInFabView.getLayoutParams();
         layoutParams.width = getWidth();
         layoutParams.height = getHeight();
         layoutParams.topMargin = mFabRect.top;
@@ -281,7 +278,7 @@ public class FloatingNavigationView extends FloatingActionButton {
         } else {
             layoutParams.leftMargin = mFabRect.left;
         }
-        mFabView.setLayoutParams(layoutParams);
+        ivInFabView.setLayoutParams(layoutParams);
     }
 
     private void updateFabRect() {
@@ -424,7 +421,7 @@ public class FloatingNavigationView extends FloatingActionButton {
         //noinspection unchecked
         mNavigationView.restoreHierarchyState(ss.navigationViewState);
         if (ss.opened) {
-            mFabView.setImageResource(R.drawable.ic_close_vector);
+            ivInFabView.setImageResource(R.drawable.ic_close_vector);
             // Run on post to prevent "unable to add window -- token null is not valid" error
             post(new Runnable() {
                 @Override

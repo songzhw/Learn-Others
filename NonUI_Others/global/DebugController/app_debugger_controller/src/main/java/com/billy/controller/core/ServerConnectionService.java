@@ -94,17 +94,14 @@ public class ServerConnectionService extends Service {
     Runnable sendConnectBroadcast = new Runnable() {
         @Override
         public void run() {
-            try{
-                if (status == WAITING_CLIENT) {//未连接之前反复探测主机
-                    String action = getString(R.string.log_action, PreferenceUtil.getString(PreferenceUtil.KEY_PACKAGE_NAME, ""));
-                    Intent intent = new Intent(action);
-                    intent.putExtra("ip", IP);
-                    intent.putExtra("port", PORT);
-                    sendBroadcast(intent, "com.billy.controller.broadcast.debugger");
-                    handler.postDelayed(sendConnectBroadcast, WAITING_CLIENT_REPEAT_TIME);
-                }
-            } catch(Exception e) {
-                e.printStackTrace();
+            //未连接之前反复探测主机. 若已经找到, status就不会是wating_client了
+            if (status == WAITING_CLIENT) {
+                String action = getString(R.string.log_action, PreferenceUtil.getString(PreferenceUtil.KEY_PACKAGE_NAME, ""));
+                Intent intent = new Intent(action);
+                intent.putExtra("ip", IP);
+                intent.putExtra("port", PORT);
+                sendBroadcast(intent, "com.billy.controller.broadcast.debugger");
+                handler.postDelayed(sendConnectBroadcast, WAITING_CLIENT_REPEAT_TIME); //第二参1000ms
             }
         }
     };
@@ -216,12 +213,15 @@ public class ServerConnectionService extends Service {
             client = ss.accept();
             if (status == WAITING_CLIENT) {
                 setStatus(RUNNING);
+
                 out = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
                 new SendMessageThread().start();
+
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 while(status == RUNNING && (msg = in.readLine()) != null) {
                     processMessage(msg);
                 }
+
             }
         }
     }

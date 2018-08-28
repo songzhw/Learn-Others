@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
 
 android {
     compileSdkVersion 27
@@ -66,7 +65,7 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     // Annotation
     compile 'com.google.dagger:dagger:2.0.2'
-    apt 'com.google.dagger:dagger-compiler:2.0.2'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
     compile 'com.jakewharton:butterknife:7.0.1'
     // Rx

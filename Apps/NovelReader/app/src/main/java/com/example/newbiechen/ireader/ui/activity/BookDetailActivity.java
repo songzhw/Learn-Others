@@ -193,8 +193,8 @@ public class BookDetailActivity extends BaseMVPActivity<BookDetailContract.Prese
     }
 
     @Override
-    protected void processLogic() {
-        super.processLogic();
+    protected void initLogic() {
+        super.initLogic();
         mRefreshLayout.showLoading();
         mPresenter.refreshBookDetail(mBookId);
     }

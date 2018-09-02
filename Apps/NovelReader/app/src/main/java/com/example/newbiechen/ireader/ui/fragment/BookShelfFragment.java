@@ -41,8 +41,7 @@ import io.reactivex.disposables.Disposable;
  * Created by newbiechen on 17-4-15.
  */
 
-public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Presenter>
-        implements BookShelfContract.View {
+public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Presenter> implements BookShelfContract.View {
     private static final String TAG = "BookShelfFragment";
     @BindView(R.id.book_shelf_rv_content)
     ScrollRefreshRecyclerView mRvContent;
@@ -149,8 +148,7 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
                         File file = new File(path);
                         //判断这个本地文件是否存在
                         if (file.exists() && file.length() != 0) {
-                            ReadActivity.startActivity(getContext(),
-                                    mCollBookAdapter.getItem(pos), true);
+                            ReadActivity.startActivity(getContext(), mCollBookAdapter.getItem(pos), true);
                         } else {
                             String tip = getContext().getString(R.string.nb_bookshelf_book_not_exist);
                             //提示(从目录中移除这个文件)
@@ -158,18 +156,12 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
                                     .setTitle(getResources().getString(R.string.nb_common_tip))
                                     .setMessage(tip)
                                     .setPositiveButton(getResources().getString(R.string.nb_common_sure),
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    deleteBook(collBook);
-                                                }
-                                            })
+                                            (dialog, which) -> deleteBook(collBook))
                                     .setNegativeButton(getResources().getString(R.string.nb_common_cancel), null)
                                     .show();
                         }
                     } else {
-                        ReadActivity.startActivity(getContext(),
-                                mCollBookAdapter.getItem(pos), true);
+                        ReadActivity.startActivity(getContext(), mCollBookAdapter.getItem(pos), true);
                     }
                 }
         );

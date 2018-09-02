@@ -100,8 +100,8 @@ public class BookSortActivity extends BaseMVPActivity<BookSortContract.Presenter
     /*********************logic*******************************/
 
     @Override
-    protected void processLogic() {
-        super.processLogic();
+    protected void initLogic() {
+        super.initLogic();
 
         mRlRefresh.showLoading();
         mPresenter.refreshSortBean();

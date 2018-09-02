@@ -154,8 +154,8 @@ public class BookListActivity extends BaseTabActivity {
 
 
     @Override
-    protected void processLogic() {
-        super.processLogic();
+    protected void initLogic() {
+        super.initLogic();
         refreshTag();
     }
 

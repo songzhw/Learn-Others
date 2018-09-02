@@ -221,8 +221,8 @@ public class SearchActivity extends BaseMVPActivity<SearchContract.Presenter>
     }
 
     @Override
-    protected void processLogic() {
-        super.processLogic();
+    protected void initLogic() {
+        super.initLogic();
         //默认隐藏
         mRlRefresh.setVisibility(View.GONE);
         //获取热词

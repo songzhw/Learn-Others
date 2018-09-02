@@ -66,17 +66,13 @@ public class MainActivity extends BaseTabActivity{
 
     @Override
     protected List<Fragment> createTabFragments() {
-        initFragment();
-        return mFragmentList;
-    }
-
-    private void initFragment(){
         Fragment bookShelfFragment = new BookShelfFragment();
         Fragment communityFragment = new CommunityFragment();
         Fragment discoveryFragment = new FindFragment();
         mFragmentList.add(bookShelfFragment);
         mFragmentList.add(communityFragment);
         mFragmentList.add(discoveryFragment);
+        return mFragmentList;
     }
 
     @Override

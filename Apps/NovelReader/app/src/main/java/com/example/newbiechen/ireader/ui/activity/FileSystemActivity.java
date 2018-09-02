@@ -129,8 +129,7 @@ public class FileSystemActivity extends BaseTabActivity {
                     List<File> files = mCurFragment.getCheckedFiles();
                     //转换成CollBook,并存储
                     List<CollBookBean> collBooks = convertCollBook(files);
-                    BookRepository.getInstance()
-                            .saveCollBooks(collBooks);
+                    BookRepository.getInstance().saveCollBooks(collBooks);
                     //设置HashMap为false
                     mCurFragment.setCheckedAll(false);
                     //改变菜单状态
@@ -168,8 +167,8 @@ public class FileSystemActivity extends BaseTabActivity {
     }
 
     @Override
-    protected void processLogic() {
-        super.processLogic();
+    protected void initLogic() {
+        super.initLogic();
         mCurFragment = mLocalFragment;
     }
 

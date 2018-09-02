@@ -111,7 +111,7 @@ public class BookDiscussionActivity extends BaseActivity implements SelectorView
     }
     /*******************************logic method***********************************************/
     @Override
-    protected void processLogic() {
+    protected void initLogic() {
         Fragment fragment = null;
 
         switch (mType){

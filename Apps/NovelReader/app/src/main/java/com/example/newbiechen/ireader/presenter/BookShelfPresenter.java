@@ -35,8 +35,7 @@ public class BookShelfPresenter extends RxPresenter<BookShelfContract.View>
 
     @Override
     public void refreshCollBooks() {
-        List<CollBookBean> collBooks = BookRepository
-                .getInstance().getCollBooks();
+        List<CollBookBean> collBooks = BookRepository.getInstance().getCollBooks();
         mView.finishRefresh(collBooks);
     }
 

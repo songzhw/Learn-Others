@@ -17,7 +17,7 @@ public abstract class BaseMVPActivity<T extends BaseContract.BasePresenter> exte
     protected abstract T bindPresenter();
 
     @Override
-    protected void processLogic() {
+    protected void initLogic() {
         attachView(bindPresenter());
     }
 

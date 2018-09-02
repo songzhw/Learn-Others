@@ -3,9 +3,7 @@ package com.example.newbiechen.ireader.widget.refresh;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.LayoutRes;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.Layout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +25,7 @@ import butterknife.ButterKnife;
 public abstract class ScrollRefreshLayout extends SwipeRefreshLayout {
     private static final int ATTR_NULL = -1;
     /********************************************/
-    private FrameLayout mFlContent;
+    private FrameLayout flayContent;
     private TextView mTvTip;
     private View mEmptyView;
     private View mContentView;
@@ -122,32 +120,28 @@ public abstract class ScrollRefreshLayout extends SwipeRefreshLayout {
     }
 
     private void initView(){
-        View view = LayoutInflater.from(mContext)
-                .inflate(R.layout.layout_scroll_refresh,this,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_scroll_refresh,this,false);
         addView(view);
-        //init View
-        mFlContent = ButterKnife.findById(view,R.id.scroll_refresh_fl_content);
-
+        flayContent = ButterKnife.findById(view,R.id.scroll_refresh_fl_content);
 
         mTvTip = ButterKnife.findById(view,R.id.scroll_refresh_tv_tip);
 
-        mEmptyView = inflateId(mFlContent,mEmptyId);
-        mFlContent.addView(mEmptyView);
+        mEmptyView = inflateId(flayContent,mEmptyId);
+        flayContent.addView(mEmptyView);
 
-        mContentView = getContentView(mFlContent);
+        mContentView = getContentView(flayContent);
 
         //默认不显示
         if (mContentView != null){
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                     LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT
             );
-            mFlContent.addView(mContentView,params);
+            flayContent.addView(mContentView,params);
             mContentView.setVisibility(GONE);
         }
     }
 
     private View inflateId(ViewGroup parent,@LayoutRes int id){
-        return LayoutInflater.from(mContext)
-                .inflate(id,parent,false);
+        return LayoutInflater.from(mContext).inflate(id,parent,false);
     }
 }

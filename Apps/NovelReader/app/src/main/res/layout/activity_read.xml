@@ -144,12 +144,6 @@
                     android:drawableTop="@drawable/ic_read_menu_night"
                     android:text="@string/nb.mode.night" />
 
-                <!--                <TextView
-                                    style="@style/NB.Theme.TextAppearance.Read.BottomMenu.Button"
-                                    android:id="@+id/read_tv_download"
-                                    android:drawableTop="@drawable/ic_read_menu_download"
-                                    android:text="@string/nb.read.download" />-->
-
                 <TextView
                     android:id="@+id/read_tv_setting"
                     style="@style/NB.Theme.TextAppearance.Read.BottomMenu.Button"
@@ -188,7 +182,9 @@
                 android:id="@+id/read_iv_category"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="vertical"></ListView>
+                android:scrollbars="vertical"/>
         </RelativeLayout>
+
     </LinearLayout>
+
 </android.support.v4.widget.DrawerLayout>

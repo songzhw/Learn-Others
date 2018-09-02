@@ -1,5 +1,6 @@
 package com.example.newbiechen.ireader.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -66,8 +67,7 @@ import static android.view.View.VISIBLE;
  * Created by newbiechen on 17-5-16.
  */
 
-public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
-        implements ReadContract.View {
+public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter> implements ReadContract.View {
     private static final String TAG = "ReadActivity";
     public static final int REQUEST_MORE_SETTING = 1;
     public static final String EXTRA_COLL_BOOK = "extra_coll_book";
@@ -119,7 +119,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
     TextView mTvSetting;
     /***************left slide*******************************/
     @BindView(R.id.read_iv_category)
-    ListView mLvCategory;
+    ListView lvTableContent;
     /*****************view******************/
     private ReadSettingDialog mSettingDialog;
     private PageLoader mPageLoader;
@@ -127,10 +127,11 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
     private Animation mTopOutAnim;
     private Animation mBottomInAnim;
     private Animation mBottomOutAnim;
-    private CategoryAdapter mCategoryAdapter;
+    private CategoryAdapter adapterTableContent;
     private CollBookBean mCollBook;
     //控制屏幕常亮
     private PowerManager.WakeLock mWakeLock;
+    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -138,7 +139,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
 
             switch (msg.what) {
                 case WHAT_CATEGORY:
-                    mLvCategory.setSelection(mPageLoader.getChapterPos());
+                    lvTableContent.setSelection(mPageLoader.getChapterPos());
                     break;
                 case WHAT_CHAPTER:
                     mPageLoader.openChapter();
@@ -147,7 +148,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
         }
     };
     // 接收电池信息和时间更新的广播
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver betteryTimeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_BATTERY_CHANGED)) {
@@ -163,7 +164,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
 
     // 亮度调节监听
     // 由于亮度调节没有 Broadcast 而是直接修改 ContentProvider 的。所以需要创建一个 Observer 来监听 ContentProvider 的变化情况。
-    private ContentObserver mBrightObserver = new ContentObserver(new Handler()) {
+    private ContentObserver brightObserver = new ContentObserver(new Handler()) {
         @Override
         public void onChange(boolean selfChange) {
             onChange(selfChange, null);
@@ -201,8 +202,8 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
 
     public static void startActivity(Context context, CollBookBean collBook, boolean isCollected) {
         context.startActivity(new Intent(context, ReadActivity.class)
-                .putExtra(EXTRA_IS_COLLECTED, isCollected)
-                .putExtra(EXTRA_COLL_BOOK, collBook));
+                                    .putExtra(EXTRA_IS_COLLECTED, isCollected)
+                                    .putExtra(EXTRA_COLL_BOOK, collBook));
     }
 
     @Override
@@ -262,7 +263,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
         intentFilter.addAction(Intent.ACTION_TIME_TICK);
-        registerReceiver(mReceiver, intentFilter);
+        registerReceiver(betteryTimeReceiver, intentFilter);
 
         //设置当前Activity的Brightness
         if (ReadSettingManager.getInstance().isBrightnessAuto()) {
@@ -276,9 +277,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
         mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "keep bright");
 
         //隐藏StatusBar
-        mPvPage.post(
-                () -> hideSystemBar()
-        );
+        mPvPage.post( () -> hideSystemBar() );
 
         //初始化TopMenu
         initTopMenu();
@@ -327,35 +326,35 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
     }
 
     private void setUpAdapter() {
-        mCategoryAdapter = new CategoryAdapter();
-        mLvCategory.setAdapter(mCategoryAdapter);
-        mLvCategory.setFastScrollEnabled(true);
+        adapterTableContent = new CategoryAdapter();
+        lvTableContent.setAdapter(adapterTableContent);
+        lvTableContent.setFastScrollEnabled(true);
     }
 
     // 注册亮度观察者
     private void registerBrightObserver() {
         try {
-            if (mBrightObserver != null) {
+            if (brightObserver != null) {
                 if (!isRegistered) {
                     final ContentResolver cr = getContentResolver();
-                    cr.unregisterContentObserver(mBrightObserver);
-                    cr.registerContentObserver(BRIGHTNESS_MODE_URI, false, mBrightObserver);
-                    cr.registerContentObserver(BRIGHTNESS_URI, false, mBrightObserver);
-                    cr.registerContentObserver(BRIGHTNESS_ADJ_URI, false, mBrightObserver);
+                    cr.unregisterContentObserver(brightObserver);
+                    cr.registerContentObserver(BRIGHTNESS_MODE_URI, false, brightObserver);
+                    cr.registerContentObserver(BRIGHTNESS_URI, false, brightObserver);
+                    cr.registerContentObserver(BRIGHTNESS_ADJ_URI, false, brightObserver);
                     isRegistered = true;
                 }
             }
         } catch (Throwable throwable) {
-            LogUtils.e(TAG, "register mBrightObserver error! " + throwable);
+            LogUtils.e(TAG, "register brightObserver error! " + throwable);
         }
     }
 
     //解注册
     private void unregisterBrightObserver() {
         try {
-            if (mBrightObserver != null) {
+            if (brightObserver != null) {
                 if (isRegistered) {
-                    getContentResolver().unregisterContentObserver(mBrightObserver);
+                    getContentResolver().unregisterContentObserver(brightObserver);
                     isRegistered = false;
                 }
             }
@@ -373,7 +372,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
 
                     @Override
                     public void onChapterChange(int pos) {
-                        mCategoryAdapter.setChapter(pos);
+                        adapterTableContent.setChapter(pos);
                     }
 
                     @Override
@@ -389,7 +388,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
                         for (TxtChapter chapter : chapters) {
                             chapter.setTitle(StringUtils.convertCC(chapter.getTitle(), mPvPage.getContext()));
                         }
-                        mCategoryAdapter.refreshItems(chapters);
+                        adapterTableContent.refreshItems(chapters);
                     }
 
                     @Override
@@ -467,7 +466,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
             }
         });
 
-        mLvCategory.setOnItemClickListener(
+        lvTableContent.setOnItemClickListener(
                 (parent, view, position, id) -> {
                     mDlSlide.closeDrawer(Gravity.START);
                     mPageLoader.skipToChapter(position);
@@ -477,8 +476,8 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
         mTvCategory.setOnClickListener(
                 (v) -> {
                     //移动到指定位置
-                    if (mCategoryAdapter.getCount() > 0) {
-                        mLvCategory.setSelection(mPageLoader.getChapterPos());
+                    if (adapterTableContent.getCount() > 0) {
+                        lvTableContent.setSelection(mPageLoader.getChapterPos());
                     }
                     //切换菜单
                     toggleMenu(true);
@@ -496,7 +495,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
         mTvPreChapter.setOnClickListener(
                 (v) -> {
                     if (mPageLoader.skipPreChapter()) {
-                        mCategoryAdapter.setChapter(mPageLoader.getChapterPos());
+                        adapterTableContent.setChapter(mPageLoader.getChapterPos());
                     }
                 }
         );
@@ -504,7 +503,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
         mTvNextChapter.setOnClickListener(
                 (v) -> {
                     if (mPageLoader.skipNextChapter()) {
-                        mCategoryAdapter.setChapter(mPageLoader.getChapterPos());
+                        adapterTableContent.setChapter(mPageLoader.getChapterPos());
                     }
                 }
         );
@@ -612,8 +611,8 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
     }
 
     @Override
-    protected void processLogic() {
-        super.processLogic();
+    protected void initLogic() {
+        super.initLogic();
         // 如果是已经收藏的，那么就从数据库中获取目录
         if (isCollected) {
             Disposable disposable = BookRepository.getInstance()
@@ -668,7 +667,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
             mHandler.sendEmptyMessage(WHAT_CHAPTER);
         }
         // 当完成章节的时候，刷新列表
-        mCategoryAdapter.notifyDataSetChanged();
+        adapterTableContent.notifyDataSetChanged();
     }
 
     @Override
@@ -760,7 +759,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mReceiver);
+        unregisterReceiver(betteryTimeReceiver);
 
         mHandler.removeMessages(WHAT_CATEGORY);
         mHandler.removeMessages(WHAT_CHAPTER);

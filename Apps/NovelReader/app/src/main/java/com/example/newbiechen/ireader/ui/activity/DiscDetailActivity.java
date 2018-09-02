@@ -55,8 +55,8 @@ public class DiscDetailActivity extends BaseActivity {
     }
 
     @Override
-    protected void processLogic() {
-        super.processLogic();
+    protected void initLogic() {
+        super.initLogic();
         Fragment fragment = null;
         switch (mCommentType){
             case REVIEW:

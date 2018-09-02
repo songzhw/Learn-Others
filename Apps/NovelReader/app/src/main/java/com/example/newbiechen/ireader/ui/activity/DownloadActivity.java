@@ -89,8 +89,8 @@ public class DownloadActivity extends BaseActivity implements DownloadService.On
     }
 
     @Override
-    protected void processLogic() {
-        super.processLogic();
+    protected void initLogic() {
+        super.initLogic();
 
         mConn = new ServiceConnection() {
             @Override

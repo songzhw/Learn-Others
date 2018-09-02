@@ -113,8 +113,8 @@ public class BillboardActivity extends BaseMVPActivity<BillboardContract.Present
     }
 
     @Override
-    protected void processLogic() {
-        super.processLogic();
+    protected void initLogic() {
+        super.initLogic();
 
         mRlRefresh.showLoading();
         mPresenter.loadBillboardList();

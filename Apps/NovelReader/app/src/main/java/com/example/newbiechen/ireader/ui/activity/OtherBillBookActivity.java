@@ -82,8 +82,8 @@ public class OtherBillBookActivity extends BaseMVPActivity<BillBookContract.Pres
     }
 
     @Override
-    protected void processLogic() {
-        super.processLogic();
+    protected void initLogic() {
+        super.initLogic();
         mRefreshLayout.showLoading();
         mPresenter.refreshBookBrief(mBillId);
     }

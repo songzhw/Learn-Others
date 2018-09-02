@@ -42,8 +42,7 @@ public class BookRepository {
     private DaoSession mSession;
     private CollBookBeanDao mCollBookDao;
     private BookRepository(){
-        mSession = DaoDbHelper.getInstance()
-                .getSession();
+        mSession = DaoDbHelper.getInstance().getSession();
         mCollBookDao = mSession.getCollBookBeanDao();
     }
 

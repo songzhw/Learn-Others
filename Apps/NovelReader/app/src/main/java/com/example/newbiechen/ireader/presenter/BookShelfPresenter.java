@@ -65,7 +65,7 @@ public class BookShelfPresenter extends RxPresenter<BookShelfContract.View>
                                 .saveCollBooksWithAsync(collBooks);
                     }
                 })
-                .compose(RxUtils::toSimpleSingle)
+                .compose(RxUtils::ioMain)
                 .subscribe(
                         beans -> {
                             mView.finishRefresh(beans);
@@ -125,7 +125,7 @@ public class BookShelfPresenter extends RxPresenter<BookShelfContract.View>
                 return newCollBooks;
             }
         })
-                .compose(RxUtils::toSimpleSingle)
+                .compose(RxUtils::ioMain)
                 .subscribe(new SingleObserver<List<CollBookBean>>() {
                     @Override
                     public void onSubscribe(Disposable d) {

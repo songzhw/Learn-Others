@@ -617,7 +617,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter> implem
         if (isCollected) {
             Disposable disposable = BookRepository.getInstance()
                     .getBookChaptersInRx(mBookId)
-                    .compose(RxUtils::toSimpleSingle)
+                    .compose(RxUtils::ioMain)
                     .subscribe(
                             (bookChapterBeen, throwable) -> {
                                 // 设置 CollBook

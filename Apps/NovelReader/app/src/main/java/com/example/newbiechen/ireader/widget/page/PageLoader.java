@@ -24,7 +24,6 @@ import com.example.newbiechen.ireader.utils.StringUtils;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -1141,7 +1140,7 @@ public abstract class PageLoader {
             public void subscribe(SingleEmitter<List<TxtPage>> e) throws Exception {
                 e.onSuccess(loadPageList(nextChapter));
             }
-        }).compose(RxUtils::toSimpleSingle)
+        }).compose(RxUtils::ioMain)
                 .subscribe(new SingleObserver<List<TxtPage>>() {
                     @Override
                     public void onSubscribe(Disposable d) {

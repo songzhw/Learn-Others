@@ -20,7 +20,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -370,13 +369,10 @@ public class LocalPageLoader extends PageLoader {
         }
 
         // 通过RxJava异步处理分章事件
-        Single.create(new SingleOnSubscribe<Void>() {
-            @Override
-            public void subscribe(SingleEmitter<Void> e) throws Exception {
-                loadChapters();
-                e.onSuccess(new Void());
-            }
-        }).compose(RxUtils::toSimpleSingle)
+        Single.create((SingleOnSubscribe<Void>) e -> {
+            loadChapters();
+            e.onSuccess(new Void());
+        }).compose(RxUtils::ioMain)
                 .subscribe(new SingleObserver<Void>() {
                     @Override
                     public void onSubscribe(Disposable d) {

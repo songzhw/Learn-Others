@@ -19,7 +19,7 @@ public class SearchPresenter extends RxPresenter<SearchContract.View>
     public void searchHotWord() {
         Disposable disp = RemoteRepository.getInstance()
                 .getHotWords()
-                .compose(RxUtils::toSimpleSingle)
+                .compose(RxUtils::ioMain)
                 .subscribe(
                         bean -> {
                             mView.finishHotWords(bean);
@@ -35,7 +35,7 @@ public class SearchPresenter extends RxPresenter<SearchContract.View>
     public void searchKeyWord(String query) {
         Disposable disp = RemoteRepository.getInstance()
                 .getKeyWords(query)
-                .compose(RxUtils::toSimpleSingle)
+                .compose(RxUtils::ioMain)
                 .subscribe(
                         bean -> {
                             mView.finishKeyWords(bean);
@@ -51,7 +51,7 @@ public class SearchPresenter extends RxPresenter<SearchContract.View>
     public void searchBook(String query) {
         Disposable disp = RemoteRepository.getInstance()
                 .getSearchBooks(query)
-                .compose(RxUtils::toSimpleSingle)
+                .compose(RxUtils::ioMain)
                 .subscribe(
                         bean -> {
                             mView.finishBooks(bean);

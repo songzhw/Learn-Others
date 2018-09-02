@@ -49,7 +49,7 @@ public class ReadPresenter extends RxPresenter<ReadContract.View>
                         }
                     }
                 })
-                .compose(RxUtils::toSimpleSingle)
+                .compose(RxUtils::ioMain)
                 .subscribe(
                         beans -> {
                             mView.showCategory(beans);

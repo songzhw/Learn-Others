@@ -113,7 +113,7 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
                                 progressDialog.setMessage("正在删除中");
                                 progressDialog.show();
                                 BookRepository.getInstance().deleteCollBookInRx(event.collBook)
-                                        .compose(RxUtils::toSimpleSingle)
+                                        .compose(RxUtils::ioMain)
                                         .subscribe(
                                                 (Void) -> {
                                                     mCollBookAdapter.removeItem(event.collBook);

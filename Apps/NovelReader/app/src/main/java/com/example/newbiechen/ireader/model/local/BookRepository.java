@@ -164,16 +164,13 @@ public class BookRepository {
 
     //获取书籍列表
     public Single<List<BookChapterBean>> getBookChaptersInRx(String bookId){
-        return Single.create(new SingleOnSubscribe<List<BookChapterBean>>() {
-            @Override
-            public void subscribe(SingleEmitter<List<BookChapterBean>> e) throws Exception {
-                List<BookChapterBean> beans = mSession
-                        .getBookChapterBeanDao()
-                        .queryBuilder()
-                        .where(BookChapterBeanDao.Properties.BookId.eq(bookId))
-                        .list();
-                e.onSuccess(beans);
-            }
+        return Single.create(singleEmitter -> {
+            List<BookChapterBean> beans = mSession
+                    .getBookChapterBeanDao()
+                    .queryBuilder()
+                    .where(BookChapterBeanDao.Properties.BookId.eq(bookId))
+                    .list();
+            singleEmitter.onSuccess(beans);
         });
     }
 

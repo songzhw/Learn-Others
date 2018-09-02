@@ -7,10 +7,6 @@ import android.content.Intent;
 import com.example.newbiechen.ireader.service.DownloadService;
 import com.squareup.leakcanary.LeakCanary;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
 /**
  * Created by newbiechen on 17-4-15.
  */

@@ -3,7 +3,7 @@ package com.example.newbiechen.ireader.model.local;
 import android.util.Log;
 
 import com.example.newbiechen.ireader.model.bean.BookChapterBean;
-import com.example.newbiechen.ireader.model.bean.BookRecordBean;
+import com.example.newbiechen.ireader.model.bean.ReadingRecordBean;
 import com.example.newbiechen.ireader.model.bean.ChapterInfoBean;
 import com.example.newbiechen.ireader.model.bean.CollBookBean;
 import com.example.newbiechen.ireader.model.gen.BookChapterBeanDao;
@@ -139,7 +139,7 @@ public class BookRepository {
         }
     }
 
-    public void saveBookRecord(BookRecordBean bean){
+    public void saveBookRecord(ReadingRecordBean bean){
         mSession.getBookRecordBeanDao()
                 .insertOrReplace(bean);
     }
@@ -175,7 +175,7 @@ public class BookRepository {
     }
 
     //获取阅读记录
-    public BookRecordBean getBookRecord(String bookId){
+    public ReadingRecordBean getBookRecord(String bookId){
         return mSession.getBookRecordBeanDao()
                 .queryBuilder()
                 .where(BookRecordBeanDao.Properties.BookId.eq(bookId))

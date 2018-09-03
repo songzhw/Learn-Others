@@ -8,7 +8,7 @@ import org.greenrobot.greendao.annotation.Generated;
  * Created by newbiechen on 17-5-20.
  */
 @Entity
-public class BookRecordBean{
+public class ReadingRecordBean {
     //所属的书的id
     @Id
     private String bookId;
@@ -18,14 +18,14 @@ public class BookRecordBean{
     private int pagePos;
 
     @Generated(hash = 340380968)
-    public BookRecordBean(String bookId, int chapter, int pagePos) {
+    public ReadingRecordBean(String bookId, int chapter, int pagePos) {
         this.bookId = bookId;
         this.chapter = chapter;
         this.pagePos = pagePos;
     }
 
     @Generated(hash = 398068002)
-    public BookRecordBean() {
+    public ReadingRecordBean() {
     }
 
     public String getBookId() {

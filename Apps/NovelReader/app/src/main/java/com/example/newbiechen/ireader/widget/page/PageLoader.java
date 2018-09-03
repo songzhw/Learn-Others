@@ -11,7 +11,7 @@ import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.TextPaint;
 
-import com.example.newbiechen.ireader.model.bean.BookRecordBean;
+import com.example.newbiechen.ireader.model.bean.ReadingRecordBean;
 import com.example.newbiechen.ireader.model.bean.CollBookBean;
 import com.example.newbiechen.ireader.model.local.BookRepository;
 import com.example.newbiechen.ireader.model.local.ReadSettingManager;
@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.disposables.Disposable;
@@ -88,7 +87,7 @@ public abstract class PageLoader {
     // 被遮盖的页，或者认为被取消显示的页
     private TxtPage mCancelPage;
     // 存储阅读记录类
-    private BookRecordBean mBookRecord;
+    private ReadingRecordBean readingRecord;
 
     private Disposable mPreLoadDisp;
 
@@ -551,31 +550,31 @@ public abstract class PageLoader {
             return;
         }
 
-        mBookRecord.setBookId(mCollBook.get_id());
-        mBookRecord.setChapter(mCurChapterPos);
+        readingRecord.setBookId(mCollBook.get_id());
+        readingRecord.setChapter(mCurChapterPos);
 
         if (mCurPage != null) {
-            mBookRecord.setPagePos(mCurPage.position);
+            readingRecord.setPagePos(mCurPage.position);
         } else {
-            mBookRecord.setPagePos(0);
+            readingRecord.setPagePos(0);
         }
 
         //存储到数据库
         BookRepository.getInstance()
-                .saveBookRecord(mBookRecord);
+                .saveBookRecord(readingRecord);
     }
 
     /**
      * 初始化书籍
      */
     private void prepareBook() {
-        mBookRecord = BookRepository.getInstance().getBookRecord(mCollBook.get_id());
+        readingRecord = BookRepository.getInstance().getBookRecord(mCollBook.get_id());
 
-        if (mBookRecord == null) {
-            mBookRecord = new BookRecordBean();
+        if (readingRecord == null) {
+            readingRecord = new ReadingRecordBean();
         }
 
-        mCurChapterPos = mBookRecord.getChapter();
+        mCurChapterPos = readingRecord.getChapter();
         mLastChapterPos = mCurChapterPos;
     }
 
@@ -606,7 +605,7 @@ public abstract class PageLoader {
         if (parseCurChapter()) {
             // 如果章节从未打开
             if (!isChapterOpen) {
-                int position = mBookRecord.getPagePos();
+                int position = readingRecord.getPagePos();
 
                 // 防止记录页的页号，大于当前最大页号
                 if (position >= mCurPageList.size()) {

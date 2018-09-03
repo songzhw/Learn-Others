@@ -424,8 +424,8 @@ public class LocalPageLoader extends PageLoader {
     protected BufferedReader getChapterReader(TxtChapter chapter) throws Exception {
         //从文件中获取数据
         byte[] content = getChapterContent(chapter);
-        ByteArrayInputStream bais = new ByteArrayInputStream(content);
-        BufferedReader br = new BufferedReader(new InputStreamReader(bais, mCharset.getName()));
+        ByteArrayInputStream in = new ByteArrayInputStream(content);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, mCharset.getName()));
         return br;
     }
 

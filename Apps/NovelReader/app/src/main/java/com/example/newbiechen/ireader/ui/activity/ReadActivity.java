@@ -386,7 +386,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter> implem
                     @Override
                     public void onCategoryFinish(List<TxtChapter> chapters) {
                         for (TxtChapter chapter : chapters) {
-                            chapter.setTitle(StringUtils.convertCC(chapter.getTitle(), mPvPage.getContext()));
+                            chapter.setTitle(StringUtils.convertString2TranditionalChinese(chapter.getTitle(), mPvPage.getContext()));
                         }
                         adapterTableContent.refreshItems(chapters);
                     }
@@ -469,7 +469,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter> implem
         lvTableContent.setOnItemClickListener(
                 (parent, view, position, id) -> {
                     mDlSlide.closeDrawer(Gravity.START);
-                    mPageLoader.skipToChapter(position);
+                    mPageLoader.goToChapter(position);
                 }
         );
 

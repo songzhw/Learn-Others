@@ -1,22 +1,16 @@
 package com.example.newbiechen.ireader.model.bean;
 
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.example.newbiechen.ireader.App;
 import com.example.newbiechen.ireader.utils.StringUtils;
-import com.google.gson.annotations.SerializedName;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.OrderBy;
 import org.greenrobot.greendao.annotation.ToMany;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import org.greenrobot.greendao.DaoException;
 import com.example.newbiechen.ireader.model.gen.DaoSession;
@@ -108,7 +102,7 @@ public class CollBookBean implements Parcelable{
     }
 
     public String getTitle() {
-        return StringUtils.convertCC(title, App.getContext());
+        return StringUtils.convertString2TranditionalChinese(title, App.getContext());
     }
 
     public void setTitle(String title) {
@@ -116,7 +110,7 @@ public class CollBookBean implements Parcelable{
     }
 
     public String getAuthor() {
-        return StringUtils.convertCC(author, App.getContext());
+        return StringUtils.convertString2TranditionalChinese(author, App.getContext());
     }
 
     public void setAuthor(String author) {
@@ -124,7 +118,7 @@ public class CollBookBean implements Parcelable{
     }
 
     public String getShortIntro() {
-        return StringUtils.convertCC(shortIntro, App.getContext());
+        return StringUtils.convertString2TranditionalChinese(shortIntro, App.getContext());
     }
 
     public void setShortIntro(String shortIntro) {
@@ -132,7 +126,7 @@ public class CollBookBean implements Parcelable{
     }
 
     public String getCover() {
-        return StringUtils.convertCC(cover, App.getContext());
+        return StringUtils.convertString2TranditionalChinese(cover, App.getContext());
     }
 
     public void setCover(String cover) {
@@ -164,7 +158,7 @@ public class CollBookBean implements Parcelable{
     }
 
     public String getUpdated() {
-        return StringUtils.convertCC(updated, App.getContext());
+        return StringUtils.convertString2TranditionalChinese(updated, App.getContext());
     }
 
     public void setUpdated(String updated) {
@@ -180,7 +174,7 @@ public class CollBookBean implements Parcelable{
     }
 
     public String getLastChapter() {
-        return StringUtils.convertCC(lastChapter, App.getContext());
+        return StringUtils.convertString2TranditionalChinese(lastChapter, App.getContext());
     }
 
     public void setLastChapter(String lastChapter) {
@@ -216,7 +210,7 @@ public class CollBookBean implements Parcelable{
     }
 
     public String getLastRead() {
-        return StringUtils.convertCC(lastRead, App.getContext());
+        return StringUtils.convertString2TranditionalChinese(lastRead, App.getContext());
     }
 
     public void setLastRead(String lastRead) {

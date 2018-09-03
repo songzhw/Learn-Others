@@ -275,7 +275,7 @@ public abstract class PageLoader {
      *
      * @param pos:从 0 开始。
      */
-    public void skipToChapter(int pos) {
+    public void goToChapter(int pos) {
         // 设置参数
         mCurChapterPos = pos;
 
@@ -569,8 +569,7 @@ public abstract class PageLoader {
      * 初始化书籍
      */
     private void prepareBook() {
-        mBookRecord = BookRepository.getInstance()
-                .getBookRecord(mCollBook.get_id());
+        mBookRecord = BookRepository.getInstance().getBookRecord(mCollBook.get_id());
 
         if (mBookRecord == null) {
             mBookRecord = new BookRecordBean();
@@ -1124,8 +1123,7 @@ public abstract class PageLoader {
         int nextChapter = mCurChapterPos + 1;
 
         // 如果不存在下一章，且下一章没有数据，则不进行加载。
-        if (!hasNextChapter()
-                || !hasChapterData(mChapterList.get(nextChapter))) {
+        if (!hasNextChapter() || !hasChapterData(mChapterList.get(nextChapter))) {
             return;
         }
 
@@ -1135,12 +1133,9 @@ public abstract class PageLoader {
         }
 
         //调用异步进行预加载加载
-        Single.create(new SingleOnSubscribe<List<TxtPage>>() {
-            @Override
-            public void subscribe(SingleEmitter<List<TxtPage>> e) throws Exception {
-                e.onSuccess(loadPageList(nextChapter));
-            }
-        }).compose(RxUtils::ioMain)
+        Single
+                .create((SingleOnSubscribe<List<TxtPage>>) e -> e.onSuccess(loadPageList(nextChapter))     )
+                .compose(RxUtils::ioMain)
                 .subscribe(new SingleObserver<List<TxtPage>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -1240,7 +1235,7 @@ public abstract class PageLoader {
         String paragraph = chapter.getTitle();//默认展示标题
         try {
             while (showTitle || (paragraph = br.readLine()) != null) {
-                paragraph = StringUtils.convertCC(paragraph, mContext);
+                paragraph = StringUtils.convertString2TranditionalChinese(paragraph, mContext);
                 // 重置段落
                 if (!showTitle) {
                     paragraph = paragraph.replaceAll("\\s", "");
@@ -1265,7 +1260,7 @@ public abstract class PageLoader {
                         // 创建Page
                         TxtPage page = new TxtPage();
                         page.position = pages.size();
-                        page.title = StringUtils.convertCC(chapter.getTitle(), mContext);
+                        page.title = StringUtils.convertString2TranditionalChinese(chapter.getTitle(), mContext);
                         page.lines = new ArrayList<>(lines);
                         page.titleLines = titleLinesCount;
                         pages.add(page);
@@ -1279,11 +1274,9 @@ public abstract class PageLoader {
 
                     //测量一行占用的字节数
                     if (showTitle) {
-                        wordCount = mTitlePaint.breakText(paragraph,
-                                true, mVisibleWidth, null);
+                        wordCount = mTitlePaint.breakText(paragraph, true, mVisibleWidth, null); //Paint的方法
                     } else {
-                        wordCount = mTextPaint.breakText(paragraph,
-                                true, mVisibleWidth, null);
+                        wordCount = mTextPaint.breakText(paragraph, true, mVisibleWidth, null);
                     }
 
                     subStr = paragraph.substring(0, wordCount);
@@ -1318,7 +1311,7 @@ public abstract class PageLoader {
                 //创建Page
                 TxtPage page = new TxtPage();
                 page.position = pages.size();
-                page.title = StringUtils.convertCC(chapter.getTitle(), mContext);
+                page.title = StringUtils.convertString2TranditionalChinese(chapter.getTitle(), mContext);
                 page.lines = new ArrayList<>(lines);
                 page.titleLines = titleLinesCount;
                 pages.add(page);

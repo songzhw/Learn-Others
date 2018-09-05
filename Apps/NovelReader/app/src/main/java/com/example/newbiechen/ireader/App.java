@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.newbiechen.ireader.service.DownloadService;
+import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 
 /**
@@ -18,14 +19,15 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        // 初始化内存分析工具
-        if (!LeakCanary.isInAnalyzerProcess(this)) {
-            LeakCanary.install(this);
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return;
         }
+        LeakCanary.install(this);
 
         sInstance = this;
         startService(new Intent(getContext(), DownloadService.class));
 
+        Stetho.initializeWithDefaults(this);
 
     }
 

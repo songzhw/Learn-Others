@@ -17,14 +17,14 @@ public class ReadingRecordBean {
     //当前的页码
     private int pagePos;
 
-    @Generated(hash = 340380968)
+    @Generated(hash = 2124439422)
     public ReadingRecordBean(String bookId, int chapter, int pagePos) {
         this.bookId = bookId;
         this.chapter = chapter;
         this.pagePos = pagePos;
     }
 
-    @Generated(hash = 398068002)
+    @Generated(hash = 679719191)
     public ReadingRecordBean() {
     }
 

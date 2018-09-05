@@ -7,10 +7,10 @@ import com.example.newbiechen.ireader.model.bean.ReadingRecordBean;
 import com.example.newbiechen.ireader.model.bean.ChapterInfoBean;
 import com.example.newbiechen.ireader.model.bean.CollBookBean;
 import com.example.newbiechen.ireader.model.gen.BookChapterBeanDao;
-import com.example.newbiechen.ireader.model.gen.BookRecordBeanDao;
 import com.example.newbiechen.ireader.model.gen.CollBookBeanDao;
 import com.example.newbiechen.ireader.model.gen.DaoSession;
 import com.example.newbiechen.ireader.model.gen.DownloadTaskBeanDao;
+import com.example.newbiechen.ireader.model.gen.ReadingRecordBeanDao;
 import com.example.newbiechen.ireader.utils.BookManager;
 import com.example.newbiechen.ireader.utils.Constant;
 import com.example.newbiechen.ireader.utils.FileUtils;
@@ -140,7 +140,7 @@ public class BookRepository {
     }
 
     public void saveBookRecord(ReadingRecordBean bean){
-        mSession.getBookRecordBeanDao()
+        mSession.getReadingRecordBeanDao()
                 .insertOrReplace(bean);
     }
 
@@ -176,9 +176,9 @@ public class BookRepository {
 
     //获取阅读记录
     public ReadingRecordBean getBookRecord(String bookId){
-        return mSession.getBookRecordBeanDao()
+        return mSession.getReadingRecordBeanDao()
                 .queryBuilder()
-                .where(BookRecordBeanDao.Properties.BookId.eq(bookId))
+                .where(ReadingRecordBeanDao.Properties.BookId.eq(bookId))
                 .unique();
     }
 
@@ -249,9 +249,9 @@ public class BookRepository {
     }
 
     public void deleteBookRecord(String id){
-        mSession.getBookRecordBeanDao()
+        mSession.getReadingRecordBeanDao()
                 .queryBuilder()
-                .where(BookRecordBeanDao.Properties.BookId.eq(id))
+                .where(ReadingRecordBeanDao.Properties.BookId.eq(id))
                 .buildDelete()
                 .executeDeleteWithoutDetachingEntities();
     }

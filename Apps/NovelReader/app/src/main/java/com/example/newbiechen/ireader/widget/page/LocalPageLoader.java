@@ -267,6 +267,7 @@ public class LocalPageLoader extends PageLoader {
      * @param chapter
      * @return
      */
+    // TxtChapter是一个类, 有start, end属性. 但没有string属性. 也就是个记录了位置信息的类
     private byte[] getChapterContent(TxtChapter chapter) {
         RandomAccessFile bookStream = null;
         try {

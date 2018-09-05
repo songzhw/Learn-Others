@@ -17,13 +17,16 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        sInstance = this;
-        startService(new Intent(getContext(), DownloadService.class));
 
         // 初始化内存分析工具
         if (!LeakCanary.isInAnalyzerProcess(this)) {
             LeakCanary.install(this);
         }
+
+        sInstance = this;
+        startService(new Intent(getContext(), DownloadService.class));
+
+
     }
 
     public static Context getContext(){

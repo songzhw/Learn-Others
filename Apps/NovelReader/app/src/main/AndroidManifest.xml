@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.example.newbiechen.ireader">
+<manifest package="com.example.newbiechen.ireader"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name=".App"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.activity.SplashActivity" android:theme="@style/SplashTheme"/>
+        <activity
+            android:name=".ui.activity.SplashActivity"
+            android:theme="@style/SplashTheme"/>
 
         <activity android:name=".ui.activity.MainActivity">
             <intent-filter>
@@ -36,23 +38,22 @@
         <activity android:name=".ui.activity.OtherBillBookActivity"/>
         <activity android:name=".ui.activity.BookDetailActivity"/>
         <activity android:name=".ui.activity.DownloadActivity"/>
-        <activity android:name=".ui.activity.ReadActivity">
-        </activity>
+        <activity android:name=".ui.activity.ReadActivity"/>
         <activity android:name=".ui.activity.FileSystemActivity"/>
-        <activity android:name=".ui.activity.CommunityActivity" />
-        <activity android:name=".ui.activity.MoreSettingActivity" />
+        <activity android:name=".ui.activity.CommunityActivity"/>
+        <activity android:name=".ui.activity.MoreSettingActivity"/>
 
-        <service android:name=".service.DownloadService" />
+        <service android:name=".service.DownloadService"/>
 
     </application>
 
 
     <!--********************************permission************************************-->
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <uses-permission android:name="android.permission.BATTERY_STATS"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 </manifest>

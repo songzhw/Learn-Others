@@ -182,7 +182,8 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter> implem
                 Log.d(TAG, "亮度模式改变");
             } else if (BRIGHTNESS_URI.equals(uri) && !BrightnessUtils.isAutoBrightness(ReadActivity.this)) {
                 Log.d(TAG, "亮度模式为手动模式 值改变");
-                BrightnessUtils.setBrightness(ReadActivity.this, BrightnessUtils.getScreenBrightness(ReadActivity.this));
+                int brightness = BrightnessUtils.getScreenBrightness(ReadActivity.this);
+                BrightnessUtils.setBrightness(ReadActivity.this, brightness);
             } else if (BRIGHTNESS_ADJ_URI.equals(uri) && BrightnessUtils.isAutoBrightness(ReadActivity.this)) {
                 Log.d(TAG, "亮度模式为自动模式 值改变");
                 BrightnessUtils.setDefaultBrightness(ReadActivity.this);

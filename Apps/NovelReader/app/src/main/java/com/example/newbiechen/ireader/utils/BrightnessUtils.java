@@ -75,7 +75,7 @@ public class BrightnessUtils {
             e.printStackTrace();
         }
         //转换范围为 (0~255)
-        float fValue = nowBrightnessValue * 225.0f;
+        float fValue = nowBrightnessValue * 255.0f;
         Log.d(TAG,"brightness: " + fValue);
         return (int)fValue;
     }

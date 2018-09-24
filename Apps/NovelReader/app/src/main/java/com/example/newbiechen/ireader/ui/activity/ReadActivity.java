@@ -771,8 +771,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter> implem
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        boolean isVolumeTurnPage = ReadSettingManager
-                .getInstance().isVolumeTurnPage();
+        boolean isVolumeTurnPage = ReadSettingManager.getInstance().isVolumeTurnPage();
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_UP:
                 if (isVolumeTurnPage) {

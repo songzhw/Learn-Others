@@ -99,13 +99,18 @@ public class EpubReader {
         if (result == null) {
             result = new Book();
         }
+
         handleMimeType(result, resources);
+
         String packageResourceHref = getPackageResourceHref(resources);
         Resource packageResource = processPackageResource(packageResourceHref, result, resources);
         result.setOpfResource(packageResource);
+
         Resource ncxResource = processNcxResource(packageResource, result);
         result.setNcxResource(ncxResource);
+
         result = postProcessBook(result);
+
         return result;
     }
 

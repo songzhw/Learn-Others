@@ -14,7 +14,9 @@ INTERNAL IMPLEMENTATION: LifecycleDisposers.Store
 
 private val disposers = WeakHashMap<Lifecycle, LifecycleDisposers>()
 private val disposersLock = ReentrantLock()
-internal operator fun LifecycleDisposers.Store.get(lifecycle: Lifecycle):
-    LifecycleDisposers = disposersLock.withLock {
-    disposers.getOrPut(lifecycle) { LifecycleDisposers.Factory.create(lifecycle) }
-}
+internal operator fun LifecycleDisposers.Store.get(lifecycle: Lifecycle): LifecycleDisposers =
+        disposersLock.withLock {
+            disposers.getOrPut(lifecycle) {
+                LifecycleDisposers.Factory.create(lifecycle)
+            }
+        }

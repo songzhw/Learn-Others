@@ -42,7 +42,8 @@ import static com.example.android.uamp.utils.MediaIDHelper.MEDIA_ID_ROOT;
 import static com.example.android.uamp.utils.MediaIDHelper.createMediaID;
 
 /**
- * Simple data provider for music tracks. The actual metadata source is delegated to a MusicProviderSource defined by a constructor argument of this class.
+ * Simple data provider for music tracks. The actual metadata source is delegated to a MusicProviderSource defined by a constructor argument
+ * of this class.
  */
 public class MusicProvider {
 
@@ -184,7 +185,8 @@ public class MusicProvider {
 	}
 
 	/**
-	 * Get the list of music tracks from a server and caches the track information for future reference, keying tracks by musicId and grouping by genre.
+	 * Get the list of music tracks from a server and caches the track information for future reference, keying tracks by musicId and grouping
+	 * by genre.
 	 */
 	public void retrieveMediaAsync(final Callback callback) {
 		LogHelper.d(TAG, "retrieveMediaAsync called");

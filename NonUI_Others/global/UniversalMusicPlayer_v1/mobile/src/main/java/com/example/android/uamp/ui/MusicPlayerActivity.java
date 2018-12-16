@@ -29,8 +29,8 @@ import com.example.android.uamp.R;
 import com.example.android.uamp.utils.LogHelper;
 
 /**
- * Main activity for the music player. This class hold the MediaBrowser and the MediaController instances. It will create a MediaBrowser when it is created and connect/disconnect
- * on start/stop. Thus, a MediaBrowser will be always connected while this activity is running.
+ * Main activity for the music player. This class hold the MediaBrowser and the MediaController instances. It will create a MediaBrowser
+ * when it is created and connect/disconnect on start/stop. Thus, a MediaBrowser will be always connected while this activity is running.
  */
 public class MusicPlayerActivity extends BaseActivity
 		implements MediaBrowserFragment.MediaFragmentListener {
@@ -43,8 +43,8 @@ public class MusicPlayerActivity extends BaseActivity
 			"com.example.android.uamp.EXTRA_START_FULLSCREEN";
 
 	/**
-	 * Optionally used with {@link #EXTRA_START_FULLSCREEN} to carry a MediaDescription to the {@link FullScreenPlayerActivity}, speeding up the screen rendering while the {@link
-	 * android.support.v4.media.session.MediaControllerCompat} is connecting.
+	 * Optionally used with {@link #EXTRA_START_FULLSCREEN} to carry a MediaDescription to the {@link FullScreenPlayerActivity}, speeding up
+	 * the screen rendering while the {@link android.support.v4.media.session.MediaControllerCompat} is connecting.
 	 */
 	public static final String EXTRA_CURRENT_MEDIA_DESCRIPTION =
 			"com.example.android.uamp.CURRENT_MEDIA_DESCRIPTION";

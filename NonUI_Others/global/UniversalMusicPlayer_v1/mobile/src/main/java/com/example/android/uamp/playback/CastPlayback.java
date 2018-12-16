@@ -73,7 +73,8 @@ public class CastPlayback implements Playback {
 	}
 
 	/**
-	 * Helper method to convert a {@link android.media.MediaMetadata} to a {@link com.google.android.gms.cast.MediaInfo} used for sending media to the receiver app.
+	 * Helper method to convert a {@link android.media.MediaMetadata} to a {@link com.google.android.gms.cast.MediaInfo} used for sending
+	 * media to the receiver app.
 	 *
 	 * @param track {@link com.google.android.gms.cast.MediaMetadata}
 	 * @param customData custom data specifies the local mediaId used by the player.

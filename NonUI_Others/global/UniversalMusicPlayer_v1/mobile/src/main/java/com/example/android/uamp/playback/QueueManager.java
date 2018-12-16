@@ -36,8 +36,8 @@ import com.example.android.uamp.utils.MediaIDHelper;
 import com.example.android.uamp.utils.QueueHelper;
 
 /**
- * Simple data provider for queues. Keeps track of a current queue and a current index in the queue. Also provides methods to set the current queue based on common queries, relying
- * on a given MusicProvider to provide the actual media metadata.
+ * Simple data provider for queues. Keeps track of a current queue and a current index in the queue. Also provides methods to set the
+ * current queue based on common queries, relying on a given MusicProvider to provide the actual media metadata.
  */
 public class QueueManager {
 	private static final String TAG = LogHelper.makeLogTag(QueueManager.class);

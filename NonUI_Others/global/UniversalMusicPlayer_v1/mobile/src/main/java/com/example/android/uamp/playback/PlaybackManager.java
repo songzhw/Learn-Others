@@ -92,7 +92,8 @@ public class PlaybackManager implements Playback.Callback {
 	/**
 	 * Handle a request to stop music
 	 *
-	 * @param withError Error message in case the stop has an unexpected cause. The error message will be set in the PlaybackState and will be visible to MediaController clients.
+	 * @param withError Error message in case the stop has an unexpected cause. The error message will be set in the PlaybackState and will be
+	 * visible to MediaController clients.
 	 */
 	public void handleStopRequest(String withError) {
 		LogHelper.d(TAG, "handleStopRequest: mState=" + mPlayback.getState() + " error=", withError);
@@ -291,8 +292,8 @@ public class PlaybackManager implements Playback.Callback {
 		 * <p/>
 		 * Threads and async handling: Search, as a potentially slow operation, should run in another thread.
 		 * <p/>
-		 * Since this method runs on the main thread, most apps with non-trivial metadata should defer the actual search to another thread (for example, by using an {@link AsyncTask}
-		 * as we do here).
+		 * Since this method runs on the main thread, most apps with non-trivial metadata should defer the actual search to another thread (for
+		 * example, by using an {@link AsyncTask} as we do here).
 		 **/
 		@Override
 		public void onPlayFromSearch(final String query, final Bundle extras) {

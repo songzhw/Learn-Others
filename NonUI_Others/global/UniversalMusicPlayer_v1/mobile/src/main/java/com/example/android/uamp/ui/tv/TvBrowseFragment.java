@@ -47,16 +47,17 @@ import static android.support.v4.media.MediaBrowserCompat.MediaItem;
 /**
  * Browse media categories and current playing queue.
  * <p/>
- * WARNING: This sample's UI is implemented for a specific MediaBrowser tree structure. It expects a tree that is three levels deep under root: - level 0: root - level 1:
- * categories of categories (like "by genre", "by artist", "playlists") - level 2: song categories (like "by genre -> Rock", "by  artist -> artistname" or "playlists -> my favorite
- * music") - level 3: the actual music
+ * WARNING: This sample's UI is implemented for a specific MediaBrowser tree structure. It expects a tree that is three levels deep under
+ * root: - level 0: root - level 1: categories of categories (like "by genre", "by artist", "playlists") - level 2: song categories (like
+ * "by genre -> Rock", "by  artist -> artistname" or "playlists -> my favorite music") - level 3: the actual music
  * <p/>
  * If you are reusing this TV code, make sure you adapt it to your MediaBrowser structure, in case it is not the same.
  * <p/>
  * <p/>
- * It uses a {@link android.support.v4.media.MediaBrowserCompat} to connect to the {@link com.example.android.uamp.MusicService}. Once connected, the fragment subscribes to get the
- * children of level 1 and then, for each children, it adds a ListRow and subscribes for its children, which, when received, are added to the ListRow. These items (like "Rock"),
- * when clicked, will open a TvVerticalGridActivity that lists all songs of the specified category on a grid-like UI.
+ * It uses a {@link android.support.v4.media.MediaBrowserCompat} to connect to the {@link com.example.android.uamp.MusicService}. Once
+ * connected, the fragment subscribes to get the children of level 1 and then, for each children, it adds a ListRow and subscribes for its
+ * children, which, when received, are added to the ListRow. These items (like "Rock"), when clicked, will open a TvVerticalGridActivity
+ * that lists all songs of the specified category on a grid-like UI.
  * <p/>
  * This fragment also shows the MediaSession queue ("now playing" list), in case there is something playing.
  */

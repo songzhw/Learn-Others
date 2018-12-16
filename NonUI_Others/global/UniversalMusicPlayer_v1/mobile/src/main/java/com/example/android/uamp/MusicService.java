@@ -60,10 +60,11 @@
  import static com.example.android.uamp.utils.MediaIDHelper.MEDIA_ID_ROOT;
 
  /**
-  * This class provides a MediaBrowser through a service. It exposes the media library to a browsing client, through the onGetRoot and onLoadChildren methods. It also creates a
-  * MediaSession and exposes it through its MediaSession.Token, which allows the client to create a MediaController that connects to and send control commands to the MediaSession
-  * remotely. This is useful for user interfaces that need to interact with your media session, like Android Auto. You can (should) also use the same service from your app's UI,
-  * which gives a seamless playback experience to the user.
+  * This class provides a MediaBrowser through a service. It exposes the media library to a browsing client, through the onGetRoot and
+  * onLoadChildren methods. It also creates a MediaSession and exposes it through its MediaSession.Token, which allows the client to create a
+  * MediaController that connects to and send control commands to the MediaSession remotely. This is useful for user interfaces that need to
+  * interact with your media session, like Android Auto. You can (should) also use the same service from your app's UI, which gives a
+  * seamless playback experience to the user.
   * <p>
   * To implement a MediaBrowserService, you need to:
   *
@@ -75,14 +76,15 @@
   * with the session's token {@link android.service.media.MediaBrowserService#setSessionToken};
   *
   * <li> Set a callback on the
-  * {@link android.media.session.MediaSession#setCallback(android.media.session.MediaSession.Callback)}. The callback will receive all the user's actions, like play, pause, etc;
+  * {@link android.media.session.MediaSession#setCallback(android.media.session.MediaSession.Callback)}. The callback will receive all the
+  * user's actions, like play, pause, etc;
   *
   * <li> Handle all the actual music playing using any method your app prefers (for example,
   * {@link android.media.MediaPlayer})
   *
   * <li> Update playbackState, "now playing" metadata and queue, using MediaSession proper methods
-  * {@link android.media.session.MediaSession#setPlaybackState(android.media.session.PlaybackState)} {@link android.media.session.MediaSession#setMetadata(android.media.MediaMetadata)}
-  * and {@link android.media.session.MediaSession#setQueue(java.util.List)})
+  * {@link android.media.session.MediaSession#setPlaybackState(android.media.session.PlaybackState)} {@link
+  * android.media.session.MediaSession#setMetadata(android.media.MediaMetadata)} and {@link android.media.session.MediaSession#setQueue(java.util.List)})
   *
   * <li> Declare and export the service in AndroidManifest with an intent receiver for the action
   * android.media.browse.MediaBrowserService
@@ -94,9 +96,10 @@
   * <ul>
   *
   * <li> Declare a meta-data tag in AndroidManifest.xml linking to a xml resource
-  * with a &lt;automotiveApp&gt; root element. For a media app, this must include an &lt;uses name="media"/&gt; element as a child. For example, in AndroidManifest.xml:
-  * &lt;meta-data android:name="com.google.android.gms.car.application" android:resource="@xml/automotive_app_desc"/&gt; And in res/values/automotive_app_desc.xml:
-  * &lt;automotiveApp&gt; &lt;uses name="media"/&gt; &lt;/automotiveApp&gt;
+  * with a &lt;automotiveApp&gt; root element. For a media app, this must include an &lt;uses name="media"/&gt; element as a child. For
+  * example, in AndroidManifest.xml: &lt;meta-data android:name="com.google.android.gms.car.application"
+  * android:resource="@xml/automotive_app_desc"/&gt; And in res/values/automotive_app_desc.xml: &lt;automotiveApp&gt; &lt;uses
+  * name="media"/&gt; &lt;/automotiveApp&gt;
   *
   * </ul>
   *
@@ -127,9 +130,9 @@
 	 private MusicProvider mMusicProvider;
 	 private PlaybackManager mPlaybackManager;
 
-	 private MediaSessionCompat mSession;
+	 private MediaSessionCompat mediaSession;
 	 private MediaNotificationManager mMediaNotificationManager;
-	 private Bundle mSessionExtras;
+	 private Bundle sessionBundle;
 	 private final DelayedStopHandler mDelayedStopHandler = new DelayedStopHandler(this);
 	 private MediaRouter mMediaRouter;
 	 private PackageValidator mPackageValidator;
@@ -161,7 +164,7 @@
 				 new QueueManager.MetadataUpdateListener() {
 					 @Override
 					 public void onMetadataChanged(MediaMetadataCompat metadata) {
-						 mSession.setMetadata(metadata);
+						 mediaSession.setMetadata(metadata);
 					 }
 
 					 @Override
@@ -178,33 +181,32 @@
 					 @Override
 					 public void onQueueUpdated(String title,
 							 List<MediaSessionCompat.QueueItem> newQueue) {
-						 mSession.setQueue(newQueue);
-						 mSession.setQueueTitle(title);
+						 mediaSession.setQueue(newQueue);
+						 mediaSession.setQueueTitle(title);
 					 }
 				 });
 
 		 LocalPlayback playback = new LocalPlayback(this, mMusicProvider);
-		 mPlaybackManager = new PlaybackManager(this, getResources(), mMusicProvider, queueManager,
-				 playback);
+		 mPlaybackManager = new PlaybackManager(this, getResources(), mMusicProvider, queueManager, playback);
 
 		 // Start a new MediaSession
-		 mSession = new MediaSessionCompat(this, "MusicService");
-		 setSessionToken(mSession.getSessionToken());
-		 mSession.setCallback(mPlaybackManager.getMediaSessionCallback());
-		 mSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
+		 mediaSession = new MediaSessionCompat(this, "MusicService");
+		 setSessionToken(mediaSession.getSessionToken());
+		 mediaSession.setCallback(mPlaybackManager.getMediaSessionCallback());
+		 mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
 				 MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
 
 		 Context context = getApplicationContext();
 		 Intent intent = new Intent(context, NowPlayingActivity.class);
 		 PendingIntent pi = PendingIntent.getActivity(context, 99 /*request code*/,
 				 intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		 mSession.setSessionActivity(pi);
+		 mediaSession.setSessionActivity(pi);
 
-		 mSessionExtras = new Bundle();
-		 CarHelper.setSlotReservationFlags(mSessionExtras, true, true, true);
-		 WearHelper.setSlotReservationFlags(mSessionExtras, true, true);
-		 WearHelper.setUseBackgroundFromTheme(mSessionExtras, true);
-		 mSession.setExtras(mSessionExtras);
+		 sessionBundle = new Bundle();
+		 CarHelper.setSlotReservationFlags(sessionBundle, true, true, true);
+		 WearHelper.setSlotReservationFlags(sessionBundle, true, true);
+		 WearHelper.setUseBackgroundFromTheme(sessionBundle, true);
+		 mediaSession.setExtras(sessionBundle);
 
 		 mPlaybackManager.updatePlaybackState(null);
 
@@ -302,7 +304,7 @@
 				 }
 			 } else {
 				 // Try to handle the intent as a media button event wrapped by MediaButtonReceiver
-				 MediaButtonReceiver.handleIntent(mSession, startIntent);
+				 MediaButtonReceiver.handleIntent(mediaSession, startIntent);
 			 }
 		 }
 		 // Reset the delay handler to enqueue a message to stop the service if
@@ -331,7 +333,7 @@
 		 }
 
 		 mDelayedStopHandler.removeCallbacksAndMessages(null);
-		 mSession.release();
+		 mediaSession.release();
 	 }
 
 	 /*
@@ -349,7 +351,7 @@
 	  */
 	 @Override
 	 public void onPlaybackStart() {
-		 mSession.setActive(true);
+		 mediaSession.setActive(true);
 
 		 mDelayedStopHandler.removeCallbacksAndMessages(null);
 
@@ -369,7 +371,7 @@
 	  */
 	 @Override
 	 public void onPlaybackStop() {
-		 mSession.setActive(false);
+		 mediaSession.setActive(false);
 		 // Reset the delayed stop handler, so after STOP_DELAY it will be executed again,
 		 // potentially stopping the service.
 		 mDelayedStopHandler.removeCallbacksAndMessages(null);
@@ -379,7 +381,7 @@
 
 	 @Override
 	 public void onPlaybackStateUpdated(PlaybackStateCompat newState) {
-		 mSession.setPlaybackState(newState);
+		 mediaSession.setPlaybackState(newState);
 	 }
 
 	 private void registerCarConnectionReceiver() {
@@ -436,12 +438,12 @@
 		 @Override
 		 public void onSessionStarted(CastSession session, String sessionId) {
 			 // In case we are casting, send the device name as an extra on MediaSession metadata.
-			 mSessionExtras.putString(EXTRA_CONNECTED_CAST,
+			 sessionBundle.putString(EXTRA_CONNECTED_CAST,
 					 session.getCastDevice().getFriendlyName());
-			 mSession.setExtras(mSessionExtras);
+			 mediaSession.setExtras(sessionBundle);
 			 // Now we can switch to CastPlayback
 			 Playback playback = new CastPlayback(mMusicProvider, MusicService.this);
-			 mMediaRouter.setMediaSessionCompat(mSession);
+			 mMediaRouter.setMediaSessionCompat(mediaSession);
 			 mPlaybackManager.switchToPlayback(playback, true);
 		 }
 
@@ -461,8 +463,8 @@
 		 @Override
 		 public void onSessionEnded(CastSession session, int error) {
 			 LogHelper.d(TAG, "onSessionEnded");
-			 mSessionExtras.remove(EXTRA_CONNECTED_CAST);
-			 mSession.setExtras(mSessionExtras);
+			 sessionBundle.remove(EXTRA_CONNECTED_CAST);
+			 mediaSession.setExtras(sessionBundle);
 			 Playback playback = new LocalPlayback(MusicService.this, mMusicProvider);
 			 mMediaRouter.setMediaSessionCompat(null);
 			 mPlaybackManager.switchToPlayback(playback, false);

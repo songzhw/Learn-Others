@@ -44,8 +44,8 @@ import com.example.android.uamp.utils.LogHelper;
 import com.example.android.uamp.utils.ResourceHelper;
 
 /**
- * Keeps track of a notification and updates it automatically for a given MediaSession. Maintaining a visible notification (usually) guarantees that the music service won't be
- * killed during playback.
+ * Keeps track of a notification and updates it automatically for a given MediaSession. Maintaining a visible notification (usually)
+ * guarantees that the music service won't be killed during playback.
  */
 public class MediaNotificationManager extends BroadcastReceiver {
 	private static final String TAG = LogHelper.makeLogTag(MediaNotificationManager.class);
@@ -151,8 +151,8 @@ public class MediaNotificationManager extends BroadcastReceiver {
 	}
 
 	/**
-	 * Posts the notification and starts tracking the session to keep it updated. The notification will automatically be removed if the session is destroyed before {@link
-	 * #stopNotification} is called.
+	 * Posts the notification and starts tracking the session to keep it updated. The notification will automatically be removed if the
+	 * session is destroyed before {@link #stopNotification} is called.
 	 */
 	public void startNotification() {
 		if (!mStarted) {
@@ -223,8 +223,8 @@ public class MediaNotificationManager extends BroadcastReceiver {
 	}
 
 	/**
-	 * Update the state based on a change on the session token. Called either when we are running for the first time or when the media session owner has destroyed the session (see
-	 * {@link android.media.session.MediaController.Callback#onSessionDestroyed()})
+	 * Update the state based on a change on the session token. Called either when we are running for the first time or when the media session
+	 * owner has destroyed the session (see {@link android.media.session.MediaController.Callback#onSessionDestroyed()})
 	 */
 	private void updateSessionToken() throws RemoteException {
 		MediaSessionCompat.Token freshToken = mService.getSessionToken();

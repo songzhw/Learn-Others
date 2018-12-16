@@ -20,8 +20,8 @@ import com.example.android.uamp.MusicService;
 import static android.support.v4.media.session.MediaSessionCompat.QueueItem;
 
 /**
- * Interface representing either Local or Remote Playback. The {@link MusicService} works directly with an instance of the Playback object to make the various calls such as play,
- * pause etc.
+ * Interface representing either Local or Remote Playback. The {@link MusicService} works directly with an instance of the Playback object
+ * to make the various calls such as play, pause etc.
  */
 public interface Playback {
 	/**
@@ -32,7 +32,8 @@ public interface Playback {
 	/**
 	 * Stop the playback. All resources can be de-allocated by implementations here.
 	 *
-	 * @param notifyListeners if true and a callback has been set by setCallback, callback.onPlaybackStatusChanged will be called after changing the state.
+	 * @param notifyListeners if true and a callback has been set by setCallback, callback.onPlaybackStatusChanged will be called after
+	 * changing the state.
 	 */
 	void stop(boolean notifyListeners);
 

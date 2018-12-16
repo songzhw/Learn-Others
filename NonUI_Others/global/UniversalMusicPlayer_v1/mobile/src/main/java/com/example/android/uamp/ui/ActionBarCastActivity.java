@@ -46,11 +46,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 /**
- * Abstract activity with toolbar, navigation drawer and cast support. Needs to be extended by any activity that wants to be shown as a top level activity.
+ * Abstract activity with toolbar, navigation drawer and cast support. Needs to be extended by any activity that wants to be shown as a top
+ * level activity.
  * <p>
- * The requirements for a subclass is to call {@link #initializeToolbar()} on onCreate, after setContentView() is called and have three mandatory layout elements: a {@link
- * android.support.v7.widget.Toolbar} with id 'toolbar', a {@link android.support.v4.widget.DrawerLayout} with id 'drawerLayout' and a {@link android.widget.ListView} with id
- * 'drawerList'.
+ * The requirements for a subclass is to call {@link #initializeToolbar()} on onCreate, after setContentView() is called and have three
+ * mandatory layout elements: a {@link android.support.v7.widget.Toolbar} with id 'toolbar', a {@link
+ * android.support.v4.widget.DrawerLayout} with id 'drawerLayout' and a {@link android.widget.ListView} with id 'drawerList'.
  */
 public abstract class ActionBarCastActivity extends AppCompatActivity {
 

@@ -340,9 +340,9 @@ public final class LocalPlayback implements Playback {
 	}
 
 	/**
-	 * Reconfigures the player according to audio focus settings and starts/restarts it. This method starts/restarts the ExoPlayer instance respecting the current audio focus state.
-	 * So if we have focus, it will play normally; if we don't have focus, it will either leave the player paused or set it to a low volume, depending on what is permitted by the
-	 * current focus settings.
+	 * Reconfigures the player according to audio focus settings and starts/restarts it. This method starts/restarts the ExoPlayer instance
+	 * respecting the current audio focus state. So if we have focus, it will play normally; if we don't have focus, it will either leave the
+	 * player paused or set it to a low volume, depending on what is permitted by the current focus settings.
 	 */
 	private void configurePlayerState() {
 		LogHelper.d(TAG, "configurePlayerState. mCurrentAudioFocusState=", mCurrentAudioFocusState);
@@ -368,7 +368,8 @@ public final class LocalPlayback implements Playback {
 	}
 
 	/**
-	 * Releases resources used by the service for playback, which is mostly just the WiFi lock for local playback. If requested, the ExoPlayer instance is also released.
+	 * Releases resources used by the service for playback, which is mostly just the WiFi lock for local playback. If requested, the ExoPlayer
+	 * instance is also released.
 	 *
 	 * @param releasePlayer Indicates whether the player should also be released
 	 */

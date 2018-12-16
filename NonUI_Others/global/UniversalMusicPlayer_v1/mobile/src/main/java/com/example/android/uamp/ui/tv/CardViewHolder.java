@@ -129,7 +129,8 @@ public class CardViewHolder extends Presenter.ViewHolder {
 	}
 
 	/**
-	 * Simple drawable that draws a text (letter, in this case). Used with the media title when the MediaDescription has no corresponding album art.
+	 * Simple drawable that draws a text (letter, in this case). Used with the media title when the MediaDescription has no corresponding
+	 * album art.
 	 */
 	private static class TextDrawable extends Drawable {
 

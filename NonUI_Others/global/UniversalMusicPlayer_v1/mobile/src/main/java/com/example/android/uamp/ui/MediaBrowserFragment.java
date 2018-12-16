@@ -48,8 +48,8 @@ import com.example.android.uamp.utils.NetworkHelper;
 /**
  * A Fragment that lists all the various browsable queues available from a {@link android.service.media.MediaBrowserService}.
  * <p/>
- * It uses a {@link MediaBrowserCompat} to connect to the {@link com.example.android.uamp.MusicService}. Once connected, the fragment subscribes to get all the children. All {@link
- * MediaBrowserCompat.MediaItem}'s that can be browsed are shown in a ListView.
+ * It uses a {@link MediaBrowserCompat} to connect to the {@link com.example.android.uamp.MusicService}. Once connected, the fragment
+ * subscribes to get all the children. All {@link MediaBrowserCompat.MediaItem}'s that can be browsed are shown in a ListView.
  */
 public class MediaBrowserFragment extends Fragment {
 

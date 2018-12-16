@@ -32,11 +32,11 @@ public class CarHelper {
 			"com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_QUEUE";
 
 	/**
-	 * Action for an intent broadcast by Android Auto when a media app is connected or disconnected. A "connected" media app is the one currently attached to the "media" facet on
-	 * Android Auto. So, this intent is sent by AA on:
+	 * Action for an intent broadcast by Android Auto when a media app is connected or disconnected. A "connected" media app is the one
+	 * currently attached to the "media" facet on Android Auto. So, this intent is sent by AA on:
 	 * <p>
-	 * - connection: when the phone is projecting and at the moment the app is selected from the list of media apps - disconnection: when another media app is selected from the list
-	 * of media apps or when the phone stops projecting (when the user unplugs it, for example)
+	 * - connection: when the phone is projecting and at the moment the app is selected from the list of media apps - disconnection: when
+	 * another media app is selected from the list of media apps or when the phone stops projecting (when the user unplugs it, for example)
 	 * <p>
 	 * The actual event (connected or disconnected) will come as an Intent extra, with the key MEDIA_CONNECTION_STATUS (see below).
 	 */

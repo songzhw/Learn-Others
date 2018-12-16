@@ -38,7 +38,8 @@ public class TvPlaybackActivity extends FragmentActivity {
 	private MediaBrowserCompat mMediaBrowser;
 	private TvPlaybackFragment mPlaybackFragment;
 	/**
-	 * Receive callbacks from the MediaController. Here we update our state such as which queue is being shown, the current title and description and the PlaybackState.
+	 * Receive callbacks from the MediaController. Here we update our state such as which queue is being shown, the current title and
+	 * description and the PlaybackState.
 	 */
 	private final MediaControllerCompat.Callback mMediaControllerCallback =
 			new MediaControllerCompat.Callback() {

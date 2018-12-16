@@ -52,7 +52,8 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 /**
- * A full screen player that shows the current playing music with a background image depicting the album art. The activity also has controls to seek/pause/play the audio.
+ * A full screen player that shows the current playing music with a background image depicting the album art. The activity also has controls
+ * to seek/pause/play the audio.
  */
 public class FullScreenPlayerActivity extends ActionBarCastActivity {
 	private static final String TAG = LogHelper.makeLogTag(FullScreenPlayerActivity.class);

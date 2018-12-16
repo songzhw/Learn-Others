@@ -29,74 +29,73 @@ import com.example.android.uamp.utils.LogHelper;
 import com.example.android.uamp.utils.QueueHelper;
 
 public class CardPresenter extends Presenter {
-    private static final String TAG = LogHelper.makeLogTag(CardPresenter.class);
+	private static final String TAG = LogHelper.makeLogTag(CardPresenter.class);
 
-    private static Activity mContext;
+	private static Activity mContext;
 
-    public CardPresenter(Activity activity) {
-        mContext = activity;
-    }
+	public CardPresenter(Activity activity) {
+		mContext = activity;
+	}
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent) {
-        LogHelper.d(TAG, "onCreateViewHolder");
+	@Override
+	public ViewHolder onCreateViewHolder(ViewGroup parent) {
+		LogHelper.d(TAG, "onCreateViewHolder");
 
-        ImageCardView cardView = new ImageCardView(mContext);
-        cardView.setFocusable(true);
-        cardView.setFocusableInTouchMode(true);
-        cardView.setBackgroundColor(mContext.getResources().getColor(R.color.default_background));
-        return new CardViewHolder(cardView);
-    }
+		ImageCardView cardView = new ImageCardView(mContext);
+		cardView.setFocusable(true);
+		cardView.setFocusableInTouchMode(true);
+		cardView.setBackgroundColor(mContext.getResources().getColor(R.color.default_background));
+		return new CardViewHolder(cardView);
+	}
 
-    @Override
-    public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
-        MediaDescriptionCompat description;
-        final CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
+	@Override
+	public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
+		MediaDescriptionCompat description;
+		final CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
 
-        // Determine description and playing state of item based on instance type
-        cardViewHolder.setState(MediaItemViewHolder.STATE_NONE);
-        if (item instanceof  MediaBrowserCompat.MediaItem) {
-            MediaBrowserCompat.MediaItem mediaItem = (MediaBrowserCompat.MediaItem) item;
-            LogHelper.d(TAG, "onBindViewHolder MediaItem: ", mediaItem.toString());
-            description = mediaItem.getDescription();
-            cardViewHolder.setState(MediaItemViewHolder.getMediaItemState(mContext, mediaItem));
-        } else if (item instanceof MediaSessionCompat.QueueItem) {
-            MediaSessionCompat.QueueItem queueItem = (MediaSessionCompat.QueueItem) item;
-            LogHelper.d(TAG, "onBindViewHolder QueueItem: ", queueItem.toString());
-            description = queueItem.getDescription();
-            if (QueueHelper.isQueueItemPlaying(mContext, queueItem)) {
-                cardViewHolder.setState(MediaItemViewHolder.getStateFromController(mContext));
-            }
-        } else {
-            throw new IllegalArgumentException("Object must be MediaItem or QueueItem, not "
-                    + item.getClass().getSimpleName());
-        }
+		// Determine description and playing state of item based on instance type
+		cardViewHolder.setState(MediaItemViewHolder.STATE_NONE);
+		if (item instanceof MediaBrowserCompat.MediaItem) {
+			MediaBrowserCompat.MediaItem mediaItem = (MediaBrowserCompat.MediaItem) item;
+			LogHelper.d(TAG, "onBindViewHolder MediaItem: ", mediaItem.toString());
+			description = mediaItem.getDescription();
+			cardViewHolder.setState(MediaItemViewHolder.getMediaItemState(mContext, mediaItem));
+		} else if (item instanceof MediaSessionCompat.QueueItem) {
+			MediaSessionCompat.QueueItem queueItem = (MediaSessionCompat.QueueItem) item;
+			LogHelper.d(TAG, "onBindViewHolder QueueItem: ", queueItem.toString());
+			description = queueItem.getDescription();
+			if (QueueHelper.isQueueItemPlaying(mContext, queueItem)) {
+				cardViewHolder.setState(MediaItemViewHolder.getStateFromController(mContext));
+			}
+		} else {
+			throw new IllegalArgumentException("Object must be MediaItem or QueueItem, not "
+					+ item.getClass().getSimpleName());
+		}
 
-        cardViewHolder.setupCardView(mContext, description);
-    }
+		cardViewHolder.setupCardView(mContext, description);
+	}
 
-    @Override
-    public void onUnbindViewHolder(Presenter.ViewHolder viewHolder) {
-        LogHelper.d(TAG, "onUnbindViewHolder");
-        final CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
-        cardViewHolder.setState(MediaItemViewHolder.STATE_NONE);
-        cardViewHolder.setBadgeImage(null);
-    }
+	@Override
+	public void onUnbindViewHolder(Presenter.ViewHolder viewHolder) {
+		LogHelper.d(TAG, "onUnbindViewHolder");
+		final CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
+		cardViewHolder.setState(MediaItemViewHolder.STATE_NONE);
+		cardViewHolder.setBadgeImage(null);
+	}
 
-    @Override
-    public void onViewAttachedToWindow(Presenter.ViewHolder viewHolder) {
-        LogHelper.d(TAG, "onViewAttachedToWindow");
-        final CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
-        cardViewHolder.attachView();
-    }
+	@Override
+	public void onViewAttachedToWindow(Presenter.ViewHolder viewHolder) {
+		LogHelper.d(TAG, "onViewAttachedToWindow");
+		final CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
+		cardViewHolder.attachView();
+	}
 
-    @Override
-    public void onViewDetachedFromWindow(Presenter.ViewHolder viewHolder) {
-        LogHelper.d(TAG, "onViewDetachedFromWindow");
-        final CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
-        cardViewHolder.detachView();
-    }
-
+	@Override
+	public void onViewDetachedFromWindow(Presenter.ViewHolder viewHolder) {
+		LogHelper.d(TAG, "onViewDetachedFromWindow");
+		final CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
+		cardViewHolder.detachView();
+	}
 }
 
 

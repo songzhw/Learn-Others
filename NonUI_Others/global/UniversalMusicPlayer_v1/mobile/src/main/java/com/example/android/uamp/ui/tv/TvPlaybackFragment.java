@@ -15,6 +15,8 @@
  */
 package com.example.android.uamp.ui.tv;
 
+import java.util.List;
+
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -51,291 +53,290 @@ import com.example.android.uamp.AlbumArtCache;
 import com.example.android.uamp.utils.LogHelper;
 import com.example.android.uamp.utils.QueueHelper;
 
-import java.util.List;
-
 /*
  * Show details of the currently playing song, along with playback controls and the playing queue.
  */
 public class TvPlaybackFragment extends PlaybackSupportFragment {
-    private static final String TAG = LogHelper.makeLogTag(TvPlaybackFragment.class);
+	private static final String TAG = LogHelper.makeLogTag(TvPlaybackFragment.class);
 
-    private static final int BACKGROUND_TYPE = PlaybackSupportFragment.BG_DARK;
-    private static final int DEFAULT_UPDATE_PERIOD = 1000;
-    private static final int UPDATE_PERIOD = 16;
+	private static final int BACKGROUND_TYPE = PlaybackSupportFragment.BG_DARK;
+	private static final int DEFAULT_UPDATE_PERIOD = 1000;
+	private static final int UPDATE_PERIOD = 16;
 
-    private ArrayObjectAdapter mRowsAdapter;
-    private ArrayObjectAdapter mPrimaryActionsAdapter;
-    protected PlayPauseAction mPlayPauseAction;
-    private SkipNextAction mSkipNextAction;
-    private SkipPreviousAction mSkipPreviousAction;
-    private PlaybackControlsRow mPlaybackControlsRow;
-    private List <MediaSessionCompat.QueueItem> mPlaylistQueue;
-    private int mDuration;
-    private Handler mHandler;
-    private Runnable mRunnable;
+	private ArrayObjectAdapter mRowsAdapter;
+	private ArrayObjectAdapter mPrimaryActionsAdapter;
+	protected PlayPauseAction mPlayPauseAction;
+	private SkipNextAction mSkipNextAction;
+	private SkipPreviousAction mSkipPreviousAction;
+	private PlaybackControlsRow mPlaybackControlsRow;
+	private List<MediaSessionCompat.QueueItem> mPlaylistQueue;
+	private int mDuration;
+	private Handler mHandler;
+	private Runnable mRunnable;
 
-    private long mLastPosition;
-    private long mLastPositionUpdateTime;
+	private long mLastPosition;
+	private long mLastPositionUpdateTime;
 
-    private BackgroundManager mBackgroundManager;
-    private ArrayObjectAdapter mListRowAdapter;
-    private ListRow mListRow;
+	private BackgroundManager mBackgroundManager;
+	private ArrayObjectAdapter mListRowAdapter;
+	private ListRow mListRow;
 
-    private ClassPresenterSelector mPresenterSelector;
+	private ClassPresenterSelector mPresenterSelector;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        LogHelper.i(TAG, "onCreate");
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		LogHelper.i(TAG, "onCreate");
 
-        mBackgroundManager = BackgroundManager.getInstance(getActivity());
-        mBackgroundManager.attach(getActivity().getWindow());
-        mHandler = new Handler();
-        mListRowAdapter = new ArrayObjectAdapter(new CardPresenter(getActivity()));
-        mPresenterSelector = new ClassPresenterSelector();
-        mRowsAdapter = new ArrayObjectAdapter(mPresenterSelector);
+		mBackgroundManager = BackgroundManager.getInstance(getActivity());
+		mBackgroundManager.attach(getActivity().getWindow());
+		mHandler = new Handler();
+		mListRowAdapter = new ArrayObjectAdapter(new CardPresenter(getActivity()));
+		mPresenterSelector = new ClassPresenterSelector();
+		mRowsAdapter = new ArrayObjectAdapter(mPresenterSelector);
 
-        setBackgroundType(BACKGROUND_TYPE);
-        setFadingEnabled(false);
-    }
+		setBackgroundType(BACKGROUND_TYPE);
+		setFadingEnabled(false);
+	}
 
-    private void initializePlaybackControls(MediaMetadataCompat metadata) {
-        setupRows();
-        addPlaybackControlsRow(metadata);
-        setAdapter(mRowsAdapter);
-        setOnItemViewClickedListener(new ItemViewClickedListener());
-    }
+	protected void updatePlayListRow(List<MediaSessionCompat.QueueItem> playlistQueue) {
+		if (QueueHelper.equals(mPlaylistQueue, playlistQueue)) {
+			// if the playlist queue hasn't changed, we don't need to update it
+			return;
+		}
+		LogHelper.d(TAG, "Updating playlist queue ('now playing')");
+		mPlaylistQueue = playlistQueue;
+		if (playlistQueue == null || playlistQueue.isEmpty()) {
+			// Remove the playlist row if no items are in the playlist
+			mRowsAdapter.remove(mListRow);
+			mListRow = null;
+			return;
+		}
+		mListRowAdapter.clear();
+		for (int i = 0; i < playlistQueue.size(); i++) {
+			MediaSessionCompat.QueueItem item = playlistQueue.get(i);
+			mListRowAdapter.add(item);
+		}
 
-    private void setupRows() {
-        PlaybackControlsRowPresenter playbackControlsRowPresenter;
-        playbackControlsRowPresenter = new PlaybackControlsRowPresenter(
-                new DescriptionPresenter());
+		if (mListRow == null) {
+			int queueSize = 0;
+			MediaControllerCompat controller = MediaControllerCompat.getMediaController(getActivity());
+			if (controller != null && controller.getQueue() != null) {
+				queueSize = controller.getQueue().size();
+			}
+			HeaderItem header = new HeaderItem(0, queueSize + " song(s) in this playlist");
 
-        playbackControlsRowPresenter.setOnActionClickedListener(new OnActionClickedListener() {
-            public void onActionClicked(Action action) {
-                if (getActivity() == null) {
-                    return;
-                }
-                MediaControllerCompat controller = MediaControllerCompat.getMediaController(getActivity());
-                if (controller == null) {
-                    return;
-                }
-                MediaControllerCompat.TransportControls controls = controller.getTransportControls();
-                if (action.getId() == mPlayPauseAction.getId()) {
-                    if (mPlayPauseAction.getIndex() == PlayPauseAction.PLAY) {
-                        controls.play();
-                    } else {
-                        controls.pause();
-                    }
-                } else if (action.getId() == mSkipNextAction.getId()) {
-                    controls.skipToNext();
-                    resetPlaybackRow();
-                } else if (action.getId() == mSkipPreviousAction.getId()) {
-                    controls.skipToPrevious();
-                    resetPlaybackRow();
-                }
+			mPresenterSelector.addClassPresenter(ListRow.class, new ListRowPresenter());
 
-                if (action instanceof PlaybackControlsRow.MultiAction) {
-                    ((PlaybackControlsRow.MultiAction) action).nextIndex();
-                    notifyChanged(action);
-                }
-            }
-        });
+			mListRow = new ListRow(header, mListRowAdapter);
+			mRowsAdapter.add(mListRow);
+		} else {
+			mRowsAdapter.notifyArrayItemRangeChanged(mRowsAdapter.indexOf(mListRow), 1);
+		}
+	}
 
-        mPresenterSelector.addClassPresenter(PlaybackControlsRow.class,
-                playbackControlsRowPresenter);
-    }
+	protected void startProgressAutomation() {
+		if (mHandler != null && mRunnable != null) {
+			mHandler.removeCallbacks(mRunnable);
+		}
+		mRunnable = new Runnable() {
+			@Override
+			public void run() {
+				long elapsedTime = SystemClock.elapsedRealtime() - mLastPositionUpdateTime;
+				int currentPosition = Math.min(mDuration, (int) (mLastPosition + elapsedTime));
+				mPlaybackControlsRow.setCurrentTime(currentPosition);
+				mHandler.postDelayed(this, getUpdatePeriod());
+			}
+		};
+		mHandler.postDelayed(mRunnable, getUpdatePeriod());
+		setFadingEnabled(true);
+	}
 
-    private void addPlaybackControlsRow(MediaMetadataCompat metadata) {
+	protected void stopProgressAutomation() {
+		if (mHandler != null && mRunnable != null) {
+			mHandler.removeCallbacks(mRunnable);
+			setFadingEnabled(false);
+		}
+		mPlaybackControlsRow.setCurrentTime((int) mLastPosition);
+	}
 
-        mPlaybackControlsRow = new PlaybackControlsRow(new MutableMediaMetadataHolder(metadata));
-        mRowsAdapter.add(mPlaybackControlsRow);
+	protected void updateMetadata(MediaMetadataCompat metadata) {
+		if (mPlaybackControlsRow == null) {
+			initializePlaybackControls(metadata);
+		}
+		mDuration = (int) metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
+		mPlaybackControlsRow.setTotalTime(mDuration);
+		((MutableMediaMetadataHolder) mPlaybackControlsRow.getItem()).metadata = metadata;
+		mRowsAdapter.notifyArrayItemRangeChanged(
+				mRowsAdapter.indexOf(mPlaybackControlsRow), 1);
+		updateAlbumArt(metadata.getDescription().getIconUri());
+	}
 
-        resetPlaybackRow();
+	protected void updatePlaybackState(PlaybackStateCompat state) {
+		if (mPlaybackControlsRow == null) {
+			// We only update playback state after we get a valid metadata.
+			return;
+		}
+		mLastPosition = state.getPosition();
+		mLastPositionUpdateTime = state.getLastPositionUpdateTime();
+		switch (state.getState()) {
+		case PlaybackStateCompat.STATE_PLAYING:
+			startProgressAutomation();
+			mPlayPauseAction.setIndex(PlayPauseAction.PAUSE);
+			break;
+		case PlaybackStateCompat.STATE_PAUSED:
+			stopProgressAutomation();
+			mPlayPauseAction.setIndex(PlayPauseAction.PLAY);
+			break;
+		}
 
-        ControlButtonPresenterSelector presenterSelector = new ControlButtonPresenterSelector();
-        mPrimaryActionsAdapter = new ArrayObjectAdapter(presenterSelector);
-        mPlaybackControlsRow.setPrimaryActionsAdapter(mPrimaryActionsAdapter);
+		MediaControllerCompat controller = MediaControllerCompat.getMediaController(getActivity());
+		updatePlayListRow(controller.getQueue());
+		mRowsAdapter.notifyArrayItemRangeChanged(
+				mRowsAdapter.indexOf(mPlaybackControlsRow), 1);
+	}
 
-        mPlayPauseAction = new PlayPauseAction(getActivity());
-        mSkipNextAction = new PlaybackControlsRow.SkipNextAction(getActivity());
-        mSkipPreviousAction = new PlaybackControlsRow.SkipPreviousAction(getActivity());
+	private void initializePlaybackControls(MediaMetadataCompat metadata) {
+		setupRows();
+		addPlaybackControlsRow(metadata);
+		setAdapter(mRowsAdapter);
+		setOnItemViewClickedListener(new ItemViewClickedListener());
+	}
 
-        mPrimaryActionsAdapter.add(mSkipPreviousAction);
-        mPrimaryActionsAdapter.add(mPlayPauseAction);
-        mPrimaryActionsAdapter.add(mSkipNextAction);
-    }
+	private void setupRows() {
+		PlaybackControlsRowPresenter playbackControlsRowPresenter;
+		playbackControlsRowPresenter = new PlaybackControlsRowPresenter(
+				new DescriptionPresenter());
 
-    protected void updatePlayListRow(List<MediaSessionCompat.QueueItem> playlistQueue) {
-        if (QueueHelper.equals(mPlaylistQueue, playlistQueue)) {
-            // if the playlist queue hasn't changed, we don't need to update it
-            return;
-        }
-        LogHelper.d(TAG, "Updating playlist queue ('now playing')");
-        mPlaylistQueue = playlistQueue;
-        if (playlistQueue == null || playlistQueue.isEmpty()) {
-            // Remove the playlist row if no items are in the playlist
-            mRowsAdapter.remove(mListRow);
-            mListRow = null;
-            return;
-        }
-        mListRowAdapter.clear();
-        for (int i = 0; i < playlistQueue.size(); i++) {
-            MediaSessionCompat.QueueItem item = playlistQueue.get(i);
-            mListRowAdapter.add(item);
-        }
+		playbackControlsRowPresenter.setOnActionClickedListener(new OnActionClickedListener() {
+			public void onActionClicked(Action action) {
+				if (getActivity() == null) {
+					return;
+				}
+				MediaControllerCompat controller = MediaControllerCompat.getMediaController(getActivity());
+				if (controller == null) {
+					return;
+				}
+				MediaControllerCompat.TransportControls controls = controller.getTransportControls();
+				if (action.getId() == mPlayPauseAction.getId()) {
+					if (mPlayPauseAction.getIndex() == PlayPauseAction.PLAY) {
+						controls.play();
+					} else {
+						controls.pause();
+					}
+				} else if (action.getId() == mSkipNextAction.getId()) {
+					controls.skipToNext();
+					resetPlaybackRow();
+				} else if (action.getId() == mSkipPreviousAction.getId()) {
+					controls.skipToPrevious();
+					resetPlaybackRow();
+				}
 
-        if (mListRow == null) {
-            int queueSize = 0;
-            MediaControllerCompat controller = MediaControllerCompat.getMediaController(getActivity());
-            if (controller != null && controller.getQueue() != null) {
-                queueSize = controller.getQueue().size();
-            }
-            HeaderItem header = new HeaderItem(0, queueSize + " song(s) in this playlist");
+				if (action instanceof PlaybackControlsRow.MultiAction) {
+					((PlaybackControlsRow.MultiAction) action).nextIndex();
+					notifyChanged(action);
+				}
+			}
+		});
 
-            mPresenterSelector.addClassPresenter(ListRow.class, new ListRowPresenter());
+		mPresenterSelector.addClassPresenter(PlaybackControlsRow.class,
+				playbackControlsRowPresenter);
+	}
 
-            mListRow = new ListRow(header, mListRowAdapter);
-            mRowsAdapter.add(mListRow);
-        } else {
-            mRowsAdapter.notifyArrayItemRangeChanged(mRowsAdapter.indexOf(mListRow), 1);
-        }
-    }
+	private void addPlaybackControlsRow(MediaMetadataCompat metadata) {
 
-    private void notifyChanged(Action action) {
-        ArrayObjectAdapter adapter = mPrimaryActionsAdapter;
-        if (adapter.indexOf(action) >= 0) {
-            adapter.notifyArrayItemRangeChanged(adapter.indexOf(action), 1);
-        }
-    }
+		mPlaybackControlsRow = new PlaybackControlsRow(new MutableMediaMetadataHolder(metadata));
+		mRowsAdapter.add(mPlaybackControlsRow);
 
-    private void resetPlaybackRow() {
-        mDuration = 0;
-        mPlaybackControlsRow.setTotalTime(0);
-        mPlaybackControlsRow.setCurrentTime(0);
-        mRowsAdapter.notifyArrayItemRangeChanged(
-                mRowsAdapter.indexOf(mPlaybackControlsRow), 1);
-    }
+		resetPlaybackRow();
 
-    private int getUpdatePeriod() {
-        if (getView() == null || mPlaybackControlsRow.getTotalTime() <= 0) {
-            return DEFAULT_UPDATE_PERIOD;
-        }
-        return Math.max(UPDATE_PERIOD, mPlaybackControlsRow.getTotalTime() / getView().getWidth());
-    }
+		ControlButtonPresenterSelector presenterSelector = new ControlButtonPresenterSelector();
+		mPrimaryActionsAdapter = new ArrayObjectAdapter(presenterSelector);
+		mPlaybackControlsRow.setPrimaryActionsAdapter(mPrimaryActionsAdapter);
 
-    protected void startProgressAutomation() {
-        if (mHandler != null && mRunnable != null) {
-            mHandler.removeCallbacks(mRunnable);
-        }
-        mRunnable = new Runnable() {
-            @Override
-            public void run() {
-                long elapsedTime = SystemClock.elapsedRealtime() - mLastPositionUpdateTime;
-                int currentPosition = Math.min(mDuration, (int) (mLastPosition + elapsedTime));
-                mPlaybackControlsRow.setCurrentTime(currentPosition);
-                mHandler.postDelayed(this, getUpdatePeriod());
-            }
-        };
-        mHandler.postDelayed(mRunnable, getUpdatePeriod());
-        setFadingEnabled(true);
-    }
+		mPlayPauseAction = new PlayPauseAction(getActivity());
+		mSkipNextAction = new PlaybackControlsRow.SkipNextAction(getActivity());
+		mSkipPreviousAction = new PlaybackControlsRow.SkipPreviousAction(getActivity());
 
-    protected void stopProgressAutomation() {
-        if (mHandler != null && mRunnable != null) {
-            mHandler.removeCallbacks(mRunnable);
-            setFadingEnabled(false);
-        }
-        mPlaybackControlsRow.setCurrentTime((int) mLastPosition);
-    }
+		mPrimaryActionsAdapter.add(mSkipPreviousAction);
+		mPrimaryActionsAdapter.add(mPlayPauseAction);
+		mPrimaryActionsAdapter.add(mSkipNextAction);
+	}
 
-    private void updateAlbumArt(Uri artUri) {
-        AlbumArtCache.getInstance().fetch(artUri.toString(), new AlbumArtCache.FetchListener() {
-                    @Override
-                    public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
-                        if (bitmap != null) {
-                            Drawable artDrawable = new BitmapDrawable(
-                                    TvPlaybackFragment.this.getResources(), bitmap);
-                            Drawable bgDrawable = new BitmapDrawable(
-                                    TvPlaybackFragment.this.getResources(), bitmap);
-                            mPlaybackControlsRow.setImageDrawable(artDrawable);
-                            mBackgroundManager.setDrawable(bgDrawable);
-                            mRowsAdapter.notifyArrayItemRangeChanged(
-                                    mRowsAdapter.indexOf(mPlaybackControlsRow), 1);
-                        }
-                    }
-                }
-        );
-    }
+	private void notifyChanged(Action action) {
+		ArrayObjectAdapter adapter = mPrimaryActionsAdapter;
+		if (adapter.indexOf(action) >= 0) {
+			adapter.notifyArrayItemRangeChanged(adapter.indexOf(action), 1);
+		}
+	}
 
-    protected void updateMetadata(MediaMetadataCompat metadata) {
-        if (mPlaybackControlsRow == null) {
-            initializePlaybackControls(metadata);
-        }
-        mDuration = (int) metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
-        mPlaybackControlsRow.setTotalTime(mDuration);
-        ((MutableMediaMetadataHolder) mPlaybackControlsRow.getItem()).metadata = metadata;
-        mRowsAdapter.notifyArrayItemRangeChanged(
-                mRowsAdapter.indexOf(mPlaybackControlsRow), 1);
-        updateAlbumArt(metadata.getDescription().getIconUri());
-    }
+	private void resetPlaybackRow() {
+		mDuration = 0;
+		mPlaybackControlsRow.setTotalTime(0);
+		mPlaybackControlsRow.setCurrentTime(0);
+		mRowsAdapter.notifyArrayItemRangeChanged(
+				mRowsAdapter.indexOf(mPlaybackControlsRow), 1);
+	}
 
-    protected void updatePlaybackState(PlaybackStateCompat state) {
-        if (mPlaybackControlsRow == null) {
-            // We only update playback state after we get a valid metadata.
-            return;
-        }
-        mLastPosition = state.getPosition();
-        mLastPositionUpdateTime = state.getLastPositionUpdateTime();
-        switch (state.getState()) {
-            case PlaybackStateCompat.STATE_PLAYING:
-                startProgressAutomation();
-                mPlayPauseAction.setIndex(PlayPauseAction.PAUSE);
-                break;
-            case PlaybackStateCompat.STATE_PAUSED:
-                stopProgressAutomation();
-                mPlayPauseAction.setIndex(PlayPauseAction.PLAY);
-                break;
-        }
+	private int getUpdatePeriod() {
+		if (getView() == null || mPlaybackControlsRow.getTotalTime() <= 0) {
+			return DEFAULT_UPDATE_PERIOD;
+		}
+		return Math.max(UPDATE_PERIOD, mPlaybackControlsRow.getTotalTime() / getView().getWidth());
+	}
 
-        MediaControllerCompat controller = MediaControllerCompat.getMediaController(getActivity());
-        updatePlayListRow(controller.getQueue());
-        mRowsAdapter.notifyArrayItemRangeChanged(
-                mRowsAdapter.indexOf(mPlaybackControlsRow), 1);
-    }
+	private void updateAlbumArt(Uri artUri) {
+		AlbumArtCache.getInstance().fetch(artUri.toString(), new AlbumArtCache.FetchListener() {
+					@Override
+					public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
+						if (bitmap != null) {
+							Drawable artDrawable = new BitmapDrawable(
+									TvPlaybackFragment.this.getResources(), bitmap);
+							Drawable bgDrawable = new BitmapDrawable(
+									TvPlaybackFragment.this.getResources(), bitmap);
+							mPlaybackControlsRow.setImageDrawable(artDrawable);
+							mBackgroundManager.setDrawable(bgDrawable);
+							mRowsAdapter.notifyArrayItemRangeChanged(
+									mRowsAdapter.indexOf(mPlaybackControlsRow), 1);
+						}
+					}
+				}
+		);
+	}
 
-    private static final class DescriptionPresenter extends AbstractDetailsDescriptionPresenter {
-        @Override
-        protected void onBindDescription(ViewHolder viewHolder, Object item) {
-            MutableMediaMetadataHolder data = ((MutableMediaMetadataHolder) item);
-            viewHolder.getTitle().setText(data.metadata.getDescription().getTitle());
-            viewHolder.getSubtitle().setText(data.metadata.getDescription().getSubtitle());
-        }
-    }
+	private static final class DescriptionPresenter extends AbstractDetailsDescriptionPresenter {
+		@Override
+		protected void onBindDescription(ViewHolder viewHolder, Object item) {
+			MutableMediaMetadataHolder data = ((MutableMediaMetadataHolder) item);
+			viewHolder.getTitle().setText(data.metadata.getDescription().getTitle());
+			viewHolder.getSubtitle().setText(data.metadata.getDescription().getSubtitle());
+		}
+	}
 
-    private final class ItemViewClickedListener implements OnItemViewClickedListener {
-        @Override
-        public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object clickedItem,
-                                  RowPresenter.ViewHolder rowViewHolder, Row row) {
+	private static final class MutableMediaMetadataHolder {
+		MediaMetadataCompat metadata;
 
-            if (clickedItem instanceof MediaSessionCompat.QueueItem) {
-                LogHelper.d(TAG, "item: ", clickedItem.toString());
+		public MutableMediaMetadataHolder(MediaMetadataCompat metadata) {
+			this.metadata = metadata;
+		}
+	}
 
-                MediaControllerCompat controller = MediaControllerCompat.getMediaController(getActivity());
-                MediaSessionCompat.QueueItem item = (MediaSessionCompat.QueueItem) clickedItem;
-                if (!QueueHelper.isQueueItemPlaying(getActivity(), item)
-                        || controller.getPlaybackState().getState()
-                        != PlaybackStateCompat.STATE_PLAYING) {
-                    controller.getTransportControls().skipToQueueItem(item.getQueueId());
-                }
-            }
-        }
-    }
+	private final class ItemViewClickedListener implements OnItemViewClickedListener {
+		@Override
+		public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object clickedItem,
+				RowPresenter.ViewHolder rowViewHolder, Row row) {
 
-    private static final class MutableMediaMetadataHolder {
-        MediaMetadataCompat metadata;
-        public MutableMediaMetadataHolder(MediaMetadataCompat metadata) {
-            this.metadata = metadata;
-        }
-    }
+			if (clickedItem instanceof MediaSessionCompat.QueueItem) {
+				LogHelper.d(TAG, "item: ", clickedItem.toString());
+
+				MediaControllerCompat controller = MediaControllerCompat.getMediaController(getActivity());
+				MediaSessionCompat.QueueItem item = (MediaSessionCompat.QueueItem) clickedItem;
+				if (!QueueHelper.isQueueItemPlaying(getActivity(), item)
+						|| controller.getPlaybackState().getState()
+						!= PlaybackStateCompat.STATE_PLAYING) {
+					controller.getTransportControls().skipToQueueItem(item.getQueueId());
+				}
+			}
+		}
+	}
 }

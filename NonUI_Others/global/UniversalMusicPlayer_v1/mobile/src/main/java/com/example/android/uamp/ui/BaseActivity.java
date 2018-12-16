@@ -39,174 +39,170 @@ import com.example.android.uamp.utils.ResourceHelper;
  */
 public abstract class BaseActivity extends ActionBarCastActivity implements MediaBrowserProvider {
 
-    private static final String TAG = LogHelper.makeLogTag(BaseActivity.class);
+	private static final String TAG = LogHelper.makeLogTag(BaseActivity.class);
 
-    private MediaBrowserCompat mMediaBrowser;
-    private PlaybackControlsFragment mControlsFragment;
+	private MediaBrowserCompat mMediaBrowser;
+	private PlaybackControlsFragment mControlsFragment;
+	// Callback that ensures that we are showing the controls
+	private final MediaControllerCompat.Callback mMediaControllerCallback =
+			new MediaControllerCompat.Callback() {
+				@Override
+				public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
+					if (shouldShowControls()) {
+						showPlaybackControls();
+					} else {
+						LogHelper.d(TAG, "mediaControllerCallback.onPlaybackStateChanged: " +
+								"hiding controls because state is ", state.getState());
+						hidePlaybackControls();
+					}
+				}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+				@Override
+				public void onMetadataChanged(MediaMetadataCompat metadata) {
+					if (shouldShowControls()) {
+						showPlaybackControls();
+					} else {
+						LogHelper.d(TAG, "mediaControllerCallback.onMetadataChanged: " +
+								"hiding controls because metadata is null");
+						hidePlaybackControls();
+					}
+				}
+			};
+	private final MediaBrowserCompat.ConnectionCallback mConnectionCallback =
+			new MediaBrowserCompat.ConnectionCallback() {
+				@Override
+				public void onConnected() {
+					LogHelper.d(TAG, "onConnected");
+					try {
+						connectToSession(mMediaBrowser.getSessionToken());
+					} catch (RemoteException e) {
+						LogHelper.e(TAG, e, "could not connect media controller");
+						hidePlaybackControls();
+					}
+				}
+			};
 
-        LogHelper.d(TAG, "Activity onCreate");
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            // Since our app icon has the same color as colorPrimary, our entry in the Recent Apps
-            // list gets weird. We need to change either the icon or the color
-            // of the TaskDescription.
-            ActivityManager.TaskDescription taskDesc = new ActivityManager.TaskDescription(
-                    getTitle().toString(),
-                    BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_white),
-                    ResourceHelper.getThemeColor(this, R.attr.colorPrimary,
-                            android.R.color.darker_gray));
-            setTaskDescription(taskDesc);
-        }
+		LogHelper.d(TAG, "Activity onCreate");
 
-        // Connect a media browser just to get the media session token. There are other ways
-        // this can be done, for example by sharing the session token directly.
-        mMediaBrowser = new MediaBrowserCompat(this,
-            new ComponentName(this, MusicService.class), mConnectionCallback, null);
-    }
+		if (Build.VERSION.SDK_INT >= 21) {
+			// Since our app icon has the same color as colorPrimary, our entry in the Recent Apps
+			// list gets weird. We need to change either the icon or the color
+			// of the TaskDescription.
+			ActivityManager.TaskDescription taskDesc = new ActivityManager.TaskDescription(
+					getTitle().toString(),
+					BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_white),
+					ResourceHelper.getThemeColor(this, R.attr.colorPrimary,
+							android.R.color.darker_gray));
+			setTaskDescription(taskDesc);
+		}
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        LogHelper.d(TAG, "Activity onStart");
+		// Connect a media browser just to get the media session token. There are other ways
+		// this can be done, for example by sharing the session token directly.
+		mMediaBrowser = new MediaBrowserCompat(this,
+				new ComponentName(this, MusicService.class), mConnectionCallback, null);
+	}
 
-        mControlsFragment = (PlaybackControlsFragment) getFragmentManager()
-            .findFragmentById(R.id.fragment_playback_controls);
-        if (mControlsFragment == null) {
-            throw new IllegalStateException("Mising fragment with id 'controls'. Cannot continue.");
-        }
+	@Override
+	protected void onStart() {
+		super.onStart();
+		LogHelper.d(TAG, "Activity onStart");
 
-        hidePlaybackControls();
+		mControlsFragment = (PlaybackControlsFragment) getFragmentManager()
+				.findFragmentById(R.id.fragment_playback_controls);
+		if (mControlsFragment == null) {
+			throw new IllegalStateException("Mising fragment with id 'controls'. Cannot continue.");
+		}
 
-        mMediaBrowser.connect();
-    }
+		hidePlaybackControls();
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        LogHelper.d(TAG, "Activity onStop");
-        MediaControllerCompat controllerCompat = MediaControllerCompat.getMediaController(this);
-        if (controllerCompat != null) {
-            controllerCompat.unregisterCallback(mMediaControllerCallback);
-        }
-        mMediaBrowser.disconnect();
-    }
+		mMediaBrowser.connect();
+	}
 
-    @Override
-    public MediaBrowserCompat getMediaBrowser() {
-        return mMediaBrowser;
-    }
+	@Override
+	public MediaBrowserCompat getMediaBrowser() {
+		return mMediaBrowser;
+	}
 
-    protected void onMediaControllerConnected() {
-        // empty implementation, can be overridden by clients.
-    }
+	@Override
+	protected void onStop() {
+		super.onStop();
+		LogHelper.d(TAG, "Activity onStop");
+		MediaControllerCompat controllerCompat = MediaControllerCompat.getMediaController(this);
+		if (controllerCompat != null) {
+			controllerCompat.unregisterCallback(mMediaControllerCallback);
+		}
+		mMediaBrowser.disconnect();
+	}
 
-    protected void showPlaybackControls() {
-        LogHelper.d(TAG, "showPlaybackControls");
-        if (NetworkHelper.isOnline(this)) {
-            getFragmentManager().beginTransaction()
-                .setCustomAnimations(
-                    R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom,
-                    R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom)
-                .show(mControlsFragment)
-                .commit();
-        }
-    }
+	protected void onMediaControllerConnected() {
+		// empty implementation, can be overridden by clients.
+	}
 
-    protected void hidePlaybackControls() {
-        LogHelper.d(TAG, "hidePlaybackControls");
-        getFragmentManager().beginTransaction()
-            .hide(mControlsFragment)
-            .commit();
-    }
+	protected void showPlaybackControls() {
+		LogHelper.d(TAG, "showPlaybackControls");
+		if (NetworkHelper.isOnline(this)) {
+			getFragmentManager().beginTransaction()
+					.setCustomAnimations(
+							R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom,
+							R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom)
+					.show(mControlsFragment)
+					.commit();
+		}
+	}
 
-    /**
-     * Check if the MediaSession is active and in a "playback-able" state
-     * (not NONE and not STOPPED).
-     *
-     * @return true if the MediaSession's state requires playback controls to be visible.
-     */
-    protected boolean shouldShowControls() {
-        MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(this);
-        if (mediaController == null ||
-            mediaController.getMetadata() == null ||
-            mediaController.getPlaybackState() == null) {
-            return false;
-        }
-        switch (mediaController.getPlaybackState().getState()) {
-            case PlaybackStateCompat.STATE_ERROR:
-            case PlaybackStateCompat.STATE_NONE:
-            case PlaybackStateCompat.STATE_STOPPED:
-                return false;
-            default:
-                return true;
-        }
-    }
+	protected void hidePlaybackControls() {
+		LogHelper.d(TAG, "hidePlaybackControls");
+		getFragmentManager().beginTransaction()
+				.hide(mControlsFragment)
+				.commit();
+	}
 
-    private void connectToSession(MediaSessionCompat.Token token) throws RemoteException {
-        MediaControllerCompat mediaController = getSupportMediaController();
-        if(mediaController == null) {
-            mediaController = new MediaControllerCompat(this, token);
-            setSupportMediaController(mediaController);
-        }
-        mediaController.registerCallback(mMediaControllerCallback);
+	/**
+	 * Check if the MediaSession is active and in a "playback-able" state (not NONE and not STOPPED).
+	 *
+	 * @return true if the MediaSession's state requires playback controls to be visible.
+	 */
+	protected boolean shouldShowControls() {
+		MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(this);
+		if (mediaController == null ||
+				mediaController.getMetadata() == null ||
+				mediaController.getPlaybackState() == null) {
+			return false;
+		}
+		switch (mediaController.getPlaybackState().getState()) {
+		case PlaybackStateCompat.STATE_ERROR:
+		case PlaybackStateCompat.STATE_NONE:
+		case PlaybackStateCompat.STATE_STOPPED:
+			return false;
+		default:
+			return true;
+		}
+	}
 
-        if (shouldShowControls()) {
-            showPlaybackControls();
-        } else {
-            LogHelper.d(TAG, "connectionCallback.onConnected: " +
-                "hiding controls because metadata is null");
-            hidePlaybackControls();
-        }
+	private void connectToSession(MediaSessionCompat.Token token) throws RemoteException {
+		MediaControllerCompat mediaController = getSupportMediaController();
+		if (mediaController == null) {
+			mediaController = new MediaControllerCompat(this, token);
+			setSupportMediaController(mediaController);
+		}
+		mediaController.registerCallback(mMediaControllerCallback);
 
-        if (mControlsFragment != null) {
-            mControlsFragment.onConnected();
-        }
+		if (shouldShowControls()) {
+			showPlaybackControls();
+		} else {
+			LogHelper.d(TAG, "connectionCallback.onConnected: " +
+					"hiding controls because metadata is null");
+			hidePlaybackControls();
+		}
 
-        onMediaControllerConnected();
-    }
+		if (mControlsFragment != null) {
+			mControlsFragment.onConnected();
+		}
 
-    // Callback that ensures that we are showing the controls
-    private final MediaControllerCompat.Callback mMediaControllerCallback =
-        new MediaControllerCompat.Callback() {
-            @Override
-            public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
-                if (shouldShowControls()) {
-                    showPlaybackControls();
-                } else {
-                    LogHelper.d(TAG, "mediaControllerCallback.onPlaybackStateChanged: " +
-                            "hiding controls because state is ", state.getState());
-                    hidePlaybackControls();
-                }
-            }
-
-            @Override
-            public void onMetadataChanged(MediaMetadataCompat metadata) {
-                if (shouldShowControls()) {
-                    showPlaybackControls();
-                } else {
-                    LogHelper.d(TAG, "mediaControllerCallback.onMetadataChanged: " +
-                        "hiding controls because metadata is null");
-                    hidePlaybackControls();
-                }
-            }
-        };
-
-    private final MediaBrowserCompat.ConnectionCallback mConnectionCallback =
-        new MediaBrowserCompat.ConnectionCallback() {
-            @Override
-            public void onConnected() {
-                LogHelper.d(TAG, "onConnected");
-                try {
-                    connectToSession(mMediaBrowser.getSessionToken());
-                } catch (RemoteException e) {
-                    LogHelper.e(TAG, e, "could not connect media controller");
-                    hidePlaybackControls();
-                }
-            }
-        };
-
+		onMediaControllerConnected();
+	}
 }

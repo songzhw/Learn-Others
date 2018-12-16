@@ -20,16 +20,14 @@ import android.os.Bundle;
 import com.example.android.uamp.R;
 
 /**
- * Placeholder activity for features that are not implemented in this sample, but
- * are in the navigation drawer.
+ * Placeholder activity for features that are not implemented in this sample, but are in the navigation drawer.
  */
 public class PlaceholderActivity extends BaseActivity {
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_placeholder);
-        initializeToolbar();
-    }
-
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_placeholder);
+		initializeToolbar();
+	}
 }

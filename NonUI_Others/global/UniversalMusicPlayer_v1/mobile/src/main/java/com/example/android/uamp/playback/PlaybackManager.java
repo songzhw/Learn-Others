@@ -70,7 +70,7 @@ public class PlaybackManager implements Playback.Callback {
 	 * Handle a request to play music
 	 */
 	public void handlePlayRequest() {
-		System.out.println("szw handlePlayRequest(): mState=" + mPlayback.getState());
+		System.out.println("szw PlaybackMgr handlePlayRequest(): mState=" + mPlayback.getState());
 		MediaSessionCompat.QueueItem currentMusic = mQueueManager.getCurrentMusic();
 		if (currentMusic != null) {
 			mServiceCallback.onPlaybackStart();

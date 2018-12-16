@@ -389,7 +389,6 @@
 	 }
 
 	 private void registerCarConnectionReceiver() {
-		 System.out.println("szw Service registerReceiver()()");
 		 IntentFilter filter = new IntentFilter(CarHelper.ACTION_MEDIA_STATUS);
 		 mCarConnectionReceiver = new BroadcastReceiver() {
 			 @Override

@@ -55,6 +55,7 @@ public class MusicPlayerActivity extends BaseActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		LogHelper.d(TAG, "Activity onCreate");
+		System.out.println("szw PlayerActivity onCreate");
 
 		setContentView(R.layout.activity_player);
 
@@ -74,6 +75,7 @@ public class MusicPlayerActivity extends BaseActivity
 			// send it to the media session and set it to null, so it won't play again
 			// when the activity is stopped/started or recreated:
 			String query = mVoiceSearchParams.getString(SearchManager.QUERY);
+			System.out.println("szw PlayerActivity onMediaControllerConnected() : "+query);
 			MediaControllerCompat.getMediaController(MusicPlayerActivity.this).getTransportControls()
 					.playFromSearch(query, mVoiceSearchParams);
 			mVoiceSearchParams = null;
@@ -84,6 +86,7 @@ public class MusicPlayerActivity extends BaseActivity
 	@Override
 	public void onMediaItemSelected(MediaBrowserCompat.MediaItem item) {
 		LogHelper.d(TAG, "onMediaItemSelected, mediaId=" + item.getMediaId());
+		System.out.println("szw PlayerActivity onMediaItemSelected() mediaId = "+item.getMediaId());
 		if (item.isPlayable()) {
 			MediaControllerCompat.getMediaController(MusicPlayerActivity.this).getTransportControls()
 					.playFromMediaId(item.getMediaId(), null);
@@ -124,6 +127,7 @@ public class MusicPlayerActivity extends BaseActivity
 	@Override
 	protected void onNewIntent(Intent intent) {
 		LogHelper.d(TAG, "onNewIntent, intent=" + intent);
+		System.out.println("szw PlayerActivity onNewIntent()");
 		initializeFromParams(null, intent);
 		startFullScreenActivityIfNeeded(intent);
 	}
@@ -136,6 +140,7 @@ public class MusicPlayerActivity extends BaseActivity
 		if (intent.getAction() != null
 				&& intent.getAction().equals(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH)) {
 			mVoiceSearchParams = intent.getExtras();
+			System.out.println("szw initializeFromParams() : "+mVoiceSearchParams.getString(SearchManager.QUERY));
 			LogHelper.d(TAG, "Starting from voice search query=",
 					mVoiceSearchParams.getString(SearchManager.QUERY));
 		} else {

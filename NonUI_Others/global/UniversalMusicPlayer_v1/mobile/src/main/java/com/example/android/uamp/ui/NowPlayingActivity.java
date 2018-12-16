@@ -39,6 +39,7 @@ public class NowPlayingActivity extends Activity {
 		LogHelper.d(TAG, "onCreate");
 		Intent newIntent;
 		UiModeManager uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
+		System.out.println("szw NowPlayingActiivty : onCreate()");
 		if (uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION) {
 			LogHelper.d(TAG, "Running on a TV Device");
 			newIntent = new Intent(this, TvPlaybackActivity.class);

@@ -149,7 +149,7 @@
 	 @Override
 	 public void onCreate() {
 		 super.onCreate();
-		 LogHelper.d(TAG, "onCreate");
+		 System.out.println("szw Service onCreate()");
 
 		 mMusicProvider = new MusicProvider();
 
@@ -234,8 +234,8 @@
 	 @Override
 	 public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid,
 			 Bundle rootHints) {
-		 LogHelper.d(TAG, "OnGetRoot: clientPackageName=" + clientPackageName,
-				 "; clientUid=" + clientUid + " ; rootHints=", rootHints);
+		 System.out.println("szw ServiceOnGetRoot(): clientPackageName=" + clientPackageName+
+				 "; clientUid=" + clientUid + " ; rootHints="+ rootHints);
 		 // To ensure you are not allowing any arbitrary app to browse your app's contents, you
 		 // need to check the origin:
 		 if (!mPackageValidator.isCallerAllowed(this, clientPackageName, clientUid)) {
@@ -268,7 +268,7 @@
 	 @Override
 	 public void onLoadChildren(@NonNull final String parentMediaId,
 			 @NonNull final Result<List<MediaItem>> result) {
-		 LogHelper.d(TAG, "OnLoadChildren: parentMediaId=", parentMediaId);
+		 System.out.println("szw Service OnLoadChildren(): parentMediaId="+ parentMediaId);
 		 if (MEDIA_ID_EMPTY_ROOT.equals(parentMediaId)) {
 			 result.sendResult(new ArrayList<MediaItem>());
 		 } else if (mMusicProvider.isInitialized()) {
@@ -293,6 +293,7 @@
 	  */
 	 @Override
 	 public int onStartCommand(Intent startIntent, int flags, int startId) {
+		 System.out.println("szw Service onStartCommand()");
 		 if (startIntent != null) {
 			 String action = startIntent.getAction();
 			 String command = startIntent.getStringExtra(CMD_NAME);
@@ -304,6 +305,7 @@
 				 }
 			 } else {
 				 // Try to handle the intent as a media button event wrapped by MediaButtonReceiver
+				 System.out.println("szw Service onStartCommand() -- receiver");
 				 MediaButtonReceiver.handleIntent(mediaSession, startIntent);
 			 }
 		 }
@@ -351,6 +353,7 @@
 	  */
 	 @Override
 	 public void onPlaybackStart() {
+		 System.out.println("szw Service onPlaybackStart()");
 		 mediaSession.setActive(true);
 
 		 mDelayedStopHandler.removeCallbacksAndMessages(null);
@@ -381,10 +384,12 @@
 
 	 @Override
 	 public void onPlaybackStateUpdated(PlaybackStateCompat newState) {
+		 System.out.println("szw Service onPlaybackStateChanged()");
 		 mediaSession.setPlaybackState(newState);
 	 }
 
 	 private void registerCarConnectionReceiver() {
+		 System.out.println("szw Service registerReceiver()()");
 		 IntentFilter filter = new IntentFilter(CarHelper.ACTION_MEDIA_STATUS);
 		 mCarConnectionReceiver = new BroadcastReceiver() {
 			 @Override

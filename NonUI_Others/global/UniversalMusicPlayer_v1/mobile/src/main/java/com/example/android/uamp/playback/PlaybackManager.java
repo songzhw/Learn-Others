@@ -70,7 +70,7 @@ public class PlaybackManager implements Playback.Callback {
 	 * Handle a request to play music
 	 */
 	public void handlePlayRequest() {
-		LogHelper.d(TAG, "handlePlayRequest: mState=" + mPlayback.getState());
+		System.out.println("szw handlePlayRequest(): mState=" + mPlayback.getState());
 		MediaSessionCompat.QueueItem currentMusic = mQueueManager.getCurrentMusic();
 		if (currentMusic != null) {
 			mServiceCallback.onPlaybackStart();
@@ -82,7 +82,7 @@ public class PlaybackManager implements Playback.Callback {
 	 * Handle a request to pause music
 	 */
 	public void handlePauseRequest() {
-		LogHelper.d(TAG, "handlePauseRequest: mState=" + mPlayback.getState());
+		System.out.println("szw handlePauseRequest(): mState=" + mPlayback.getState());
 		if (mPlayback.isPlaying()) {
 			mPlayback.pause();
 			mServiceCallback.onPlaybackStop();
@@ -108,7 +108,7 @@ public class PlaybackManager implements Playback.Callback {
 	 * @param error if not null, error message to present to the user.
 	 */
 	public void updatePlaybackState(String error) {
-		LogHelper.d(TAG, "updatePlaybackState, playback state=" + mPlayback.getState());
+		System.out.println("szw PlaybackMgr updatePlaybackState(), playback state=" + mPlayback.getState());
 		long position = PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN;
 		if (mPlayback != null && mPlayback.isConnected()) {
 			position = mPlayback.getCurrentStreamPosition();
@@ -173,7 +173,7 @@ public class PlaybackManager implements Playback.Callback {
 
 	@Override
 	public void setCurrentMediaId(String mediaId) {
-		LogHelper.d(TAG, "setCurrentMediaId", mediaId);
+		System.out.println("szw setCurrentMediaId"+ mediaId);
 		mQueueManager.setQueueFromMusic(mediaId);
 	}
 
@@ -233,8 +233,8 @@ public class PlaybackManager implements Playback.Callback {
 		String musicId = MediaIDHelper.extractMusicIDFromMediaID(mediaId);
 		int favoriteIcon = mMusicProvider.isFavorite(musicId) ?
 				R.drawable.ic_star_on : R.drawable.ic_star_off;
-		LogHelper.d(TAG, "updatePlaybackState, setting Favorite custom action of music ",
-				musicId, " current favorite=", mMusicProvider.isFavorite(musicId));
+		System.out.println("szw setCustomAction(), setting Favorite custom action of music "+
+				musicId+ " current favorite="+ mMusicProvider.isFavorite(musicId));
 		Bundle customActionExtras = new Bundle();
 		WearHelper.setShowCustomActionOnWear(customActionExtras, true);
 		stateBuilder.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
@@ -271,7 +271,7 @@ public class PlaybackManager implements Playback.Callback {
 	private class MediaSessionCallback extends MediaSessionCompat.Callback {
 		@Override
 		public void onPlay() {
-			LogHelper.d(TAG, "play");
+			System.out.println("szw MediaSessionCallback onPlay()");
 			if (mQueueManager.getCurrentMusic() == null) {
 				mQueueManager.setRandomQueue();
 			}
@@ -280,7 +280,7 @@ public class PlaybackManager implements Playback.Callback {
 
 		@Override
 		public void onPlayFromMediaId(String mediaId, Bundle extras) {
-			LogHelper.d(TAG, "playFromMediaId mediaId:", mediaId, "  extras=", extras);
+			System.out.println("szw MediaSessionCallback playFromMediaId() mediaId:"+ mediaId+ "  extras="+ extras);
 			mQueueManager.setQueueFromMusic(mediaId);
 			handlePlayRequest();
 		}
@@ -297,7 +297,7 @@ public class PlaybackManager implements Playback.Callback {
 		 **/
 		@Override
 		public void onPlayFromSearch(final String query, final Bundle extras) {
-			LogHelper.d(TAG, "playFromSearch  query=", query, " extras=", extras);
+			System.out.println("szw MediaSessionCallback playFromSearch()  query="+ query+ " extras="+ extras);
 
 			mPlayback.setState(PlaybackStateCompat.STATE_CONNECTING);
 			mMusicProvider.retrieveMediaAsync(new MusicProvider.Callback() {

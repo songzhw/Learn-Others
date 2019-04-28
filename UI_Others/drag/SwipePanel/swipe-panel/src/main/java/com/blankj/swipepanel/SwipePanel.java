@@ -95,7 +95,7 @@ public class SwipePanel extends FrameLayout {
     paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
     paint.setStyle(Paint.Style.FILL);
 
-    halfSize = dp2px(72);
+    halfSize = DrawableUtils.dp2px(72);
     unit = halfSize / 16;
 
     if (attrs != null) {
@@ -426,16 +426,16 @@ public class SwipePanel extends FrameLayout {
   }
 
   private void animClose() {
-    boolean l = animClose(LEFT);
-    boolean u = animClose(TOP);
-    boolean r = animClose(RIGHT);
-    boolean d = animClose(BOTTOM);
+    boolean l = isAnimCloseAt(LEFT);
+    boolean u = isAnimCloseAt(TOP);
+    boolean r = isAnimCloseAt(RIGHT);
+    boolean d = isAnimCloseAt(BOTTOM);
     if (l || u || r || d) {
       postInvalidateDelayed(0);
     }
   }
 
-  private boolean animClose(int direction) {
+  private boolean isAnimCloseAt(int direction) {
     if (mCloses[direction]) {
       if (progresses[direction] > 0) {
         progresses[direction] -= mStartSpeed[direction];
@@ -585,11 +585,6 @@ public class SwipePanel extends FrameLayout {
       getChildAt(i).dispatchTouchEvent(cancelEvent);
     }
     cancelEvent.recycle();
-  }
-
-  private static int dp2px(final float dpValue) {
-    final float scale = Resources.getSystem().getDisplayMetrics().density;
-    return (int) (dpValue * scale + 0.5f);
   }
 
 

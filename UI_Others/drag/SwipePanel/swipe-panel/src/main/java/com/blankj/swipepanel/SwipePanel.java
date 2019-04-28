@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.*;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.SystemClock;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
@@ -15,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.*;
 import android.widget.FrameLayout;
 
@@ -41,20 +38,20 @@ public class SwipePanel extends FrameLayout {
 
   @IntDef({LEFT, TOP, RIGHT, BOTTOM})
   @Retention(RetentionPolicy.SOURCE)
-  public @interface Direction {
+  public @interface SwipePanelDirection {
   }
 
   private static final float TRIGGER_PROGRESS = 0.95f;
 
-  private int mWidth;
-  private int mHeight;
+  private int width;
+  private int height;
 
-  private Paint mPaint;
+  private Paint paint;
 
   private float halfSize;
   private float unit;
 
-  private int mTouchSlop;
+  private int touchSlop;
 
   private Path[] mPath = new Path[4];
   private int[] mPaintColor = new int[4];
@@ -75,13 +72,16 @@ public class SwipePanel extends FrameLayout {
   private float mCurrentX;
   private float mCurrentY;
   private RectF mRectF = new RectF();
+  private float curPathX;
+  private float curPathY;
 
   private boolean mIsEdgeStart;
   private int mStartDirection = -1;
 
-  private int mLimit;
+  private int oneThird;
 
   private OnFullSwipeListener mListener;
+
 
   public SwipePanel(@NonNull Context context) {
     this(context, null);
@@ -90,10 +90,10 @@ public class SwipePanel extends FrameLayout {
   public SwipePanel(@NonNull Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
     int edgeSlop = ViewConfiguration.get(context).getScaledEdgeSlop();
-    mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
+    touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
 
-    mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-    mPaint.setStyle(Paint.Style.FILL);
+    paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+    paint.setStyle(Paint.Style.FILL);
 
     halfSize = dp2px(72);
     unit = halfSize / 16;
@@ -183,7 +183,7 @@ public class SwipePanel extends FrameLayout {
   }
 
   private void setDrawable(int drawableId, int direction) {
-    mDrawables[direction] = getDrawable(getContext(), drawableId);
+    mDrawables[direction] = DrawableUtils.getDrawable(getContext(), drawableId);
   }
 
   public void setLeftDrawable(Drawable drawable) {
@@ -248,14 +248,14 @@ public class SwipePanel extends FrameLayout {
   }
 
   public void wrapView(@NonNull View view) {
-    ViewParent parent = view.getParent();
-    if (parent instanceof ViewGroup) {
-      ViewGroup group = (ViewGroup) parent;
-      int i = group.indexOfChild(view);
+    ViewParent viewParent = view.getParent();
+    if (viewParent instanceof ViewGroup) {
+      ViewGroup parent = (ViewGroup) viewParent;
+      int selfViewIndex = parent.indexOfChild(view);
+      parent.removeViewAt(selfViewIndex);
       ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-      group.removeViewAt(i);
-      group.addView(this, i, layoutParams);
-      addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+      parent.addView(this, selfViewIndex, layoutParams);
+      this.addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     } else {
       addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
@@ -277,7 +277,7 @@ public class SwipePanel extends FrameLayout {
     postInvalidate();
   }
 
-  public void close(@Direction int direction) {
+  public void close(@SwipePanelDirection int direction) {
     mCloses[direction] = true;
     mStartSpeed[direction] = 0.01f;
     postInvalidate();
@@ -286,9 +286,9 @@ public class SwipePanel extends FrameLayout {
   @Override
   protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
     super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    mWidth = getMeasuredWidth();
-    mHeight = getMeasuredHeight();
-    mLimit = Math.min(mWidth, mHeight) / 3;
+    width = getMeasuredWidth();
+    height = getMeasuredHeight();
+    oneThird = Math.min(width, height) / 3;
   }
 
   @Override
@@ -308,7 +308,7 @@ public class SwipePanel extends FrameLayout {
   private void drawPath(Canvas canvas, int direction) {
     if (mPath[direction] == null) return;
     updatePaint(direction);
-    canvas.drawPath(getPath(direction), mPaint);
+    canvas.drawPath(getPath(direction), paint);
     drawIcon(canvas, direction);
   }
 
@@ -324,10 +324,10 @@ public class SwipePanel extends FrameLayout {
         edge = 0;
         mark = 1;
       } else if (direction == RIGHT) {
-        edge = mWidth;
+        edge = width;
         mark = -1;
       } else {
-        edge = mHeight;
+        edge = height;
         mark = -1;
       }
       if (direction == LEFT || direction == RIGHT) {
@@ -352,7 +352,7 @@ public class SwipePanel extends FrameLayout {
   private void drawIcon(Canvas canvas, int direction) {
     if (mDrawables[direction] == null) return;
     if (mBitmaps[direction] == null || mBitmaps[direction].isRecycled()) {
-      mBitmaps[direction] = drawable2Bitmap(mDrawables[direction]);
+      mBitmaps[direction] = DrawableUtils.drawable2Bitmap(mDrawables[direction]);
     }
     if (mBitmaps[direction] == null || mBitmaps[direction].isRecycled()) {
       Log.e(TAG, "couldn't get bitmap.");
@@ -380,7 +380,7 @@ public class SwipePanel extends FrameLayout {
       mRectF.right = mRectF.left + width;
       mRectF.bottom = mRectF.top + height;
     } else if (direction == RIGHT) {
-      mRectF.right = mWidth + progresses[direction] * unit * -1 + deltaWidth / 2 * -1;
+      mRectF.right = this.width + progresses[direction] * unit * -1 + deltaWidth / 2 * -1;
       mRectF.top = mDown[RIGHT] - height / 2f;
       mRectF.left = mRectF.right - width;
       mRectF.bottom = mRectF.top + height;
@@ -391,7 +391,7 @@ public class SwipePanel extends FrameLayout {
       mRectF.bottom = mRectF.top + height;
     } else {
       mRectF.left = mDown[BOTTOM] - width / 2;
-      mRectF.bottom = mHeight + progresses[direction] * unit * -1 + deltaHeight / 2 * -1;
+      mRectF.bottom = this.height + progresses[direction] * unit * -1 + deltaHeight / 2 * -1;
       mRectF.top = mRectF.bottom - height;
       mRectF.right = mRectF.left + width;
     }
@@ -413,18 +413,16 @@ public class SwipePanel extends FrameLayout {
     mPath[direction].quadTo(preX, preY, (preX + curPathX) / 2, (preY + curPathY) / 2);
   }
 
-  private float curPathX;
-  private float curPathY;
 
   private void updatePaint(int direction) {
-    mPaint.setColor(mPaintColor[direction]);
+    paint.setColor(mPaintColor[direction]);
     float alphaProgress = progresses[direction];
     if (alphaProgress < 0.25f) {
       alphaProgress = 0.25f;
     } else if (alphaProgress > 0.75f) {
       alphaProgress = 0.75f;
     }
-    mPaint.setAlpha((int) (alphaProgress * 255));
+    paint.setAlpha((int) (alphaProgress * 255));
   }
 
   private void animClose() {
@@ -479,7 +477,7 @@ public class SwipePanel extends FrameLayout {
           float deltaY = mCurrentY - mDownY;
           float disX = Math.abs(deltaX);
           float disY = Math.abs(deltaY);
-          if (disX > mTouchSlop || disY > mTouchSlop) {
+          if (disX > touchSlop || disY > touchSlop) {
             if (disX >= disY) {
               if (mIsStart[LEFT] && deltaX > 0) {
                 decideDirection(LEFT);
@@ -526,24 +524,24 @@ public class SwipePanel extends FrameLayout {
   private void decideDirection(int direction) {
     if (direction == LEFT || direction == RIGHT) {
       if (mIsCenter[direction]) {
-        mDown[direction] = mHeight / 2f;
+        mDown[direction] = height / 2f;
       } else {
         if (mDownY < halfSize) {
           mDown[direction] = halfSize;
-        } else if (mDownY >= mHeight - halfSize) {
-          mDown[direction] = mHeight - halfSize;
+        } else if (mDownY >= height - halfSize) {
+          mDown[direction] = height - halfSize;
         } else {
           mDown[direction] = mDownY;
         }
       }
     } else {
       if (mIsCenter[direction]) {
-        mDown[direction] = mWidth / 2f;
+        mDown[direction] = width / 2f;
       } else {
         if (mDownX < halfSize) {
           mDown[direction] = halfSize;
-        } else if (mDownX >= mWidth - halfSize) {
-          mDown[direction] = mWidth - halfSize;
+        } else if (mDownX >= width - halfSize) {
+          mDown[direction] = width - halfSize;
         } else {
           mDown[direction] = mDownX;
         }
@@ -562,19 +560,19 @@ public class SwipePanel extends FrameLayout {
     if (mStartDirection == LEFT) {
       float deltaX = mCurrentX - mDownX;
       if (deltaX <= 0) return 0;
-      return Math.min(deltaX / mLimit, 1);
+      return Math.min(deltaX / oneThird, 1);
     } else if (mStartDirection == TOP) {
       float deltaY = mCurrentY - mDownY;
       if (deltaY <= 0) return 0;
-      return Math.min(deltaY / mLimit, 1);
+      return Math.min(deltaY / oneThird, 1);
     } else if (mStartDirection == RIGHT) {
       float deltaX = mCurrentX - mDownX;
       if (deltaX >= 0) return 0;
-      return Math.min(-deltaX / mLimit, 1);
+      return Math.min(-deltaX / oneThird, 1);
     } else {
       float deltaY = mCurrentY - mDownY;
       if (deltaY >= 0) return 0;
-      return Math.min(-deltaY / mLimit, 1);
+      return Math.min(-deltaY / oneThird, 1);
     }
   }
 
@@ -594,55 +592,8 @@ public class SwipePanel extends FrameLayout {
     return (int) (dpValue * scale + 0.5f);
   }
 
-  private static Bitmap drawable2Bitmap(final Drawable drawable) {
-    if (drawable instanceof BitmapDrawable) {
-      BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-      if (bitmapDrawable.getBitmap() != null) {
-        return bitmapDrawable.getBitmap();
-      }
-    }
-    Bitmap bitmap;
-    if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-      bitmap = Bitmap.createBitmap(1, 1,
-          drawable.getOpacity() != PixelFormat.OPAQUE
-              ? Bitmap.Config.ARGB_8888
-              : Bitmap.Config.RGB_565);
-    } else {
-      bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-          drawable.getIntrinsicHeight(),
-          drawable.getOpacity() != PixelFormat.OPAQUE
-              ? Bitmap.Config.ARGB_8888
-              : Bitmap.Config.RGB_565);
-    }
-    Canvas canvas = new Canvas(bitmap);
-    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-    drawable.draw(canvas);
-    return bitmap;
-  }
-
-  private static final Object sLock = new Object();
-
-  private static TypedValue sTempValue;
-
-  private static Drawable getDrawable(@NonNull Context context, @DrawableRes int id) {
-    if (Build.VERSION.SDK_INT >= 21) {
-      return context.getDrawable(id);
-    } else if (Build.VERSION.SDK_INT >= 16) {
-      return context.getResources().getDrawable(id);
-    } else {
-      final int resolvedId;
-      synchronized (sLock) {
-        if (sTempValue == null) {
-          sTempValue = new TypedValue();
-        }
-        context.getResources().getValue(id, sTempValue, true);
-        resolvedId = sTempValue.resourceId;
-      }
-      return context.getResources().getDrawable(resolvedId);
-    }
-  }
 
   public interface OnFullSwipeListener {
-    void onFullSwipe(@Direction int direction);
+    void onFullSwipe(@SwipePanelDirection int direction);
   }
 }

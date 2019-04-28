@@ -9,21 +9,21 @@ import com.blankj.utilcode.util.ToastUtils;
 
 public class LayoutSwipePanelActivity extends AppCompatActivity {
 
-    public static void start(Context context) {
-        Intent starter = new Intent(context, LayoutSwipePanelActivity.class);
-        context.startActivity(starter);
-    }
+  public static void start(Context context) {
+    Intent starter = new Intent(context, LayoutSwipePanelActivity.class);
+    context.startActivity(starter);
+  }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_layout_swipe_panel);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_layout_swipe_panel);
 
-        ((SwipePanel) findViewById(R.id.swipePanel)).setOnFullSwipeListener(new SwipePanel.OnFullSwipeListener() {
-            @Override
-            public void onFullSwipe(int direction) {
-                ToastUtils.showLong(direction);
-            }
-        });
-    }
+    ((SwipePanel) findViewById(R.id.swipePanel)).setOnFullSwipeListener(new SwipePanel.OnFullSwipeListener() {
+      @Override
+      public void onFullSwipe(int direction) {
+        ToastUtils.showLong(direction);
+      }
+    });
+  }
 }

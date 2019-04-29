@@ -27,3 +27,4 @@ public class LayoutSwipePanelActivity extends AppCompatActivity {
     });
   }
 }
+

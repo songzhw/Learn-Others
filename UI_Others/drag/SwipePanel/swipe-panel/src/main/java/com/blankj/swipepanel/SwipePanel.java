@@ -2,7 +2,6 @@ package com.blankj.swipepanel;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
@@ -58,7 +57,7 @@ public class SwipePanel extends FrameLayout {
   private int[] mEdgeSizes = new int[4];
   private Drawable[] mDrawables = new Drawable[4];
   private Bitmap[] mBitmaps = new Bitmap[4];
-  private boolean[] mIsStart = new boolean[4];
+  private boolean[] isStartAry = new boolean[4];
   private float[] mDown = new float[4];
   private float[] progresses = new float[4];
   private float[] preProgresses = new float[4];
@@ -67,20 +66,20 @@ public class SwipePanel extends FrameLayout {
   private boolean[] mIsCenter = new boolean[4];
   private boolean[] mEnabled = {true, true, true, true};
 
-  private float mDownX;
-  private float mDownY;
-  private float mCurrentX;
-  private float mCurrentY;
+  private float downX;
+  private float downY;
+  private float currentX;
+  private float currentY;
   private RectF mRectF = new RectF();
   private float curPathX;
   private float curPathY;
 
-  private boolean mIsEdgeStart;
-  private int mStartDirection = -1;
+  private boolean isEdgeStart;
+  private int startDirection = -1;
 
   private int oneThird;
 
-  private OnFullSwipeListener mListener;
+  private OnFullSwipeListener listener;
 
 
   public SwipePanel(@NonNull Context context) {
@@ -262,7 +261,7 @@ public class SwipePanel extends FrameLayout {
   }
 
   public void setOnFullSwipeListener(OnFullSwipeListener listener) {
-    mListener = listener;
+    this.listener = listener;
   }
 
   public boolean isOpen(int direction) {
@@ -456,64 +455,67 @@ public class SwipePanel extends FrameLayout {
     super.dispatchTouchEvent(ev);
     int action = ev.getAction();
     if (action == MotionEvent.ACTION_DOWN) {
-      mDownX = ev.getX();
-      mDownY = ev.getY();
-      mIsStart[LEFT] = mEnabled[LEFT] && mDrawables[LEFT] != null && !isOpen(LEFT) && mDownX <= mEdgeSizes[LEFT];
-      mIsStart[TOP] = mEnabled[TOP] && mDrawables[TOP] != null && !isOpen(TOP) && mDownY <= mEdgeSizes[TOP];
-      mIsStart[RIGHT] = mEnabled[RIGHT] && mDrawables[RIGHT] != null && !isOpen(RIGHT) && mDownX >= getWidth() - mEdgeSizes[RIGHT];
-      mIsStart[BOTTOM] = mEnabled[BOTTOM] && mDrawables[BOTTOM] != null && !isOpen(BOTTOM) && mDownY >= getHeight() - mEdgeSizes[BOTTOM];
-      mIsEdgeStart = mIsStart[LEFT] || mIsStart[TOP] || mIsStart[RIGHT] || mIsStart[BOTTOM];
-      if (mIsEdgeStart) {
-        mStartDirection = -1;
+      downX = ev.getX();
+      downY = ev.getY();
+      isStartAry[LEFT] = mEnabled[LEFT] && mDrawables[LEFT] != null && !isOpen(LEFT) && downX <= mEdgeSizes[LEFT];
+      isStartAry[TOP] = mEnabled[TOP] && mDrawables[TOP] != null && !isOpen(TOP) && downY <= mEdgeSizes[TOP];
+      isStartAry[RIGHT] = mEnabled[RIGHT] && mDrawables[RIGHT] != null && !isOpen(RIGHT) && downX >= getWidth() - mEdgeSizes[RIGHT];
+      isStartAry[BOTTOM] = mEnabled[BOTTOM] && mDrawables[BOTTOM] != null && !isOpen(BOTTOM) && downY >= getHeight() - mEdgeSizes[BOTTOM];
+      isEdgeStart = isStartAry[LEFT] || isStartAry[TOP] || isStartAry[RIGHT] || isStartAry[BOTTOM];
+      if (isEdgeStart) {
+        startDirection = -1;
       }
       return true;
     }
-    if (mIsEdgeStart) {
+    if (isEdgeStart) {
+
       if (action == MotionEvent.ACTION_MOVE) {
-        mCurrentX = ev.getX();
-        mCurrentY = ev.getY();
-        if (mStartDirection == -1) {
-          float deltaX = mCurrentX - mDownX;
-          float deltaY = mCurrentY - mDownY;
+        currentX = ev.getX();
+        currentY = ev.getY();
+        if (startDirection == -1) {
+          float deltaX = currentX - downX;
+          float deltaY = currentY - downY;
           float disX = Math.abs(deltaX);
           float disY = Math.abs(deltaY);
           if (disX > touchSlop || disY > touchSlop) {
             if (disX >= disY) {
-              if (mIsStart[LEFT] && deltaX > 0) {
-                decideDirection(LEFT);
-              } else if (mIsStart[RIGHT] && deltaX < 0) {
-                decideDirection(RIGHT);
+              if (isStartAry[LEFT] && deltaX > 0) {
+                setDirection(LEFT);
+              } else if (isStartAry[RIGHT] && deltaX < 0) {
+                setDirection(RIGHT);
               }
             } else {
-              if (mIsStart[TOP] && deltaY > 0) {
-                decideDirection(TOP);
-              } else if (mIsStart[BOTTOM] && deltaY < 0) {
-                decideDirection(BOTTOM);
+              if (isStartAry[TOP] && deltaY > 0) {
+                setDirection(TOP);
+              } else if (isStartAry[BOTTOM] && deltaY < 0) {
+                setDirection(BOTTOM);
               }
             }
           }
         }
-        if (mStartDirection != -1) {
-          float preProgress = preProgresses[mStartDirection];
-          preProgresses[mStartDirection] = progresses[mStartDirection];
-          progresses[mStartDirection] = calculateProgress();
-          if (Math.abs(preProgress - progresses[mStartDirection]) > 0.01) {
+        if (startDirection != -1) {
+          float preProgress = preProgresses[startDirection];
+          preProgresses[startDirection] = progresses[startDirection];
+          progresses[startDirection] = calculateProgress();
+          if (Math.abs(preProgress - progresses[startDirection]) > 0.01) {
             postInvalidate();
           } else {
-            preProgresses[mStartDirection] = preProgress;
+            preProgresses[startDirection] = preProgress;
           }
         }
-      } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-        if (mStartDirection != -1) {
-          mCurrentX = ev.getX();
-          mCurrentY = ev.getY();
-          progresses[mStartDirection] = calculateProgress();
-          if (isOpen(mStartDirection)) {
-            if (mListener != null) {
-              mListener.onFullSwipe(mStartDirection);
+      }
+
+      else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+        if (startDirection != -1) {
+          currentX = ev.getX();
+          currentY = ev.getY();
+          progresses[startDirection] = calculateProgress();
+          if (isOpen(startDirection)) {
+            if (listener != null) {
+              listener.onFullSwipe(startDirection);
             }
           } else {
-            close(mStartDirection);
+            close(startDirection);
           }
         }
       }
@@ -521,33 +523,33 @@ public class SwipePanel extends FrameLayout {
     return true;
   }
 
-  private void decideDirection(int direction) {
+  private void setDirection(int direction) {
     if (direction == LEFT || direction == RIGHT) {
       if (mIsCenter[direction]) {
         mDown[direction] = height / 2f;
       } else {
-        if (mDownY < halfSize) {
+        if (downY < halfSize) {
           mDown[direction] = halfSize;
-        } else if (mDownY >= height - halfSize) {
+        } else if (downY >= height - halfSize) {
           mDown[direction] = height - halfSize;
         } else {
-          mDown[direction] = mDownY;
+          mDown[direction] = downY;
         }
       }
     } else {
       if (mIsCenter[direction]) {
         mDown[direction] = width / 2f;
       } else {
-        if (mDownX < halfSize) {
+        if (downX < halfSize) {
           mDown[direction] = halfSize;
-        } else if (mDownX >= width - halfSize) {
+        } else if (downX >= width - halfSize) {
           mDown[direction] = width - halfSize;
         } else {
-          mDown[direction] = mDownX;
+          mDown[direction] = downX;
         }
       }
     }
-    mStartDirection = direction;
+    startDirection = direction;
     if (mPath[direction] == null) {
       mPath[direction] = new Path();
     }
@@ -557,20 +559,20 @@ public class SwipePanel extends FrameLayout {
   }
 
   private float calculateProgress() {
-    if (mStartDirection == LEFT) {
-      float deltaX = mCurrentX - mDownX;
+    if (startDirection == LEFT) {
+      float deltaX = currentX - downX;
       if (deltaX <= 0) return 0;
       return Math.min(deltaX / oneThird, 1);
-    } else if (mStartDirection == TOP) {
-      float deltaY = mCurrentY - mDownY;
+    } else if (startDirection == TOP) {
+      float deltaY = currentY - downY;
       if (deltaY <= 0) return 0;
       return Math.min(deltaY / oneThird, 1);
-    } else if (mStartDirection == RIGHT) {
-      float deltaX = mCurrentX - mDownX;
+    } else if (startDirection == RIGHT) {
+      float deltaX = currentX - downX;
       if (deltaX >= 0) return 0;
       return Math.min(-deltaX / oneThird, 1);
     } else {
-      float deltaY = mCurrentY - mDownY;
+      float deltaY = currentY - downY;
       if (deltaY >= 0) return 0;
       return Math.min(-deltaY / oneThird, 1);
     }

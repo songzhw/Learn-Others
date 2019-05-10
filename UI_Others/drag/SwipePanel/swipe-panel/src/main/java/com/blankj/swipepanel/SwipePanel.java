@@ -285,11 +285,13 @@ public class SwipePanel extends FrameLayout {
   @Override
   protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
     super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    width = getMeasuredWidth();
+    width = getMeasuredWidth(); // 在判断拖了哪边, 是否拖到了边上时, width都用得上.
     height = getMeasuredHeight();
-    oneThird = Math.min(width, height) / 3;
+    oneThird = Math.min(width, height) / 3; // oneThird是拖动成立的基准线
   }
 
+  // = = = = = = = = = = = ViewGroup的绘制要在dispatchDraw上 = = = = = = = = = = =
+  // 因为ViewGroup.onDraw并不见得会被调用. 没有bg时就不会调用onDraw
   @Override
   protected void dispatchDraw(Canvas canvas) {
     super.dispatchDraw(canvas);
@@ -449,6 +451,7 @@ public class SwipePanel extends FrameLayout {
     return false;
   }
 
+  // = = = = = = = = = = = Touch事件. 调用了super, 返回的是true = = = = = = = = = = =
   @SuppressLint("WrongConstant")
   @Override
   public boolean dispatchTouchEvent(MotionEvent ev) {

@@ -39,17 +39,31 @@ class TasksActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.tasks_act)
-        setupNavigationDrawer()
-        setSupportActionBar(findViewById(R.id.toolbar))
+
+        drawerLayout = (findViewById<DrawerLayout>(R.id.drawer_layout))
+                .apply {
+                    setStatusBarBackground(R.color.colorPrimaryDark)
+                }
+
+        /*
+         * toolbar上的title, icon, click handler是在哪设置的?
+         * : 是在每个Fragment中设定的, 毕竟每个fragment的toolbar是不一样的!
+         *   Fragment就是在onCreateOptionsMenu(menu: Menu, inflater: MenuInflater)中定义menu文件
+         */
+        this.setSupportActionBar(findViewById(R.id.toolbar))
 
         val navController: NavController = findNavController(R.id.nav_host_fragment)
+        // 两个id来自 menu/drawer_actions.xml,
         appBarConfiguration =
             AppBarConfiguration.Builder(R.id.tasks_fragment_dest, R.id.statistics_fragment_dest)
                 .setDrawerLayout(drawerLayout)
                 .build()
         setupActionBarWithNavController(navController, appBarConfiguration)
-        findViewById<NavigationView>(R.id.nav_view)
-            .setupWithNavController(navController)
+        findViewById<NavigationView>(R.id.nav_view).setupWithNavController(navController)
+
+
+        // 放置Fragment的flay是使用了: app:navGraph="@navigation/nav_graph" , 即res/navigation/nav_graph.xml
+        // 而这个nav_graph.xml中指明了起点Fragment是TasksFramgent:  app:startDestination="@id/tasks_fragment_dest"
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -57,12 +71,6 @@ class TasksActivity : AppCompatActivity() {
             || super.onSupportNavigateUp()
     }
 
-    private fun setupNavigationDrawer() {
-        drawerLayout = (findViewById<DrawerLayout>(R.id.drawer_layout))
-            .apply {
-                setStatusBarBackground(R.color.colorPrimaryDark)
-            }
-    }
 }
 
 // Keys for navigation

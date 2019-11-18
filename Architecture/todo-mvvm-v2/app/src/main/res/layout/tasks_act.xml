@@ -53,7 +53,7 @@
 
     </LinearLayout>
 
-    <!-- Navigation Drawer -->
+    <!-- Navigation Drawer: 就是抽屉打开后的样子, 可以设置headerLayout与menu等 -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"

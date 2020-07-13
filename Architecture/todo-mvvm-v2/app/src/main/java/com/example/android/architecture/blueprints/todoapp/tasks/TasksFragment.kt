@@ -89,32 +89,42 @@ class TasksFragment : Fragment() {
 
         // Set the lifecycle owner to the lifecycle of the view
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
-        setupSnackbar()
-        setupListAdapter()
-        setupRefreshLayout(viewDataBinding.refreshLayout, viewDataBinding.tasksList)
-        setupNavigation()
-        setupFab()
 
-        // Always reloading data for simplicity. Real apps should only do this on first load and
-        // when navigating back to this destination. TODO: https://issuetracker.google.com/79672220
-        viewModel.loadTasks(true)
-    }
+        view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
+        arguments?.let {
+            viewModel.showEditResultMessage(args.userMessage)
+        }
 
-    private fun setupNavigation() {
+        val viewModel = viewDataBinding.viewmodel as TasksViewModel
+        if (viewModel != null) {
+            listAdapter = TasksAdapter(viewModel)
+            viewDataBinding.tasksList.adapter = listAdapter
+        } else {
+            Timber.w("ViewModel not initialized when attempting to set up adapter.")
+        }
+
+        this.setupRefreshLayout(viewDataBinding.refreshLayout, viewDataBinding.tasksList)
+
         viewModel.openTaskEvent.observe(this, EventObserver {
             openTaskDetails(it)
         })
         viewModel.newTaskEvent.observe(this, EventObserver {
             navigateToAddNewTask()
         })
+
+        activity?.findViewById<FloatingActionButton>(R.id.add_task_fab)?.let {
+            it.setOnClickListener {
+                navigateToAddNewTask()
+            }
+        }
+
+        // Always reloading data for simplicity. Real apps should only do this on first load and
+        // when navigating back to this destination. TODO: https://issuetracker.google.com/79672220
+        viewModel?.loadTasks(true)
     }
 
-    private fun setupSnackbar() {
-        view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
-        arguments?.let {
-            viewModel.showEditResultMessage(args.userMessage)
-        }
-    }
+
+
 
     private fun showFilteringPopUpMenu() {
         val view = activity?.findViewById<View>(R.id.menu_filter) ?: return
@@ -136,14 +146,6 @@ class TasksFragment : Fragment() {
         }
     }
 
-    private fun setupFab() {
-        activity?.findViewById<FloatingActionButton>(R.id.add_task_fab)?.let {
-            it.setOnClickListener {
-                navigateToAddNewTask()
-            }
-        }
-    }
-
     private fun navigateToAddNewTask() {
         val action = TasksFragmentDirections
             .actionTasksFragmentToAddEditTaskFragment(
@@ -158,13 +160,4 @@ class TasksFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    private fun setupListAdapter() {
-        val viewModel = viewDataBinding.viewmodel
-        if (viewModel != null) {
-            listAdapter = TasksAdapter(viewModel)
-            viewDataBinding.tasksList.adapter = listAdapter
-        } else {
-            Timber.w("ViewModel not initialized when attempting to set up adapter.")
-        }
-    }
 }

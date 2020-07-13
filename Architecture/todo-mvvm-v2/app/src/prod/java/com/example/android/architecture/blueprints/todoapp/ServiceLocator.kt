@@ -79,3 +79,9 @@ object ServiceLocator {
         }
     }
 }
+
+class Temp(val sl : ServiceLocator){
+    fun foo(){
+        sl.resetRepository()
+    }
+}

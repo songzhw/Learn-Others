@@ -1,13 +1,18 @@
 package ca.six.learn.artitecture.flow.permissions
 
+import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 
 data class Permission(
@@ -18,11 +23,7 @@ data class Permission(
 
 
 class PermissionFragment : Fragment() {
-    companion object {
-        private const val REQUEST_PERMISSION = 10
-
-        fun newInstance() = PermissionFragment()
-    }
+    val REQUEST_CODE_PERMISSION = 23
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,19 +31,15 @@ class PermissionFragment : Fragment() {
     }
 
     fun request(vararg permissions: String) {
-        requestPermissions(permissions, REQUEST_PERMISSION)
+        requestPermissions(permissions, REQUEST_CODE_PERMISSION)
     }
 
     var completableDeferred: CompletableDeferred<List<Permission>> = CompletableDeferred()
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode != REQUEST_PERMISSION || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
+        if (requestCode != REQUEST_CODE_PERMISSION || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
         completableDeferred.complete(permissions.map {
             Permission(
                 it,
@@ -94,19 +91,9 @@ object PermissionFlow {
         }
     }
 
-    fun requestEach() = flow {
-        createFragment()
-
-        permissionFragment?.takeIf { permissionsToRequest.isNotEmpty() }?.run {
-            request(*permissionsToRequest)
-            val results = completableDeferred.await()
-            results.forEach { emit(it) }
-        }
-    }
-
     private fun createFragment() = permissionFragment?.let {
         addFragment(it)
-    } ?: PermissionFragment.newInstance().let {
+    } ?: PermissionFragment().let {
         permissionFragment = it
         addFragment(it)
     }
@@ -141,3 +128,17 @@ fun PermissionFlow.withActivity(activity: FragmentActivity) {
     activityInFlow = activity
 }
 
+class PermissionFlowDemo : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        GlobalScope.launch {
+            permissionFlow {
+                withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                withActivity(this@PermissionFlowDemo)
+                request().collect { granded: Boolean -> println("okay") }
+            }
+        }
+
+    }
+}

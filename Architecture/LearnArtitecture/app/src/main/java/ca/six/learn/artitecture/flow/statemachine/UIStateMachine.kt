@@ -23,11 +23,19 @@ class UIStateMachineDemo : AppCompatActivity(R.layout.activity_btn_tv) {
 }
 
 object BizState {
-    operator fun <T> invoke(actionOn: CoroutineContext = Dispatchers.Default, action: () -> T): Flow<T> {
-        return flow<T>{ emit(action())}
+    operator fun <T> invoke(
+        actionOn: CoroutineContext = Dispatchers.Default,
+        action: () -> T
+    ): Flow<T> {
+        return flow<T> { emit(action()) }
             .onStart { emit() }
             .catch { exception -> emit(exception) }
             .onCompletion { emit() }
             .flowOn(actionOn)
     }
 }
+
+sealed class UIState<T>
+object Start : UIState<Unit>()
+object Completion: UIState<Unit>()
+object Success<T>: UIState<T>() //generics不能用于object, 得用于class

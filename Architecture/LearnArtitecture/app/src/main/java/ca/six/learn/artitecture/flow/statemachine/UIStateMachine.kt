@@ -20,6 +20,14 @@ class UIStateMachineDemo : AppCompatActivity(R.layout.activity_btn_tv) {
 
     }
 
+    // 其实可以是viewmodel调用的方法
+    fun onResult(state: UIState<String>) {
+        when (state) {
+            is Start -> println("start")
+            is Success -> println(state.value)
+        }
+    }
+
 }
 
 

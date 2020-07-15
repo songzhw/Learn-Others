@@ -22,21 +22,23 @@ class UIStateMachineDemo : AppCompatActivity(R.layout.activity_btn_tv) {
 
 }
 
-object BizState {
+
+sealed class UIState<out T>
+object Start : UIState<Nothing>()
+object Completion : UIState<Nothing>()
+class Success<out T>(val value: T) : UIState<T>() //generics不能用于object, 得用于class
+class Failure(val exception: Throwable) : UIState<Nothing>()
+
+
+object Machine {
     operator fun <T> invoke(
         actionOn: CoroutineContext = Dispatchers.Default,
-        action: () -> T
-    ): Flow<UIState<T>> {
-        return flow<UIState<T>> { emit(Success(action())) }
+        action: suspend () -> T
+    ): Flow<UIState<T>> =
+        flow<UIState<T>> { emit(Success(action())) }
             .onStart { emit(Start) }
-//            .catch { exception -> emit(exception) }
+            .catch { exception -> emit(Failure(exception)) }
             .onCompletion { emit(Completion) }
-//            .flowOn(actionOn)
-    }
+            .flowOn(actionOn)
 }
 
-sealed class UIState<T>
-object Start : UIState<Unit>()
-object Completion : UIState<Unit>()
-class Success<T>(val value: T) : UIState<T>() //generics不能用于object, 得用于class
-class Failure(val exception: Throwable) : UIState<Throwable>()

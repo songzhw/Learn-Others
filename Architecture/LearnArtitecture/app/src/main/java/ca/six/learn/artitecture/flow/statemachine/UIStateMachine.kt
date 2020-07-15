@@ -26,16 +26,17 @@ object BizState {
     operator fun <T> invoke(
         actionOn: CoroutineContext = Dispatchers.Default,
         action: () -> T
-    ): Flow<T> {
-        return flow<T> { emit(action()) }
-            .onStart { emit() }
-            .catch { exception -> emit(exception) }
-            .onCompletion { emit() }
-            .flowOn(actionOn)
+    ): Flow<UIState<T>> {
+        return flow { emit(Success(action())) }
+            .onStart { emit(Start) }
+//            .catch { exception -> emit(exception) }
+            .onCompletion { emit(Completion) }
+//            .flowOn(actionOn)
     }
 }
 
 sealed class UIState<T>
 object Start : UIState<Unit>()
-object Completion: UIState<Unit>()
-object Success<T>: UIState<T>() //generics不能用于object, 得用于class
+object Completion : UIState<Unit>()
+class Success<T>(val value: T) : UIState<T>() //generics不能用于object, 得用于class
+class Failure(val exception: Throwable) : UIState<Throwable>()

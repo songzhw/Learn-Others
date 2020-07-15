@@ -27,7 +27,7 @@ object BizState {
         actionOn: CoroutineContext = Dispatchers.Default,
         action: () -> T
     ): Flow<UIState<T>> {
-        return flow { emit(Success(action())) }
+        return flow<UIState<T>> { emit(Success(action())) }
             .onStart { emit(Start) }
 //            .catch { exception -> emit(exception) }
             .onCompletion { emit(Completion) }

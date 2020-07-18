@@ -27,7 +27,9 @@ class UIStateMachineDemo : AppCompatActivity(R.layout.activity_btn_tv) {
                     }
                 }
         }
+
     }
+
 
 }
 
@@ -44,7 +46,7 @@ class UIStateMachineViewModel : ViewModel() {
 sealed class UIState<out T>
 object Start : UIState<Nothing>()
 object Completion : UIState<Nothing>()
-class Success<out T>(val value: T) : UIState<T>() //generics不能用于object, 得用于class
+class Success<T>(val value: T) : UIState<T>() //generics不能用于object, 得用于class
 class Failure(val exception: Throwable) : UIState<Nothing>()
 
 
@@ -59,4 +61,3 @@ object Machine {
             .onCompletion { emit(Completion) }
             .flowOn(actionOn)
 }
-

@@ -27,22 +27,20 @@ class KeyboardDemo : AppCompatActivity(R.layout.activity_keyboard) {
         val rootView = findViewById<View>(Window.ID_ANDROID_CONTENT)
         rootView.viewTreeObserver.addOnGlobalLayoutListener {
             // 每次软软键盘的弹出/消失, 都会触发onGlobalLayout()这个方法
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            println("szw onGlobalLayout(${imm.isActive}) : ${rootView.isKeyboardOpen()}")
+            println("szw onGlobalLayout() : ${rootView.isKeyboardOpen()}")
         }
     }
 }
 
 fun View.isKeyboardOpen(): Boolean {
     val rect = Rect()
-    getWindowVisibleDisplayFrame(rect)
+    getWindowVisibleDisplayFrame(rect) // 这样子rect在软键盘弹出时就不包括软键盘的部分了
     // 以1080 * 2160的手机来说, 正常情况下, rect就是(0, 66 -- 1080, 2028)
     // 要是键盘弹出来了, 那rect就是 (0, 66 -- 1080, 1343)
     // 备注: 2160 - 2028 = 132, 正好是48dp * 2.75(density). 所以navigation bar是48dp
-    println("szw        rect = $rect")
-    println("szw        density = " + Resources.getSystem().displayMetrics.density)
-    println("szw        height = ${rootView.height}")
-    return true
+    val dp100 = 100 * Resources.getSystem().displayMetrics.density
+    val difference = rootView.height - rect.bottom  // 软键盘弹出与否, rootView.height也总是2160
+    return difference > dp100
 }
 /*
   1. 可能的例外情况1: gesture navigation  -- 其实不影响我们, 因为我们是判断差大于100dp, 才算出来. 所以不影响正常时

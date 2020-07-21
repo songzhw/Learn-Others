@@ -1,12 +1,10 @@
 package ca.six.learn.artitecture.lifecycle
 
-import android.content.Context
 import android.content.res.Resources
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import android.view.Window
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -25,9 +23,14 @@ class KeyboardDemo : AppCompatActivity(R.layout.activity_keyboard) {
         })
 
         val rootView = findViewById<View>(Window.ID_ANDROID_CONTENT)
+        val previousState = rootView.isKeyboardOpen() //=> 一进入页面时是没有软键盘的, 所以此值为false
+        println("szw prev = $previousState")
         rootView.viewTreeObserver.addOnGlobalLayoutListener {
             // 每次软软键盘的弹出/消失, 都会触发onGlobalLayout()这个方法
-            println("szw onGlobalLayout() : ${rootView.isKeyboardOpen()}")
+            val isKeyboardOpen = rootView.isKeyboardOpen()
+            if (isKeyboardOpen != previousState) {
+                // TODO send out message (LiveData, flow, RxJava, EventBus, ...)
+            }
         }
     }
 }

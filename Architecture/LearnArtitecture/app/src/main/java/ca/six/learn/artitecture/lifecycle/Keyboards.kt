@@ -23,13 +23,14 @@ class KeyboardDemo : AppCompatActivity(R.layout.activity_keyboard) {
         })
 
         val rootView = findViewById<View>(Window.ID_ANDROID_CONTENT)
-        val previousState = rootView.isKeyboardOpen() //=> 一进入页面时是没有软键盘的, 所以此值为false
+        var previousState = rootView.isKeyboardOpen() //=> 一进入页面时是没有软键盘的, 所以此值为false
         println("szw prev = $previousState")
         rootView.viewTreeObserver.addOnGlobalLayoutListener {
             // 每次软软键盘的弹出/消失, 都会触发onGlobalLayout()这个方法
             val isKeyboardOpen = rootView.isKeyboardOpen()
             if (isKeyboardOpen != previousState) {
                 // TODO send out message (LiveData, flow, RxJava, EventBus, ...)
+                previousState = isKeyboardOpen
             }
         }
     }

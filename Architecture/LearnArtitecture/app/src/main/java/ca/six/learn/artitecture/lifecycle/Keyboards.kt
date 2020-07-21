@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -16,23 +17,29 @@ class KeyboardDemo : AppCompatActivity(R.layout.activity_keyboard) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycle.addObserver(object : LifecycleEventObserver {
-            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-                println("szw state change $event")
-            }
-        })
-
         val rootView = findViewById<View>(Window.ID_ANDROID_CONTENT)
         var previousState = rootView.isKeyboardOpen() //=> 一进入页面时是没有软键盘的, 所以此值为false
-        println("szw prev = $previousState")
-        rootView.viewTreeObserver.addOnGlobalLayoutListener {
-            // 每次软软键盘的弹出/消失, 都会触发onGlobalLayout()这个方法
-            val isKeyboardOpen = rootView.isKeyboardOpen()
-            if (isKeyboardOpen != previousState) {
-                // TODO send out message (LiveData, flow, RxJava, EventBus, ...)
-                previousState = isKeyboardOpen
+        val listener = object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                // 每次软软键盘的弹出/消失, 都会触发onGlobalLayout()这个方法
+                val isKeyboardOpen = rootView.isKeyboardOpen()
+                if (isKeyboardOpen != previousState) {
+                    // TODO send out message (LiveData, flow, RxJava, EventBus, ...)
+                    previousState = isKeyboardOpen
+                    println("szw keyboard now? = $isKeyboardOpen")
+                }
             }
         }
+
+        lifecycle.addObserver(object : LifecycleEventObserver {
+            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+                if (event == Lifecycle.Event.ON_RESUME) {
+                    rootView.viewTreeObserver.addOnGlobalLayoutListener(listener)
+                } else if (event == Lifecycle.Event.ON_PAUSE) {
+                    rootView.viewTreeObserver.removeOnGlobalLayoutListener(listener)
+                }
+            }
+        })
     }
 }
 

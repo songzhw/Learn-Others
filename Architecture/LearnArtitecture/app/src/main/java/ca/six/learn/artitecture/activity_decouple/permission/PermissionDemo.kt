@@ -8,6 +8,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.appcompat.app.AppCompatActivity
 
+
+// 备注: 请求权限 是ReqeustPermssion()用于请求一个权限
+// 而ReqeustMultiplePermssions()是请求多个权限. 而callback中就不再是一个boolean值了, 而是一个object, 可以一一判断看哪个权限有哪个权限被拒
 class PermissionDemo : AppCompatActivity() {
     lateinit var permissionLauncher: ActivityResultLauncher<String>
 

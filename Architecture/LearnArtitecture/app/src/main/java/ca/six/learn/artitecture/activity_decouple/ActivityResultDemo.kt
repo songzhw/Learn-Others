@@ -1,11 +1,13 @@
 package ca.six.learn.artitecture.activity_decouple
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
 
@@ -21,8 +23,7 @@ class ActivityResultDemo : AppCompatActivity() {
 
         // 自动生成requestCode, 所以不用我们操心了. (若有多种requestCode, 那就使用多个ActivityResultLauncher实例.
         // 算是彻底解决了if-else串这种不符合OC原则的做法了.
-        resultLauncher =
-            registerForActivityResult(StartActivityForResult()) { result: ActivityResult ->
+        resultLauncher = registerForActivityResult(StartActivityForResult()) { result: ActivityResult ->
                 // ActivityResult类只有两个成员: int mResultCode, Intent mData
                 val data = result.data
                 println("szw code = ${ActivityResult.resultCodeToString(result.resultCode)}")
@@ -39,3 +40,5 @@ class ActivityResultDemo : AppCompatActivity() {
         return super.onTouchEvent(event)
     }
 }
+
+

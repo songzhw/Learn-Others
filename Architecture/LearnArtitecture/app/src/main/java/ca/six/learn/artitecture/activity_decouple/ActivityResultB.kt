@@ -1,5 +1,6 @@
 package ca.six.learn.artitecture.activity_decouple
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
@@ -17,8 +18,10 @@ class ActivityResultB : AppCompatActivity() {
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if(MotionEvent.ACTION_UP == event.action){
-
+        if (MotionEvent.ACTION_UP == event.action) {
+            val it = Intent().putExtra("key", "value23")
+            setResult(Activity.RESULT_OK, it);
+            this.finish()
         }
         return super.onTouchEvent(event)
     }

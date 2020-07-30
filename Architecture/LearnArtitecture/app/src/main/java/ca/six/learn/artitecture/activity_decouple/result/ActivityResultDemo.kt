@@ -1,13 +1,11 @@
-package ca.six.learn.artitecture.activity_decouple
+package ca.six.learn.artitecture.activity_decouple.result
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
 

@@ -1,4 +1,4 @@
-package ca.six.learn.artitecture.activity_decouple
+package ca.six.learn.artitecture.activity_decouple.result
 
 import android.app.Activity.RESULT_OK
 import android.content.Context
